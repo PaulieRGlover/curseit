@@ -1,0 +1,10 @@
+{
+  "name": "affable-diet",
+  "version": "0.0.1",
+  "author": "Paul R. Glover",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "foods:db:dev:up": "sudo docker compose -f tools/foods.docker-compose.yml up foods-db-dev -d"
+  }
+}
