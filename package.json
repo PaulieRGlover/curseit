@@ -5,20 +5,36 @@
   "scripts": {},
   "private": true,
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
     "@nestjs/schematics": "^10.0.1",
+    "@nestjs/testing": "^10.0.2",
+    "@nx/eslint": "20.6.4",
+    "@nx/eslint-plugin": "20.6.4",
     "@nx/js": "20.6.4",
     "@nx/nest": "^20.6.4",
     "@prisma/client": "^6.5.0",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@types/node": "18.16.9",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^9.0.0",
     "nx": "20.6.4",
     "prettier": "^2.6.2",
     "prisma": "^6.5.0",
     "tslib": "^2.3.0",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.19.0"
   },
   "workspaces": [
-    "packages/*"
-  ]
+    "packages/*",
+    "libs/*"
+  ],
+  "dependencies": {
+    "@nestjs/common": "^10.0.2",
+    "@nestjs/core": "^10.0.2",
+    "@nestjs/platform-express": "^10.0.2",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0"
+  }
 }
