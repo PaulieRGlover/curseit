@@ -4,27 +4,40 @@ services:
     ports:
       - 5434:5432
     volumes:
-      - /home/crysknight/postgres:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: eadeadeadA1
       POSTGRES_DB: foods
     networks:
       - affablediet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
     restart: always
     ports:
-      - "8888:80"
+      - 8888:80
     environment:
-      PGADMIN_DEFAULT_EMAIL: paulie.r.glover@gmail.com
+      PGADMIN_DEFAULT_EMAIL: king.of.the.localhost@localhost.com
       PGADMIN_DEFAULT_PASSWORD: eadeadeadA1
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+      - ./servers.json:/pgadmin4/servers.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      foods-db-dev:
+        condition: service_healthy
 networks:
   affablediet:
     driver: bridge
 
 volumes:
   pgadmin-data:
+  postgres-data:

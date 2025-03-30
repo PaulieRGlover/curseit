@@ -18,5 +18,12 @@
       "api"
     ]
   },
-  "dependencies": {}
+  "dependencies": {},
+  "prisma": {
+    "schema": "src/lib/schema.prisma"
+  },
+  "scripts": {
+    "db:dev-migrate": "npx prisma migrate dev",
+    "db:create-client": "npx prisma generate"
+  }
 }
