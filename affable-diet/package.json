@@ -5,6 +5,6 @@
   "license": "ISC",
   "description": "",
   "scripts": {
-    "foods:db:dev:up": "sudo docker compose -f tools/foods.docker-compose.yml up foods-db-dev -d"
+    "foods:db:dev:up": "sudo docker compose -f tools/foods.docker-compose.yml up foods-db-dev pgadmin -d"
   }
 }

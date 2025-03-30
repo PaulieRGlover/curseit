@@ -7,9 +7,24 @@ services:
       - /home/crysknight/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: nest
+      POSTGRES_PASSWORD: eadeadeadA1
+      POSTGRES_DB: foods
     networks:
       - affablediet
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: paulie.r.glover@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: eadeadeadA1
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
 networks:
   affablediet:
+    driver: bridge
+
+volumes:
+  pgadmin-data:
