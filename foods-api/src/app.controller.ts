@@ -10,4 +10,9 @@ export class AppController {
   health() {
     return this.service.health();
   }
+
+  @Get('some-food')
+  async getSomeFood() {
+    return await this.service.getSomeFood();
+  }
 };
