@@ -10,12 +10,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@curseit/foods-prisma": [
-        "libs/foods-prisma/src"
-      ],
-      "@curseit/foods-prisma/*": [
-        "libs/foods-prisma/src/*"
-      ]
+      "@curseit/foods-prisma": ["libs/foods-prisma/src"],
+      "@curseit/foods-prisma/*": ["libs/foods-prisma/src/*"]
     }
   }
 }
