@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "foods-prisma": {
+      "type": "library",
+      "root": "libs/foods-prisma",
+      "entryFile": "index",
+      "sourceRoot": "libs/foods-prisma/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/foods-prisma/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
+}
