@@ -1,9 +1,14 @@
 import { FoodsPrismaClient } from '@curseit/foods-prisma';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class FoodsService {
+  constructor(
+    @Inject('PRISMA_CLIENT')
+    private readonly prismaClient: typeof FoodsPrismaClient,
+  ) {}
+
   getFoods() {
-    return FoodsPrismaClient.food.findMany();
+    return this.prismaClient.food.findMany();
   }
 }
