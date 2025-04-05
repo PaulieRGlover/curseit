@@ -21,7 +21,7 @@
     "schema": "src/schema.prisma"
   },
   "scripts": {
-    "docker": "sudo docker compose -f tools/foods.docker-compose.yml up foods-db-dev pgadmin -d",
+    "docker": "docker compose -f tools/foods.docker-compose.yml up foods-db-dev pgadmin -d",
     "migrate:reset": "npx prisma migrate reset",
     "migrate:dev": "npx prisma migrate dev",
     "create-client": "npx prisma generate"

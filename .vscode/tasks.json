@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Foods DB up",
+      "type": "shell",
+      "command": "npx nx run foods-prisma:docker",
+      "presentation": {
+        "group": "curseddiet",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Foods API up",
+      "type": "shell",
+      "command": "npx nx serve foods-api --configuration=development"
+    },
+    {
+      "label": "Start Foods Dev Enviroment",
+      "dependsOn": [
+        "Foods DB up",
+        "Foods API up"
+      ],
+      "dependsOrder": "parallel",
+      "promptOnClose": true
+    }
+  ]
+}
