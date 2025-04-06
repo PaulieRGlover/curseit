@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { FoodsController } from './foods.controller';
-import { FoodsService } from './foods.service';
 import { FoodsPrismaClient } from '@curseit/foods-prisma';
+import { FdcModule } from './fdc/fdc.module';
+import { FoodsService } from './foods.service';
 
 @Module({
+  imports: [FdcModule],
   controllers: [FoodsController],
   providers: [
     FoodsService,

@@ -3,7 +3,9 @@ import { AppController } from './app.controller';
 import { FoodsModule } from '../foods/foods.module';
 
 @Module({
-  imports: [FoodsModule],
+  imports: [
+    FoodsModule,
+  ],
   controllers: [AppController],
 })
 export class AppModule {}

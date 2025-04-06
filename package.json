@@ -1,5 +1,5 @@
 {
-  "name": "@affable-apps/source",
+  "name": "@curseit/source",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {},
@@ -7,7 +7,7 @@
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@nestjs/schematics": "^10.0.1",
-    "@nestjs/testing": "^10.0.2",
+    "@nestjs/testing": "^11.0.13",
     "@nx/eslint": "20.6.4",
     "@nx/eslint-plugin": "20.6.4",
     "@nx/jest": "20.6.4",
@@ -44,12 +44,17 @@
     "apps/*"
   ],
   "dependencies": {
-    "@nestjs/common": "^10.0.2",
+    "@anatine/zod-nestjs": "^2.0.12",
+    "@anatine/zod-openapi": "^2.2.8",
+    "@nestjs/axios": "^4.0.0",
+    "@nestjs/common": "^11.0.13",
     "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^10.0.2",
-    "@nestjs/platform-express": "^10.0.2",
-    "axios": "^1.6.0",
+    "@nestjs/core": "^11.0.13",
+    "@nestjs/platform-express": "^11.0.13",
+    "axios": "^1.8.4",
+    "openapi3-ts": "^4.4.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "zod": "^3.24.2"
   }
 }
