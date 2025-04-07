@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import {
+  FdcDataTypeEnumSchema,
   FdcSearchResponseDataSchema,
   FdcSearchResultFood,
 } from './external/fdc.types';
@@ -11,7 +12,12 @@ export class FdcService {
   constructor(private readonly httpService: HttpService) {}
 
   async searchFoods(query: string): Promise<Array<FdcSearchResultFood>> {
-    const response = this.httpService.get(`/foods/search?query=${query}&dataType=Foundation`);
+    const response = this.httpService.get('/foods/search', {
+      params: {
+        query,
+        dataType: FdcDataTypeEnumSchema.Values.Foundation,
+      },
+    });
 
     const { data } = await firstValueFrom(response);
 
