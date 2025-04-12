@@ -18,7 +18,8 @@ model Food {
   id   String @id @default(uuid())
   name String @unique
 
-  nutritients NutritientInFood[]
+  nutritients  NutritientInFood[]
+  cacheEntries CachedFood[]
 
   @@map("foods")
 }
@@ -36,11 +37,31 @@ model Nutritient {
 model NutritientInFood {
   value Float
 
-  food         Food       @relation(fields: [foodId], references: [id])
-  foodId       String
-  nutritient   Nutritient @relation(fields: [nutritientId], references: [id])
-  nutritientId String
+  food         Food       @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  foodId       String     @map("food_id")
+  nutritient   Nutritient @relation(fields: [nutritientId], references: [id], onDelete: Cascade)
+  nutritientId String     @map("nutritient_id")
 
   @@id([foodId, nutritientId])
   @@map("nutritients_in_food")
+}
+
+model CacheEntry {
+  id        String   @id @default(uuid())
+  hash      String   @unique
+  expiresAt DateTime @map("expires_at")
+
+  foods CachedFood[]
+
+  @@map("cache_entries")
+}
+
+model CachedFood {
+  food         Food       @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  foodId       String     @map("food_id")
+  cacheEntry   CacheEntry @relation(fields: [cacheEntryId], references: [hash], onDelete: Cascade)
+  cacheEntryId String     @map("cache_entry_id")
+
+  @@id([foodId, cacheEntryId])
+  @@map("cached_foods")
 }

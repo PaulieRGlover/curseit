@@ -24,6 +24,7 @@
     "docker": "docker compose -f tools/foods.docker-compose.yml up foods-db-dev pgadmin -d",
     "migrate:reset": "npx prisma migrate reset",
     "migrate:dev": "npx prisma migrate dev",
+    "migrate:apply": "npx prisma db push",
     "create-client": "npx prisma generate"
   }
 }
