@@ -1,6 +1,6 @@
 import { FoodsPrismaClient } from '@curseit/foods-prisma';
 import { Inject, Injectable } from '@nestjs/common';
-import { FdcService } from './fdc/fdc.service';
+import { FdcService } from './modules/fdc/fdc.service';
 
 @Injectable()
 export class FoodsService {
