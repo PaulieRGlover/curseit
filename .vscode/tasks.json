@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "npx nx run foods-prisma:docker",
       "presentation": {
-        "group": "curseddiet",
+        "group": "cursediet",
         "panel": "new"
       }
     },

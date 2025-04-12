@@ -15,9 +15,7 @@ export class FoodsService {
   }
 
   async searchFoods(name: string) {
-    const result = await this.fdcService.searchFoods(name);
-
-    console.log(`result: `, JSON.stringify(result, null, 4));
+    const foods = await this.fdcService.searchFoods(name);
 
     return this.prismaClient.food.findMany({
       where: { name },

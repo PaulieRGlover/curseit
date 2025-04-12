@@ -27,7 +27,7 @@ export type FdcDataType = z.infer<typeof FdcDataTypeSchema>;
 
 export const FdcFoodSearchCriteriaSchema = z.object({
   query: z.string(),
-  dataType: z.array(FdcDataTypeSchema).optional(),
+  dataType: FdcDataTypeSchema.optional(),
   pageSize: z.number().min(1).max(200).optional(),
   pageNumber: z.number().nonnegative().optional(),
   sortBy: FdcSortByEnumSchema.optional(),
@@ -49,16 +49,16 @@ export type FdcFoodNutritientAbridged = z.infer<typeof FdcFoodNutritientAbridged
 
 export const FdcSearchResultFoodSchema = z.object({
   fdcId: z.number().nonnegative(),
-  dataType: FdcDataTypeSchema.optional(),
+  dataType: FdcDataTypeEnumSchema.optional(),
   description: z.string(),
-  foodCode: z.string().optional(),
+  foodCode: z.number().optional(),
   foodNutritients: z.array(FdcFoodNutritientAbridgedSchema).optional(),
   publishedDate: FdcDateSchema.optional(),
-  scientificName: z.string().optional(),
+  scientificName: z.string().optional(), 
   brandOwner: z.string().optional(),
   gtinUpc: z.string().optional(),
   ingredients: z.string().optional(),
-  ndbNumber: z.string().optional(),
+  ndbNumber: z.number().optional(),
   additionalDescriptions: z.string().optional(),
   score: z.number().optional(),
 });
