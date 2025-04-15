@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/basic-types"
+    },
+    {
       "path": "../../libs/foods-prisma"
     },
     {

@@ -16,10 +16,17 @@
       "command": "npx nx serve foods-api --configuration=development"
     },
     {
+      "label": "Prisma studio up",
+      "type": "shell",
+      "command": "npx prisma studio --schema=libs/foods-prisma/src/schema.prisma",
+      "dependsOn": ["Foods DB up"]
+    },
+    {
       "label": "Start Foods Dev Enviroment",
       "dependsOn": [
         "Foods DB up",
-        "Foods API up"
+        "Foods API up",
+        "Prisma studio up"
       ],
       "dependsOrder": "parallel",
       "promptOnClose": true

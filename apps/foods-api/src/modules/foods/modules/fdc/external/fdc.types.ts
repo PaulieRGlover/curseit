@@ -36,7 +36,7 @@ export const FdcFoodSearchCriteriaSchema = z.object({
 });
 export type FdcFoodSearchCriteria = z.infer<typeof FdcFoodSearchCriteriaSchema>;
 
-export const FdcFoodNutritientAbridgedSchema = z.object({
+export const FdcFoodNutrientAbridgedSchema = z.object({
   nutrientId: z.number().nonnegative(),
   nutrientName: z.string(),
   nutrientNumber: z.string(),
@@ -45,14 +45,14 @@ export const FdcFoodNutritientAbridgedSchema = z.object({
   derivationDescription: z.string().optional(),
   value: z.number().optional(),
 });
-export type FdcFoodNutritientAbridged = z.infer<typeof FdcFoodNutritientAbridgedSchema>;
+export type FdcFoodNutrientAbridged = z.infer<typeof FdcFoodNutrientAbridgedSchema>;
 
 export const FdcSearchResultFoodSchema = z.object({
   fdcId: z.number().nonnegative(),
   dataType: FdcDataTypeEnumSchema.optional(),
   description: z.string(),
   foodCode: z.number().optional(),
-  foodNutritients: z.array(FdcFoodNutritientAbridgedSchema).optional(),
+  foodNutrients: z.array(FdcFoodNutrientAbridgedSchema).optional(),
   publishedDate: FdcDateSchema.optional(),
   scientificName: z.string().optional(), 
   brandOwner: z.string().optional(),

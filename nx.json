@@ -28,11 +28,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/foods-prisma/*"]
+      "exclude": ["libs/foods-prisma/*", "libs/basic-types/*"]
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/foods-prisma/*"],
+      "include": ["libs/foods-prisma/*", "libs/basic-types/*"],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

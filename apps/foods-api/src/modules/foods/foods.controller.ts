@@ -6,13 +6,8 @@ import { SearchDto } from './dto/search.dto';
 export class FoodsController {
   constructor(private foodsService: FoodsService) {}
 
-  @Get()
-  foods() {
-    return this.foodsService.getFoods();
-  }
-
   @Get('search')
   search(@Query() query: SearchDto) {
-    return this.foodsService.searchFoods(query.name);
+    return this.foodsService.searchFoods(query);
   }
 }

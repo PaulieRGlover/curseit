@@ -27,6 +27,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/basic-types/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/foods-prisma/tsconfig.lib.json"
     }
   ]

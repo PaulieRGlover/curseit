@@ -6,15 +6,16 @@ import {
   FdcSearchResponseDataSchema,
   FdcSearchResultFood,
 } from './external/fdc.types';
+import { SearchDto } from '../../dto/search.dto';
 
 @Injectable()
 export class FdcService {
   constructor(private readonly httpService: HttpService) {}
 
-  async searchFoods(query: string): Promise<Array<FdcSearchResultFood>> {
+  async searchFoods(search: SearchDto): Promise<Array<FdcSearchResultFood>> {
     const response = this.httpService.get('/foods/search', {
       params: {
-        query,
+        query: search.name,
         dataType: FdcDataTypeEnumSchema.Values.Foundation,
       },
     });

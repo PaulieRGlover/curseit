@@ -1,5 +1,8 @@
 import * as path from 'path';
-import { PrismaClient } from '../generated/index.js';
+import {
+  PrismaClient,
+  Prisma as FoodsPrisma,
+} from '../generated/index.js';
 import * as dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
@@ -12,5 +15,9 @@ export const FoodsPrismaClient = new PrismaClient({
     },
   },
 });
+
+export {
+  FoodsPrisma,
+};
 
 export * from '../generated/index.js';
