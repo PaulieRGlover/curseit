@@ -16,7 +16,7 @@ export class FdcService {
     const response = this.httpService.get('/foods/search', {
       params: {
         query: search.name,
-        dataType: FdcDataTypeEnumSchema.Values.Foundation,
+        dataType: `${FdcDataTypeEnumSchema.Values.Foundation},${FdcDataTypeEnumSchema.Values['SR Legacy']}`,
       },
     });
 

@@ -10,7 +10,6 @@ CREATE TABLE "foods" (
 CREATE TABLE "nutrients" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "norm" DOUBLE PRECISION,
 
     CONSTRAINT "nutrients_pkey" PRIMARY KEY ("id")
 );

@@ -27,7 +27,6 @@ model Food {
 model Nutrient {
   id   String @id @default(uuid())
   name String @unique
-  norm Float?
 
   foods NutrientInFood[]
 

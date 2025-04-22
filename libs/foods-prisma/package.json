@@ -16,15 +16,22 @@
   "nx": {
     "name": "foods-prisma"
   },
-  "dependencies": {},
   "prisma": {
-    "schema": "src/schema.prisma"
+    "schema": "src/schema.prisma",
+    "seed": "node --import tsx src/seed/index.ts src/seed/index.ts"
   },
   "scripts": {
     "docker": "docker compose -f tools/foods.docker-compose.yml up foods-db-dev pgadmin -d",
     "migrate:reset": "npx prisma migrate reset",
     "migrate:dev": "npx prisma migrate dev",
     "migrate:apply": "npx prisma db push",
-    "create-client": "npx prisma generate"
+    "create-client": "npx prisma generate",
+    "seed": "npx prisma db seed"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
   }
 }
