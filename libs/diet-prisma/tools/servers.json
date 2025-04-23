@@ -1,11 +1,11 @@
 {
   "Servers": {
     "1": {
-      "Name": "Foods Database",
+      "Name": "Diet Database",
       "Group": "Development",
       "Host": "host.docker.internal",
       "Port": 5434,
-      "MaintenanceDB": "foods",
+      "MaintenanceDB": "diet",
       "Username": "postgres",
       "Password": "eadeadeadA1",
       "SSLMode": "prefer"
