@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FdcService } from './modules/fdc/fdc.service';
 import { CacheService } from './modules/cache/cache.service';
 import { SearchDto } from './dto/search.dto';
@@ -13,13 +13,12 @@ import { dietPrismaFoodToFood } from './transformers/diet-prisma-food-to-food.tr
 import {
   foodWithNutrientsToFood,
 } from './transformers/food-with-nutrients-to-food.transformer';
-import { DietPrismaClient } from '@curseit/diet-prisma';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FoodsService {
   constructor(
-    @Inject('PRISMA_CLIENT')
-    private readonly prismaClient: typeof DietPrismaClient,
+    private readonly db: PrismaService,
     private readonly fdcService: FdcService,
     private readonly cacheService: CacheService,
   ) {}
@@ -30,9 +29,9 @@ export class FoodsService {
   ) {
     const { foodsWithNutrients } = foodsWithNutrientsDto;
 
-    const foodsPrisma = await this.prismaClient.$transaction(
+    const foodsPrisma = await this.db.$transaction(
       foodsWithNutrients.map(foodWithNutrients => {
-        return this.prismaClient.food.create({
+        return this.db.food.create({
           data: foodWithNutrientsToFoodsPrismaFoodCreate(foodWithNutrients),
         });
       }),

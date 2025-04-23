@@ -21,7 +21,7 @@ export class AuthController {
     return this.signToken
   }
 
-  private async signToken(user: UserDto): Promise<{ access_token: string }> {
+  private async signToken(user: UserDto) {
     const payload = { sub: user.id, login: user.login };
   }
 }
