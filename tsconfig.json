@@ -7,10 +7,10 @@
       "path": "./libs/foods-prisma"
     },
     {
-      "path": "./apps/foods-api"
+      "path": "./libs/basic-types"
     },
     {
-      "path": "./libs/basic-types"
+      "path": "./apps/diet-api"
     }
   ],
   "compilerOptions": {

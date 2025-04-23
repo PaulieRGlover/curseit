@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Foods DB up",
+      "label": "Diet DB up",
       "type": "shell",
       "command": "npx nx run foods-prisma:docker",
       "presentation": {
@@ -11,9 +11,9 @@
       }
     },
     {
-      "label": "Foods API up",
+      "label": "Diet API up",
       "type": "shell",
-      "command": "npx nx serve foods-api --configuration=development"
+      "command": "npx nx serve diet-api --configuration=development"
     },
     {
       "label": "Prisma studio up",
@@ -22,10 +22,10 @@
       "dependsOn": ["Foods DB up"]
     },
     {
-      "label": "Start Foods Dev Enviroment",
+      "label": "Start Diet Dev Enviroment",
       "dependsOn": [
-        "Foods DB up",
-        "Foods API up",
+        "Diet DB up",
+        "Diet API up",
         "Prisma studio up"
       ],
       "dependsOrder": "parallel",

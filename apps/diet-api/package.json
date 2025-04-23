@@ -1,9 +1,9 @@
 {
-  "name": "@affable-apps/foods-api",
+  "name": "@curseit/diet-api",
   "version": "0.0.1",
   "private": true,
   "nx": {
-    "name": "foods-api",
+    "name": "diet-api",
     "targets": {
       "build": {
         "executor": "nx:run-commands",
@@ -28,26 +28,22 @@
           "build"
         ],
         "options": {
-          "buildTarget": "foods-api:build",
+          "buildTarget": "diet-api:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "foods-api:build:development"
+            "buildTarget": "diet-api:build:development"
           },
           "production": {
-            "buildTarget": "foods-api:build:production"
+            "buildTarget": "diet-api:build:production"
           }
-        }
-      },
-      "test": {
-        "options": {
-          "passWithNoTests": true
         }
       }
     },
     "tags": [
-      "api"
+      "diet-api",
+      "diet"
     ]
   }
 }
