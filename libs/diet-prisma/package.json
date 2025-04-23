@@ -26,12 +26,13 @@
     "seed": "node --import tsx src/seed/index.ts src/seed/index.ts"
   },
   "scripts": {
-    "docker": "docker compose -f tools/foods.docker-compose.yml up foods-db-dev pgadmin -d",
-    "migrate:reset": "npx prisma migrate reset",
-    "migrate:dev": "npx prisma migrate dev",
-    "migrate:apply": "npx prisma db push",
-    "create-client": "npx prisma generate",
-    "seed": "npx prisma db seed"
+    "docker:up": "docker compose -f tools/diet.docker-compose.yml up diet-db-dev pgadmin -d",
+    "docker:down": "docker compose -f tools/diet.docker-compose.yml down -v",
+    "prisma:migrate:reset": "npx prisma migrate reset",
+    "prisma:migrate:dev": "npx prisma migrate dev",
+    "prisma:migrate:apply": "npx prisma db push",
+    "prisma:create-client": "npx prisma generate",
+    "prisma:seed": "npx prisma db seed"
   },
   "dependencies": {
     "tslib": "^2.3.0"

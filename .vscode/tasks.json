@@ -2,33 +2,92 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Diet DB up",
+      "label": "diet:db:down",
       "type": "shell",
-      "command": "npx nx run diet-prisma:docker",
+      "command": "npx nx run diet-prisma:docker:down",
       "presentation": {
-        "group": "cursediet",
+        "group": "diet",
+        "panel": "new",
+        "close": true
+      }
+    },
+    {
+      "label": "diet:db:up",
+      "type": "shell",
+      "command": "npx nx run diet-prisma:docker:up",
+      "presentation": {
+        "group": "diet",
+        "panel": "new",
+        "close": true
+      }
+    },
+    {
+      "label": "diet:db:migrate",
+      "type": "shell",
+      "command": "npx nx run diet-prisma:prisma:migrate:apply",
+      "presentation": {
+        "group": "diet",
+        "panel": "new",
+        "close": true
+      }
+    },
+    {
+      "label": "diet:db:create-client",
+      "type": "shell",
+      "command": "npx nx run diet-prisma:prisma:create-client",
+      "presentation": {
+        "group": "diet",
+        "panel": "new",
+        "close": true
+      }
+    },
+    {
+      "label": "diet:api:up",
+      "type": "shell",
+      "command": "npx nx serve diet-api --configuration=development",
+      "presentation": {
+        "group": "diet",
         "panel": "new"
       }
     },
     {
-      "label": "Diet API up",
-      "type": "shell",
-      "command": "npx nx serve diet-api --configuration=development"
-    },
-    {
-      "label": "Prisma studio up",
+      "label": "diet:prisma-studio:up",
       "type": "shell",
       "command": "npx prisma studio --schema=libs/diet-prisma/src/schema.prisma",
-      "dependsOn": ["Foods DB up"]
+      "dependsOn": ["Diet DB up"],
+      "presentation": {
+        "group": "diet",
+        "panel": "new"
+      }
     },
     {
-      "label": "Start Diet Dev Enviroment",
+      "label": "diet:services",
       "dependsOn": [
-        "Diet DB up",
-        "Diet API up",
-        "Prisma studio up"
+        "diet:api:up",
+        "diet:prisma-studio:up"
       ],
       "dependsOrder": "parallel",
+      "promptOnClose": true
+    },
+    {
+      "label": "diet:dev:start",
+      "dependsOn": [
+        "diet:db:up",
+        "diet:services"
+      ],
+      "dependsOrder": "sequence",
+      "promptOnClose": true
+    },
+    {
+      "label": "diet:dev:reset",
+      "dependsOn": [
+        "diet:db:down",
+        "diet:db:up",
+        "diet:db:migrate",
+        "diet:db:create-client",
+        "diet:services"
+      ],
+      "dependsOrder": "sequence",
       "promptOnClose": true
     }
   ]
