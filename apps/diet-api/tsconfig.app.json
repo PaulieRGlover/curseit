@@ -15,5 +15,13 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": []
+  "exclude": [],
+  "references": [
+    {
+      "path": "../../libs/basic-types/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/diet-prisma/tsconfig.lib.json"
+    }
+  ]
 }

@@ -4,20 +4,16 @@
   "files": [],
   "references": [
     {
-      "path": "./libs/foods-prisma"
-    },
-    {
       "path": "./libs/basic-types"
     },
     {
       "path": "./apps/diet-api"
+    },
+    {
+      "path": "./libs/diet-prisma"
     }
   ],
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "@curseit/foods-prisma": ["libs/foods-prisma/src"],
-      "@curseit/foods-prisma/*": ["libs/foods-prisma/src/*"]
-    }
   }
 }

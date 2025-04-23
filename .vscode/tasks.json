@@ -4,7 +4,7 @@
     {
       "label": "Diet DB up",
       "type": "shell",
-      "command": "npx nx run foods-prisma:docker",
+      "command": "npx nx run diet-prisma:docker",
       "presentation": {
         "group": "cursediet",
         "panel": "new"
@@ -18,7 +18,7 @@
     {
       "label": "Prisma studio up",
       "type": "shell",
-      "command": "npx prisma studio --schema=libs/foods-prisma/src/schema.prisma",
+      "command": "npx prisma studio --schema=libs/diet-prisma/src/schema.prisma",
       "dependsOn": ["Foods DB up"]
     },
     {

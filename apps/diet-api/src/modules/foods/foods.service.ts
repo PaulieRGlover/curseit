@@ -1,4 +1,3 @@
-import { FoodsPrismaClient } from '@curseit/foods-prisma';
 import { Inject, Injectable } from '@nestjs/common';
 import { FdcService } from './modules/fdc/fdc.service';
 import { CacheService } from './modules/cache/cache.service';
@@ -10,16 +9,17 @@ import { Food, FoodsWithNutrientsDto } from './dto/foods.dto';
 import {
   fdcFoodToFoodWithNutrients,
 } from './transformers/fdc-food-to-food-with-nutrients.transformer';
-import { foodsPrismaFoodToFood } from './transformers/foods-prisma-food-to-food.transformer';
+import { dietPrismaFoodToFood } from './transformers/diet-prisma-food-to-food.transformer';
 import {
   foodWithNutrientsToFood,
 } from './transformers/food-with-nutrients-to-food.transformer';
+import { DietPrismaClient } from '@curseit/diet-prisma';
 
 @Injectable()
 export class FoodsService {
   constructor(
     @Inject('PRISMA_CLIENT')
-    private readonly prismaClient: typeof FoodsPrismaClient,
+    private readonly prismaClient: typeof DietPrismaClient,
     private readonly fdcService: FdcService,
     private readonly cacheService: CacheService,
   ) {}
@@ -44,7 +44,7 @@ export class FoodsService {
   async searchFoods(searchDto: SearchDto): Promise<Food[]> {
     const foodsPrismaFromCache = await this.cacheService.getSearchCache(searchDto);
     if (foodsPrismaFromCache) {
-      return foodsPrismaFromCache.map(foodsPrismaFoodToFood);
+      return foodsPrismaFromCache.map(dietPrismaFoodToFood);
     }
 
     const fdcFoods = await this.fdcService.searchFoods(searchDto);

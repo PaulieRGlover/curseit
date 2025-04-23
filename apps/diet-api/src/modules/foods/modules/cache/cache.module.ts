@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CacheService } from './cache.service';
-import { FoodsPrismaClient } from '@curseit/foods-prisma';
+import { DietPrismaClient } from '@curseit/diet-prisma';
 
 @Module({
   providers: [
     CacheService,
     {
       provide: 'PRISMA_CLIENT',
-      useValue: FoodsPrismaClient,
+      useValue: DietPrismaClient,
     },
   ],
   exports: [CacheService],

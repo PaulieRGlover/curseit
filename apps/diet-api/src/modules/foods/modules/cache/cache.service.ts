@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SearchDto } from '../../dto/search.dto';
 import {
-  FoodsPrismaClient,
+  DietPrismaClient,
   type Food as FoodsPrismaFood,
   type CacheEntry as FoodsPrismaCacheEntry,
-} from '@curseit/foods-prisma';
+} from '@curseit/diet-prisma';
 import objectHash from 'object-hash';
 import { Nullable } from '@curseit/basic-types';
 
@@ -12,7 +12,7 @@ import { Nullable } from '@curseit/basic-types';
 export class CacheService {
   constructor(
       @Inject('PRISMA_CLIENT')
-      private readonly prismaClient: typeof FoodsPrismaClient,
+      private readonly prismaClient: typeof DietPrismaClient,
   ) {}
 
   private async removeCacheEntry(id: FoodsPrismaCacheEntry['id']) {

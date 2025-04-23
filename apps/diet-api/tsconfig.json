@@ -4,6 +4,12 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/basic-types"
+    },
+    {
+      "path": "../../libs/diet-prisma"
+    },
+    {
       "path": "./tsconfig.app.json"
     }
   ]

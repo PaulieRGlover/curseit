@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { FoodsController } from './foods.controller';
-import { FoodsPrismaClient } from '@curseit/foods-prisma';
 import { FdcModule } from './modules/fdc/fdc.module';
 import { FoodsService } from './foods.service';
 import { CacheModule } from './modules/cache/cache.module';
+import { DietPrismaClient } from '@curseit/diet-prisma';
 
 @Module({
   imports: [FdcModule, CacheModule],
@@ -12,7 +12,7 @@ import { CacheModule } from './modules/cache/cache.module';
     FoodsService,
     {
       provide: 'PRISMA_CLIENT',
-      useValue: FoodsPrismaClient,
+      useValue: DietPrismaClient,
     },
   ],
 })

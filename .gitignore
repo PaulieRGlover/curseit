@@ -45,3 +45,5 @@ test-output
 
 # always
 .env
+node_modules
+generated
