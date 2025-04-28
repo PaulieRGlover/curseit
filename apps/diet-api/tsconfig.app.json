@@ -24,7 +24,13 @@
       "path": "../../libs/basic-types/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/diet-prisma/tsconfig.lib.json"
+      "path": "../../libs/prisma-errors/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/diet-orm/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/basic-time/tsconfig.lib.json"
     }
   ]
 }

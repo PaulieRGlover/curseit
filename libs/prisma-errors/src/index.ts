@@ -1,0 +1,3 @@
+export const PRISMA_ERRORS = {
+  UNIQUE_CONTRAINT_FAILED: 'P2002',
+};

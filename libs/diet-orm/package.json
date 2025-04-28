@@ -1,22 +1,21 @@
 {
-  "name": "@curseit/diet-prisma",
+  "name": "@curseit/diet-orm",
   "version": "0.0.1",
   "private": true,
   "type": "module",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./package.json": "./package.json"
   },
   "nx": {
-    "name": "diet-prisma",
     "tags": [
       "diet-api",
       "diet"
-    ]
+    ],
+    "name": "diet-orm"
   },
   "prisma": {
     "schema": "src/schema.prisma",
@@ -31,10 +30,8 @@
     "prisma:create-client": "npx prisma generate",
     "prisma:seed": "npx prisma db seed"
   },
-  "dependencies": {
-    "tslib": "^2.3.0"
-  },
   "devDependencies": {
+    "tslib": "^2.3.0",
     "@types/node": "^22.14.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",

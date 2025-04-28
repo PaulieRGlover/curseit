@@ -1,11 +1,15 @@
-import { DietPrismaClient, PrismaClient } from '@curseit/diet-prisma';
-import { Global, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Global, Inject, Injectable } from '@nestjs/common';
+import { PrismaClient } from '@curseit/diet-orm';
+import { databaseConfig } from '@/config';
+import { type ConfigType } from '@nestjs/config';
 
 @Global()
 @Injectable()
-export class PrismaService extends DietPrismaClient {
-  constructor() {
-    super({ datasources: { db: { url: process.env.DATABASE_URL } } });
+export class PrismaService extends PrismaClient {
+  constructor(
+    @Inject(databaseConfig.KEY)
+    config: ConfigType<typeof databaseConfig>,
+  ) {
+    super({ datasources: { db: { url: config.url } } });
   }
 }

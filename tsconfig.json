@@ -10,10 +10,16 @@
       "path": "./apps/diet-api"
     },
     {
-      "path": "./libs/diet-prisma"
+      "path": "./libs/diet-orm"
+    },
+    {
+      "path": "./libs/prisma-errors"
+    },
+    {
+      "path": "./libs/basic-time"
     }
   ],
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./"
   }
 }

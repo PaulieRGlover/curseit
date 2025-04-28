@@ -6,12 +6,20 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated"
+  output   = "../dist"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String @id @default(uuid())
+  login        String @unique
+  passwordHash String @map("password_hash")
+
+  @@map("users")
 }
 
 model Food {
