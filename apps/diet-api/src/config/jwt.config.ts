@@ -3,9 +3,13 @@ import { registerAs } from '@nestjs/config';
 import z from 'zod';
 
 export const JwtConfigSchema = z.object({
-  JWT_SECRET: z.string(),
+  ID_JWT_SECRET: z.string(),
+  ACCESS_JWT_SECRET: z.string(),
+  REFRESH_JWT_SECRET: z.string(),
 }).transform(env => ({
-  jwtSecret: env.JWT_SECRET,
+  idJwtSecret: env.ID_JWT_SECRET,
+  accessJwtSecret: env.ACCESS_JWT_SECRET,
+  refreshJwtSecret: env.REFRESH_JWT_SECRET,
 }));
 export type JwtConfig = z.infer<typeof JwtConfigSchema>;
 

@@ -5,6 +5,7 @@ import { appConfig, databaseConfig, jwtConfig } from '@/config';
 import { AuthModule } from '../auth/auth.module';
 import { FoodsModule } from '../foods/foods.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -12,9 +13,10 @@ import { PrismaModule } from '../prisma/prisma.module';
       isGlobal: true,
       load: [databaseConfig, appConfig, jwtConfig],
     }),
-    AuthModule,
-    FoodsModule,
     PrismaModule,
+    AuthModule,
+    UserModule,
+    FoodsModule,
   ],
   controllers: [AppController],
 })
