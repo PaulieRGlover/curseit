@@ -1,0 +1,138 @@
+// Place your key bindings in this file to override the defaults
+[
+    { "key": "alt+backspace", "command": "deleteRight" },
+    { "key": "alt+f", "command": "cursorLeft" },
+    { "key": "shift+alt+f", "command": "cursorLeftSelect" },
+    { "key": "alt+v", "command": "cursorDown" },
+    { "key": "shift+alt+v", "command": "cursorDownSelect" },
+    { "key": "alt+j", "command": "cursorRight" },
+    { "key": "shift+alt+j", "command": "cursorRightSelect" },
+    { "key": "alt+y", "command": "cursorUp" },
+    { "key": "shift+alt+y", "command": "cursorUpSelect" },
+    { "key": "alt+d", "command": "cursorHome" },
+    { "key": "shift+alt+d", "command": "cursorHomeSelect" },
+    { "key": "alt+k", "command": "cursorEnd" },
+    { "key": "shift+alt+k", "command": "cursorEndSelect" },
+    { "key": "alt+c", "command": "cursorWordStartLeft" },
+    { "key": "shift+alt+c", "command": "cursorWordStartLeftSelect" },
+    { "key": "alt+u", "command": "cursorWordEndRight" },
+    { "key": "shift+alt+u", "command": "cursorWordEndRightSelect" },
+    {
+        "key": "alt+v",
+        "command": "selectNextSuggestion",
+        "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+    },
+    {
+        "key": "alt+y",
+        "command": "selectPrevSuggestion",
+        "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+    },
+    {
+        "key": "alt+v",
+        "command": "settings.action.focusSettingsFile",
+        "when": "inSettingsSearch && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+v",
+        "command": "showNextParameterHint",
+        "when": "editorTextFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+    },
+    {
+        "key": "alt+y",
+        "command": "showPrevParameterHint",
+        "when": "editorTextFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+    },
+    {
+        "key": "alt+v",
+        "command": "history.showNext",
+        "when": "historyNavigationEnabled && historyNavigationWidget"
+    },
+    {
+        "key": "alt+y",
+        "command": "history.showPrevious",
+        "when": "historyNavigationEnabled && historyNavigationWidget"
+    },
+    {
+        "key": "alt+v",
+        "command": "workbench.action.quickOpenNavigateNextInFilePicker",
+        "when": "inFilesPicker && inQuickOpen"
+    },
+    {
+        "key": "alt+y",
+        "command": "workbench.action.quickOpenNavigatePreviousInFilePicker",
+        "when": "inFilesPicker && inQuickOpen"
+    },
+    {
+        "key": "tab",
+        "command": "editor.emmet.action.expandAbbreviation",
+        "when": "config.emmet.triggerExpansionOnTab && editorTextFocus && !editorReadonly && !editorTabMovesFocus"
+    },
+    {
+        "key": "tab",
+        "command": "-editor.emmet.action.expandAbbreviation",
+        "when": "config.emmet.triggerExpansionOnTab && editorTextFocus && !editorReadonly && !editorTabMovesFocus"
+    },
+    {
+        "key": "alt+t",
+        "command": "workbench.action.terminal.newInActiveWorkspace"
+    },
+    {
+        "key": "shift+delete",
+        "command": "editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    // Toggle between terminal and editor focus
+    {
+        "key": "alt+`",
+        "command": "workbench.action.terminal.focus",
+        "when": "editorFocus"
+    },
+    {
+        "key": "alt+`",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "alt+`",
+        "command": "-workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "alt+]",
+        "command": "workbench.action.terminal.focusNext",
+        "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+    },
+    {
+        "key": "alt+[",
+        "command": "workbench.action.terminal.focusPrevious",
+        "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+    },
+    {
+        "key": "alt+y",
+        "command": "workbench.action.terminal.selectPrevSuggestion",
+        "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+    },
+    {
+        "key": "alt+v",
+        "command": "workbench.action.terminal.selectNextSuggestion",
+        "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+l ctrl+l",
+        "command": "eslint.executeAutofix"
+    },
+    {
+        "key": "shift+f2",
+        "command": "merge-conflict.next"
+    },
+    {
+        "key": "alt+'",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+k alt+i",
+        "command": "-editor.action.showHover",
+        "when": "editorTextFocus"
+    }
+]

@@ -8,6 +8,8 @@ chmod +x setup.sh
 ```
 Then restart VSCode
 
+If not needed, remove .vscode/keybindings.json
+
 ## Troubleshooting
 
 - when running `npx nx run diet-prisma:docker`, the error is:
