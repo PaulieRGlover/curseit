@@ -3,6 +3,7 @@ set -e
 
 echo "🔧 Updating package list..."
 sudo apt-get update -y
+sudo apt-get install -y jq
 
 install_node() {
   if command -v node &>/dev/null; then
@@ -43,7 +44,39 @@ install_docker() {
   fi
 }
 
+install_ohmyzsh() {
+  if [ "$SHELL" = "/bin/zsh" ] || [ "$SHELL" = "/usr/bin/zsh" ]; then
+    echo "✅ Zsh already the default shell."
+  else
+    echo "📦 Installing Zsh..."
+    sudo apt-get install -y zsh
+    echo "🌟 Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    chsh -s $(which zsh)
+    echo "ℹ️ Default shell set to Zsh. You may need to log out and log back in."
+  fi
+}
+
+install_vscode_extensions() {
+  if ! command -v code &>/dev/null; then
+    echo "⚠️ VSCode 'code' command not found. Skipping extension installation."
+    return
+  fi
+
+  if [ -f ".vscode/extensions.json" ]; then
+    echo "🧩 Installing VSCode extensions from .vscode/extensions.json..."
+    jq -r '.recommendations[]' .vscode/extensions.json | while read -r extension; do
+      echo "🔌 Installing $extension..."
+      code --install-extension "$extension" || echo "⚠️ Failed to install $extension"
+    done
+  else
+    echo "ℹ️ No .vscode/extensions.json found."
+  fi
+}
+
 install_node
 install_docker
+install_ohmyzsh
+install_vscode_extensions
 
 echo "✅ All done! You may need to log out and back in to use Docker without sudo."

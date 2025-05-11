@@ -1,0 +1,35 @@
+{
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 100,
+  "editor.rulers": [
+    100
+  ],
+  "workbench.colorTheme": "Oceanic Plus",
+  "workbench.iconTheme": "material-icon-theme",
+  "emmet.includeLanguages": {
+    "vue": "html",
+    "vue-html": "html"
+  },
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "git.openRepositoryInParentFolders": "always",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.cursorWidth": 2,
+  "terminal.integrated.tabStopWidth": 2,
+  "terminal.integrated.letterSpacing": 0,
+  "editor.tabSize": 2,
+  "nxConsole.showNodeVersionOnStartup": false,
+  "window.zoomLevel": -0.5,
+  "search.searchOnTypeDebouncePeriod": 1000,
+  "git.confirmSync": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "javascript.updateImportsOnFileMove.enabled": "never"
+}

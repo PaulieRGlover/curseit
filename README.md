@@ -6,7 +6,7 @@
 chmod +x setup.sh
 ./setup.sh
 ```
-Then restart the shell
+Then restart VSCode
 
 ## Troubleshooting
 
