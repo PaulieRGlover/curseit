@@ -1,5 +1,13 @@
 # CURSEIT
 
+## Set up
+
+```
+chmod +x setup.sh
+./setup.sh
+```
+Then restart the shell
+
 ## Troubleshooting
 
 - when running `npx nx run diet-prisma:docker`, the error is:
