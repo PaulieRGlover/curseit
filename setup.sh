@@ -7,10 +7,10 @@ sudo apt-get install -y jq
 
 install_node() {
   if command -v node &>/dev/null; then
-    echo "✅ Node.js is already installed: $(node -v)"
+    echo "✅ Node.js already installed: $(node -v)"
   else
-    echo "📦 Installing Node.js..."
-    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    echo "📦 Installing Node.js v22..."
+    curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
     sudo apt-get install -y nodejs
   fi
 }
