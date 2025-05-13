@@ -1,6 +1,5 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
-const path = require('path');
-const { join } = require('path');
+const { join, resolve } = require('path');
 
 module.exports = {
   output: {
@@ -20,7 +19,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      '@': resolve(__dirname, 'src'),
     },
   },
 };

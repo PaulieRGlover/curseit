@@ -39,11 +39,17 @@
             "buildTarget": "diet-api:build:production"
           }
         }
+      },
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
       }
     },
     "tags": [
-      "diet-api",
-      "diet"
+      "server-side",
+      "diet",
+      "diet-api"
     ]
   }
 }

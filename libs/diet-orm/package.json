@@ -12,8 +12,9 @@
   },
   "nx": {
     "tags": [
-      "diet-api",
-      "diet"
+      "server-side",
+      "diet",
+      "diet-orm"
     ],
     "name": "diet-orm"
   },

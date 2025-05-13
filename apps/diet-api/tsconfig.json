@@ -7,16 +7,19 @@
       "path": "../../libs/basic-types"
     },
     {
-      "path": "../../libs/prisma-errors"
-    },
-    {
       "path": "../../libs/diet-orm"
     },
     {
       "path": "../../libs/basic-time"
     },
     {
+      "path": "../../libs/prisma-errors"
+    },
+    {
       "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
     }
   ]
 }
