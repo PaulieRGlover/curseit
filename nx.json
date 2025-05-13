@@ -60,7 +60,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/foods-api-e2e/**/*"]
+      "exclude": ["apps/diet-api-e2e/**/*"]
     }
   ],
   "targetDefaults": {
