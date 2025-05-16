@@ -6,6 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { FoodsModule } from '../foods/foods.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { UserModule } from '../user/user.module';
+import { ValidationModule } from '../validation/validation.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from '../user/user.module';
       load: [DatabaseConfig, AppConfig, JwtConfig, HashingConfig],
     }),
     PrismaModule,
+    ValidationModule,
     AuthModule,
     UserModule,
     FoodsModule,

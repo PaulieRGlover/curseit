@@ -5,18 +5,19 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { SignInDto, SignUpDto, TokensDto } from './dto/auth.dto';
-import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtConfig } from '@/config';
 import { type ConfigType } from '@nestjs/config';
 import { Prisma } from '@curseit/diet-orm';
-import { AUTH_MESSAGES } from '@/messages';
 import { PRISMA_ERRORS } from '@curseit/prisma-errors';
-import { JwtCreateDto, UserDto, UserSchema, JwtReadSchema, JwtReadDto } from '@/dto';
 import { Nullable } from '@curseit/basic-types';
-import { HashService } from './hash.service';
+import { JwtConfig } from '@/config';
 import { UUIDV4 } from '@/constants';
+import { AUTH_MESSAGES } from '@/messages';
+import { JwtCreateDto, UserDto, UserSchema, JwtReadSchema, JwtReadDto } from '@/dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { ValidationService } from '../validation/validation.service';
+import { SignInDto, SignUpDto, TokensDto } from './dto/auth.dto';
+import { HashService } from './hash.service';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +26,7 @@ export class AuthService {
     private readonly jwtConfig: ConfigType<typeof JwtConfig>,
     @Inject(UUIDV4)
     private readonly uuidv4: typeof import('uuid').v4,
+    private readonly validationService: ValidationService,
     private readonly hashService: HashService,
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
@@ -48,12 +50,7 @@ export class AuthService {
       throw new InternalServerErrorException();
     }
 
-    const validatedUser = UserSchema.safeParse(user);
-    if (!validatedUser.success) {
-      throw new InternalServerErrorException();
-    }
-
-    return validatedUser.data;
+    return this.validationService.validate<typeof UserSchema>(UserSchema, user);
   }
 
   async signIn(dto: SignInDto): Promise<UserDto> {
@@ -70,12 +67,7 @@ export class AuthService {
       throw new UnauthorizedException(AUTH_MESSAGES.INVALID_CREDENTIALS);
     }
 
-    const validatedUser = UserSchema.safeParse(user);
-    if (!validatedUser.success) {
-      throw new InternalServerErrorException();
-    }
-
-    return validatedUser.data;
+    return this.validationService.validate<typeof UserSchema>(UserSchema, user);
   }
 
   async signOut(accessToken: JwtReadDto, refreshToken: JwtReadDto) {
@@ -131,10 +123,7 @@ export class AuthService {
       return null;
     }
 
-    const validatedUser = UserSchema.safeParse(user);
-    if (!validatedUser.success) {
-      throw new InternalServerErrorException();
-    }
+    const validatedUser = this.validationService.validate<typeof UserSchema>(UserSchema, user);
 
     const isTokenInvalidated = Boolean(
       await this.prismaService.invalidatedToken.findUnique({
@@ -145,6 +134,6 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    return validatedUser.data;
+    return validatedUser;
   }
 }
