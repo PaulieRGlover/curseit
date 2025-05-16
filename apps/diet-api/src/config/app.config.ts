@@ -10,7 +10,7 @@ export const AppConfigSchema = z.object({
 export const AppConfig = registerAs('app', async () => {
   const result = AppConfigSchema.safeParse(process.env);
   if (!result.success) {
-    throw CONFIG_MESSAGES.INVALID_PORT;
+    throw CONFIG_MESSAGES.INVALID_APP_CONFIG(result.error);
   }
 
   return result.data;

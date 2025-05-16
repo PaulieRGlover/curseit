@@ -10,7 +10,7 @@ export const DatabaseConfigSchema = z.object({
 export const DatabaseConfig = registerAs('database', async () => {
   const result = DatabaseConfigSchema.safeParse(process.env);
   if (!result.success) {
-    throw CONFIG_MESSAGES.INVALID_DATABASE_URL;
+    throw CONFIG_MESSAGES.INVALID_DATABASE_CONFIG(result.error);
   }
 
   return result.data;

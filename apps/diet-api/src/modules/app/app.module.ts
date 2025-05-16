@@ -1,7 +1,7 @@
 import { AppController } from './app.controller';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppConfig, DatabaseConfig, HashConfig, JwtConfig } from '@/config';
+import { AppConfig, DatabaseConfig, HashingConfig, JwtConfig } from '@/config';
 import { AuthModule } from '../auth/auth.module';
 import { FoodsModule } from '../foods/foods.module';
 import { PrismaModule } from '../prisma/prisma.module';
@@ -11,7 +11,7 @@ import { UserModule } from '../user/user.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [DatabaseConfig, AppConfig, JwtConfig, HashConfig],
+      load: [DatabaseConfig, AppConfig, JwtConfig, HashingConfig],
     }),
     PrismaModule,
     AuthModule,

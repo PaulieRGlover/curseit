@@ -25,7 +25,7 @@ export const JwtConfigSchema = z.object({
 export const JwtConfig = registerAs('jwt', async () => {
   const result = JwtConfigSchema.safeParse(process.env);
   if (!result.success) {
-    throw `${CONFIG_MESSAGES.INVALID_JWT_SECRETS}: ${result.error}`;
+    throw CONFIG_MESSAGES.INVALID_JWT_CONFIG(result.error);
   }
 
   return result.data;
