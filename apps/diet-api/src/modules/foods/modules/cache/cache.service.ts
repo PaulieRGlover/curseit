@@ -3,17 +3,17 @@ import { SearchDto } from '../../dto/search.dto';
 import {
   type Food as FoodsPrismaFood,
   type CacheEntry as FoodsPrismaCacheEntry,
-} from '@curseit/diet-prisma';
+} from '@curseit/diet-orm';
 import objectHash from 'object-hash';
 import { Nullable } from '@curseit/basic-types';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 
 @Injectable()
 export class CacheService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   private async removeCacheEntry(id: FoodsPrismaCacheEntry['id']) {
-    await this.db.cacheEntry.delete({ where: { id } });
+    await this.prismaService.cacheEntry.delete({ where: { id } });
   }
 
   async createSearchCache(
@@ -22,7 +22,7 @@ export class CacheService {
   ): Promise<FoodsPrismaCacheEntry> {
     const hash = objectHash(searchDto);
 
-    return await this.db.cacheEntry.create({
+    return await this.prismaService.cacheEntry.create({
       data: {
         hash,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60),
@@ -42,7 +42,7 @@ export class CacheService {
   async getSearchCache(searchDto: SearchDto): Promise<Nullable<FoodsPrismaFood[]>> {
     const hash = objectHash(searchDto);
 
-    const cacheEntry = await this.db.cacheEntry.findUnique({
+    const cacheEntry = await this.prismaService.cacheEntry.findUnique({
       where: { hash },
       include: {
         foods: {

@@ -1,0 +1,22 @@
+{
+  "name": "@curseit/ms",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "name": "ms",
+    "tags": [
+      "ms"
+    ]
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

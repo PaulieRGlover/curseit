@@ -1,17 +1,17 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { jwtConfig } from '@/config';
+import { JwtConfig } from '@/config';
 import { Inject, Injectable } from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { User } from '@/dto';
+import { UserDto } from '@/dto';
 import { AuthService } from '../auth.service';
 
 @Injectable()
 export class AccessJwtStrategy
-  extends PassportStrategy<typeof Strategy, User>(Strategy, 'accessJwt') {
+  extends PassportStrategy<typeof Strategy, UserDto>(Strategy, 'accessJwt') {
   constructor(
-    @Inject(jwtConfig.KEY)
-    config: ConfigType<typeof jwtConfig>,
+    @Inject(JwtConfig.KEY)
+    config: ConfigType<typeof JwtConfig>,
     private readonly authService: AuthService,
   ) {
     super({

@@ -1,4 +1,4 @@
-import { type Food as DietPrismaFood } from '@curseit/diet-prisma';
+import { type Food as DietPrismaFood } from '@curseit/diet-orm';
 import { Food } from '../dto/foods.dto';
 
 export const dietPrismaFoodToFood = (food: DietPrismaFood): Food => {

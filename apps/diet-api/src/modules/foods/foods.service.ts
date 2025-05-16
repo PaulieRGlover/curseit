@@ -2,23 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { FdcService } from './modules/fdc/fdc.service';
 import { CacheService } from './modules/cache/cache.service';
 import { SearchDto } from './dto/search.dto';
-import {
-  foodWithNutrientsToFoodsPrismaFoodCreate,
-} from './transformers/food-with-nutrients-to-foods-prisma-food-create.transformer';
+import { foodWithNutrientsToFoodsPrismaFoodCreate } from './transformers/food-with-nutrients-to-foods-prisma-food-create.transformer';
 import { Food, FoodsWithNutrientsDto } from './dto/foods.dto';
-import {
-  fdcFoodToFoodWithNutrients,
-} from './transformers/fdc-food-to-food-with-nutrients.transformer';
+import { fdcFoodToFoodWithNutrients } from './transformers/fdc-food-to-food-with-nutrients.transformer';
 import { dietPrismaFoodToFood } from './transformers/diet-prisma-food-to-food.transformer';
-import {
-  foodWithNutrientsToFood,
-} from './transformers/food-with-nutrients-to-food.transformer';
+import { foodWithNutrientsToFood } from './transformers/food-with-nutrients-to-food.transformer';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FoodsService {
   constructor(
-    private readonly db: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly fdcService: FdcService,
     private readonly cacheService: CacheService,
   ) {}
@@ -29,9 +23,9 @@ export class FoodsService {
   ) {
     const { foodsWithNutrients } = foodsWithNutrientsDto;
 
-    const foodsPrisma = await this.db.$transaction(
-      foodsWithNutrients.map(foodWithNutrients => {
-        return this.db.food.create({
+    const foodsPrisma = await this.prismaService.$transaction(
+      foodsWithNutrients.map((foodWithNutrients) => {
+        return this.prismaService.food.create({
           data: foodWithNutrientsToFoodsPrismaFoodCreate(foodWithNutrients),
         });
       }),

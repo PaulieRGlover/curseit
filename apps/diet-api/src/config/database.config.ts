@@ -7,9 +7,7 @@ export const DatabaseConfigSchema = z.object({
 }).transform(env => ({
   url: env.DATABASE_URL,
 }));
-export type DatabaseConfig = z.infer<typeof DatabaseConfigSchema>;
-
-export const databaseConfig = registerAs('database', async () => {
+export const DatabaseConfig = registerAs('database', async () => {
   const result = DatabaseConfigSchema.safeParse(process.env);
   if (!result.success) {
     throw CONFIG_MESSAGES.INVALID_DATABASE_URL;

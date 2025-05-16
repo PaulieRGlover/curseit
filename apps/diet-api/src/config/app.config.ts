@@ -7,9 +7,7 @@ export const AppConfigSchema = z.object({
 }).transform(env => ({
   port: env.PORT,
 }));
-export type AppConfig = z.infer<typeof AppConfigSchema>;
-
-export const appConfig = registerAs('app', async () => {
+export const AppConfig = registerAs('app', async () => {
   const result = AppConfigSchema.safeParse(process.env);
   if (!result.success) {
     throw CONFIG_MESSAGES.INVALID_PORT;

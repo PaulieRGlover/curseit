@@ -134,5 +134,9 @@
         "key": "alt+k alt+i",
         "command": "-editor.action.showHover",
         "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+f12",
+        "command": "typescript.goToSourceDefinition"
     }
 ]

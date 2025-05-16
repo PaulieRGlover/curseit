@@ -3,14 +3,15 @@
  * This is only a minimal backend to get started.
  */
 
+import 'dotenv/config';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './modules/app/app.module';
-import 'dotenv/config';
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import fastifyCookie from 'fastify-cookie';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { AppModule } from './modules/app/app.module';
+import { AppConfig } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
@@ -24,7 +25,7 @@ async function bootstrap() {
   fastifyInstance.register(fastifyCookie);
 
   const configService = app.get(ConfigService);
-  const { port } = configService.get<{ port: number }>('app') ?? {};
+  const { port } = configService.get<ConfigType<typeof AppConfig>>('app') ?? {};
 
   await app.listen(port ?? 3000);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
