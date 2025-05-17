@@ -1,5 +1,8 @@
 import { createZodDto } from '@anatine/zod-nestjs';
+
 import z from 'zod';
+
+import { JwtReadSchema } from '@/dto';
 
 export const SignUpSchema = z.object({
   login: z.string(),
@@ -9,6 +12,12 @@ export class SignUpDto extends createZodDto(SignUpSchema) {}
 
 export const SignInSchema = SignUpSchema.extend({});
 export class SignInDto extends createZodDto(SignInSchema) {}
+
+export const SignOutSchema = z.object({
+  accessToken: JwtReadSchema,
+  refreshToken: JwtReadSchema,
+});
+export class SignOutDto extends createZodDto(SignOutSchema) {}
 
 export const TokensSchema = z.object({
   idToken: z.string(),

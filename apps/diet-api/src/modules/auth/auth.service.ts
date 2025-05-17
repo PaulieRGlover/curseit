@@ -1,22 +1,26 @@
 import {
   ConflictException,
-  UnauthorizedException,
   Inject,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { type ConfigType } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+
+import { Nullable } from '@curseit/basic-types';
 import { Prisma } from '@curseit/diet-orm';
 import { PRISMA_ERRORS } from '@curseit/prisma-errors';
-import { Nullable } from '@curseit/basic-types';
+
 import { JwtConfig } from '@/config';
 import { UUIDV4 } from '@/constants';
+import { JwtCreateDto, JwtReadSchema, UserDto, UserSchema } from '@/dto';
 import { AUTH_MESSAGES } from '@/messages';
-import { JwtCreateDto, UserDto, UserSchema, JwtReadSchema, JwtReadDto } from '@/dto';
+
 import { PrismaService } from '../prisma/prisma.service';
 import { ValidationService } from '../validation/validation.service';
-import { SignInDto, SignUpDto, TokensDto } from './dto/auth.dto';
+
+import { SignInDto, SignOutDto, SignUpDto, TokensDto } from './dto';
 import { HashService } from './hash.service';
 
 @Injectable()
@@ -70,21 +74,21 @@ export class AuthService {
     return this.validationService.validate<typeof UserSchema>(UserSchema, user);
   }
 
-  async signOut(accessToken: JwtReadDto, refreshToken: JwtReadDto) {
-    await this.prismaService.invalidatedToken.createMany({
-      data: await Promise.all(
-        [accessToken, refreshToken].map(async ({ jti, exp }) => {
-          return {
-            id: jti,
-            expiresAt: new Date(exp * 1000),
-          };
-        }),
-      ),
-    });
+  async signOut(dto: SignOutDto) {
+    try {
+      await this.prismaService.invalidatedToken.createMany({
+        data: [dto.accessToken, dto.refreshToken].map(({ jti, exp }) => ({
+          id: jti,
+          expiresAt: new Date(exp * 1000),
+        })),
+      });
 
-    await this.prismaService.invalidatedToken.deleteMany({
-      where: { expiresAt: { lte: new Date() } },
-    });
+      await this.prismaService.invalidatedToken.deleteMany({
+        where: { expiresAt: { lte: new Date() } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
   }
 
   async signTokens(user: UserDto): Promise<TokensDto> {
@@ -96,11 +100,11 @@ export class AuthService {
     const [idToken, accessToken, refreshToken] = await Promise.all([
       await this.jwtService.signAsync(idTokenPayload, { secret: idJwtSecret }),
       await this.jwtService.signAsync(accessTokenPayload, {
-        expiresIn: this.jwtConfig.accessTokenTtl,
+        expiresIn: this.jwtConfig.accessTokenTtlInMs / 1000,
         secret: accessJwtSecret,
       }),
       await this.jwtService.signAsync(refreshTokenPayload, {
-        expiresIn: this.jwtConfig.refreshTokenTtl,
+        expiresIn: this.jwtConfig.refreshTokenTtlInMs / 1000,
         secret: refreshJwtSecret,
       }),
     ]);
@@ -112,26 +116,37 @@ export class AuthService {
     };
   }
 
-  async validateToken(payload: unknown): Promise<Nullable<UserDto>> {
-    const validatedJwt = JwtReadSchema.safeParse(payload);
-    if (!validatedJwt.success) {
-      throw new UnauthorizedException();
+  async validateTokenPayload(payload: unknown): Promise<Nullable<UserDto>> {
+    const validatedJwt = this.validationService.validate<typeof JwtReadSchema>(
+      JwtReadSchema,
+      payload,
+      null,
+    );
+    if (!validatedJwt) {
+      return null;
     }
 
-    const user = await this.prismaService.user.findUnique({ where: { id: validatedJwt.data.sub } });
+    const user = await this.prismaService.user.findUnique({ where: { id: validatedJwt.sub } });
     if (!user) {
       return null;
     }
 
-    const validatedUser = this.validationService.validate<typeof UserSchema>(UserSchema, user);
+    const validatedUser = this.validationService.validate<typeof UserSchema>(
+      UserSchema,
+      user,
+      null,
+    );
+    if (!validatedUser) {
+      return null;
+    }
 
     const isTokenInvalidated = Boolean(
       await this.prismaService.invalidatedToken.findUnique({
-        where: { id: validatedJwt.data.jti },
+        where: { id: validatedJwt.jti },
       }),
     );
     if (isTokenInvalidated) {
-      throw new UnauthorizedException();
+      return null;
     }
 
     return validatedUser;

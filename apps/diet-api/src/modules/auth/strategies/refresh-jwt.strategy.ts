@@ -1,16 +1,21 @@
-import { type FastifyRequest } from 'fastify';
-import { Strategy } from 'passport-jwt';
-import { JwtConfig } from '@/config';
 import { Inject, Injectable } from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+
+import { type FastifyRequest } from 'fastify';
+import { Strategy } from 'passport-jwt';
+
+import { JwtConfig } from '@/config';
 import { UserDto } from '@/dto';
+
 import { AuthService } from '../auth.service';
-import { REFRESH_TOKEN_COOKIE_NAME } from '@/constants';
+import { REFRESH_TOKEN_COOKIE_NAME } from '../constants';
 
 @Injectable()
-export class RefreshJwtStrategy
-  extends PassportStrategy<typeof Strategy, UserDto>(Strategy, 'refreshJwt') {
+export class RefreshJwtStrategy extends PassportStrategy<typeof Strategy, UserDto>(
+  Strategy,
+  'refreshJwt',
+) {
   constructor(
     @Inject(JwtConfig.KEY)
     config: ConfigType<typeof JwtConfig>,
@@ -23,6 +28,6 @@ export class RefreshJwtStrategy
   }
 
   validate(payload: unknown) {
-    return this.authService.validateToken(payload);
+    return this.authService.validateTokenPayload(payload);
   }
 }

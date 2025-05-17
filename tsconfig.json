@@ -16,7 +16,7 @@
       "path": "./libs/prisma-errors"
     },
     {
-      "path": "./libs/basic-time"
+      "path": "./libs/time"
     },
     {
       "path": "./apps/diet-api-e2e"

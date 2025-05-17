@@ -1,20 +1,31 @@
+import { ConfigType } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { generateMock } from '@anatine/zod-mock';
+
+import { FastifyReply } from 'fastify';
+
+import { DAY, MINUTE } from '@curseit/time';
+
+import { JwtConfig, JwtConfigSchema } from '@/config';
+import { JwtReadSchema, UserSchema } from '@/dto';
+
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { SignUpSchema, TokensSchema, SignInSchema } from './dto/auth.dto';
-import { FastifyReply } from 'fastify';
 import {
   ID_TOKEN_COOKIE_NAME,
   ID_TOKEN_COOKIE_OPTIONS,
   REFRESH_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_COOKIE_OPTIONS,
-} from '@/constants';
-import { JwtReadSchema, UserSchema } from '@/dto';
+} from './constants';
+import { SignInSchema, SignUpSchema, TokensSchema } from './dto';
+import { CookieSerializeOptions } from 'fastify-cookie';
 
 describe('AuthController', () => {
   let controller: AuthController;
+  let MOCK_JWT_CONFIG: jest.Mocked<ConfigType<typeof JwtConfig>>;
   let MOCK_AUTH_SERVICE: jest.Mocked<AuthService>;
+  let TARGET_REFRESH_TOKEN_COOKIE_OPTIONS: CookieSerializeOptions;
 
   const MOCK_USER = generateMock(UserSchema);
   const MOCK_TOKENS = generateMock(TokensSchema);
@@ -31,6 +42,14 @@ describe('AuthController', () => {
       controllers: [AuthController],
       providers: [
         {
+          provide: JwtConfig.KEY,
+          useValue: {
+            ...generateMock(JwtConfigSchema),
+            accessTokenTtlInMs: 15 * MINUTE,
+            refreshTokenTtlInMs: 30 * DAY,
+          },
+        },
+        {
           provide: AuthService,
           useValue: {
             signUp: jest.fn(),
@@ -43,7 +62,13 @@ describe('AuthController', () => {
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
+    MOCK_JWT_CONFIG = module.get(JwtConfig.KEY);
     MOCK_AUTH_SERVICE = module.get(AuthService);
+
+    TARGET_REFRESH_TOKEN_COOKIE_OPTIONS = {
+      ...REFRESH_TOKEN_COOKIE_OPTIONS,
+      maxAge: MOCK_JWT_CONFIG.refreshTokenTtlInMs / 1000,
+    };
   });
 
   describe('signUp', () => {
@@ -61,12 +86,12 @@ describe('AuthController', () => {
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         ID_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.idToken,
-        ID_TOKEN_COOKIE_OPTIONS
+        ID_TOKEN_COOKIE_OPTIONS,
       );
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         REFRESH_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.refreshToken,
-        REFRESH_TOKEN_COOKIE_OPTIONS
+        TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
       );
       expect(result).toEqual({ access_token: MOCK_TOKENS.accessToken });
     });
@@ -87,12 +112,12 @@ describe('AuthController', () => {
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         ID_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.idToken,
-        ID_TOKEN_COOKIE_OPTIONS
+        ID_TOKEN_COOKIE_OPTIONS,
       );
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         REFRESH_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.refreshToken,
-        REFRESH_TOKEN_COOKIE_OPTIONS
+        TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
       );
       expect(result).toEqual({ access_token: MOCK_TOKENS.accessToken });
     });
@@ -108,7 +133,10 @@ describe('AuthController', () => {
 
       expect(MOCK_RESPONSE.clearCookie).toHaveBeenCalledWith(ID_TOKEN_COOKIE_NAME);
       expect(MOCK_RESPONSE.clearCookie).toHaveBeenCalledWith(REFRESH_TOKEN_COOKIE_NAME);
-      expect(MOCK_AUTH_SERVICE.signOut).toHaveBeenCalledWith(MOCK_ACCESS_TOKEN, MOCK_REFRESH_TOKEN);
+      expect(MOCK_AUTH_SERVICE.signOut).toHaveBeenCalledWith({
+        accessToken: MOCK_ACCESS_TOKEN,
+        refreshToken: MOCK_REFRESH_TOKEN,
+      });
     });
   });
 
@@ -124,12 +152,12 @@ describe('AuthController', () => {
       expect(response.setCookie).toHaveBeenCalledWith(
         ID_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.idToken,
-        ID_TOKEN_COOKIE_OPTIONS
+        ID_TOKEN_COOKIE_OPTIONS,
       );
       expect(response.setCookie).toHaveBeenCalledWith(
         REFRESH_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.refreshToken,
-        REFRESH_TOKEN_COOKIE_OPTIONS
+        TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
       );
       expect(result).toEqual({ access_token: MOCK_TOKENS.accessToken });
     });

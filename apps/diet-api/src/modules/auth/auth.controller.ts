@@ -1,27 +1,54 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { type ConfigType } from '@nestjs/config';
+
+import type { FastifyReply } from 'fastify';
+import { CookieSerializeOptions } from 'fastify-cookie';
+
+import { JwtConfig } from '@/config';
+import { GetAccessToken, GetRefreshToken, GetUser } from '@/decorators';
+import { JwtReadDto, UserDto } from '@/dto';
+import { AccessJwtGuard, RefreshJwtGuard } from '@/guards';
+import { AUTH_MESSAGES } from '@/messages';
+
 import { AuthService } from './auth.service';
+import {
+  ID_TOKEN_COOKIE_NAME,
+  ID_TOKEN_COOKIE_OPTIONS,
+  REFRESH_TOKEN_COOKIE_NAME,
+  REFRESH_TOKEN_COOKIE_OPTIONS,
+} from './constants';
 import {
   RefreshResponseDto,
   SignInDto,
   SignInResponseDto,
   SignUpDto,
   SignUpResponseDto,
-} from './dto/auth.dto';
-import type { FastifyReply } from 'fastify';
-import {
-  ID_TOKEN_COOKIE_NAME,
-  ID_TOKEN_COOKIE_OPTIONS,
-  REFRESH_TOKEN_COOKIE_NAME,
-  REFRESH_TOKEN_COOKIE_OPTIONS,
-} from '@/constants';
-import { AccessJwtGuard, RefreshJwtGuard } from '@/guards';
-import { GetAccessToken, GetRefreshToken, GetUser } from '@/decorators';
-import { JwtReadDto, UserDto } from '@/dto';
-import { AUTH_MESSAGES } from '@/messages';
+} from './dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject(JwtConfig.KEY)
+    private readonly jwtConfig: ConfigType<typeof JwtConfig>,
+    private readonly authService: AuthService,
+  ) {}
+
+  private get refreshTokenCookieOptions(): CookieSerializeOptions {
+    return {
+      ...REFRESH_TOKEN_COOKIE_OPTIONS,
+      maxAge: this.jwtConfig.refreshTokenTtlInMs / 1000,
+    };
+  }
 
   @Post('sign-up')
   async signUp(
@@ -33,7 +60,7 @@ export class AuthController {
     const { idToken, accessToken, refreshToken } = await this.authService.signTokens(user);
 
     response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, ID_TOKEN_COOKIE_OPTIONS);
-    response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
+    response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, this.refreshTokenCookieOptions);
 
     return { access_token: accessToken };
   }
@@ -49,7 +76,7 @@ export class AuthController {
     const { idToken, accessToken, refreshToken } = await this.authService.signTokens(user);
 
     response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, ID_TOKEN_COOKIE_OPTIONS);
-    response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
+    response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, this.refreshTokenCookieOptions);
 
     return { access_token: accessToken };
   }
@@ -65,7 +92,7 @@ export class AuthController {
     response.clearCookie(ID_TOKEN_COOKIE_NAME);
     response.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
 
-    this.authService.signOut(accessToken, refreshToken);
+    this.authService.signOut({ accessToken, refreshToken });
 
     return AUTH_MESSAGES.SIGN_OUT_SUCCESSFUL;
   }
@@ -79,7 +106,7 @@ export class AuthController {
     const { idToken, accessToken, refreshToken } = await this.authService.signTokens(user);
 
     response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, ID_TOKEN_COOKIE_OPTIONS);
-    response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
+    response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, this.refreshTokenCookieOptions);
 
     return { access_token: accessToken };
   }

@@ -1,12 +1,16 @@
-import { CONFIG_MESSAGES } from '@/messages';
 import { registerAs } from '@nestjs/config';
+
 import z from 'zod';
 
-export const AppConfigSchema = z.object({
-  PORT: z.coerce.number(),
-}).transform(env => ({
-  port: env.PORT,
-}));
+import { CONFIG_MESSAGES } from '@/messages';
+
+export const AppConfigSchema = z
+  .object({
+    PORT: z.coerce.number().optional(),
+  })
+  .transform((env) => ({
+    port: env.PORT ?? 3000,
+  }));
 export const AppConfig = registerAs('app', async () => {
   const result = AppConfigSchema.safeParse(process.env);
   if (!result.success) {
