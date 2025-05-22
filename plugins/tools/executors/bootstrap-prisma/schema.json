@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "BootstrapPrisma executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "reset": {
+      "type": "boolean",
+      "description": "Reset docker volume",
+      "default": false
+    },
+    "seed": {
+      "type": "boolean",
+      "description": "Seed the db with test values",
+      "default": false
+    }
+  },
+  "required": []
+}

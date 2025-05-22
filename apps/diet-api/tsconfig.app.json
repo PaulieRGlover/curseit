@@ -30,13 +30,13 @@
   ],
   "references": [
     {
-      "path": "../../libs/basic-types/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/diet-orm/tsconfig.lib.json"
+      "path": "../../libs/types/tsconfig.lib.json"
     },
     {
       "path": "../../libs/prisma-errors/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/diet-orm/tsconfig.lib.json"
     },
     {
       "path": "../../libs/time/tsconfig.lib.json"

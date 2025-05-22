@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "ServeAndE2e executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "serveTarget": {
+      "type": "string",
+      "description": "What to run before e2e"
+    },
+    "configuration": {
+      "type": "string",
+      "description": "Configuration profile for serveTarget",
+      "default": "e2e"
+    },
+    "timeout": {
+      "type": "number",
+      "default": 15000
+    }
+  },
+  "required": []
+}

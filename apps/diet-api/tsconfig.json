@@ -4,13 +4,13 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/basic-types"
-    },
-    {
-      "path": "../../libs/diet-orm"
+      "path": "../../libs/types"
     },
     {
       "path": "../../libs/prisma-errors"
+    },
+    {
+      "path": "../../libs/diet-orm"
     },
     {
       "path": "../../libs/time"

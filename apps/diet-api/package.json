@@ -18,6 +18,11 @@
             "args": [
               "node-env=development"
             ]
+          },
+          "e2e": {
+            "args": [
+              "node-env=e2e"
+            ]
           }
         }
       },
@@ -25,7 +30,8 @@
         "executor": "@nx/js:node",
         "defaultConfiguration": "development",
         "dependsOn": [
-          "build"
+          "build",
+          "diet-orm:bootstrap"
         ],
         "options": {
           "buildTarget": "diet-api:build",
@@ -37,6 +43,9 @@
           },
           "production": {
             "buildTarget": "diet-api:build:production"
+          },
+          "e2e": {
+            "buildTarget": "diet-api:build:e2e"
           }
         }
       },

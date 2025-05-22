@@ -8,7 +8,7 @@ export const AppConfigSchema = z
   .object({
     PORT: z.coerce.number().optional(),
   })
-  .transform((env) => ({
+  .transform(env => ({
     port: env.PORT ?? 3000,
   }));
 export const AppConfig = registerAs('app', async () => {

@@ -8,7 +8,7 @@ import {
 import { type ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { Nullable } from '@curseit/basic-types';
+import { Nullable } from '@curseit/types';
 import { Prisma } from '@curseit/diet-orm';
 import { PRISMA_ERRORS } from '@curseit/prisma-errors';
 

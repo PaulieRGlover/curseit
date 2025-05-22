@@ -16,26 +16,88 @@
       "diet",
       "diet-orm"
     ],
-    "name": "diet-orm"
+    "name": "diet-orm",
+    "targets": {
+      "bootstrap": {
+        "executor": "@curseit/tools:bootstrap-prisma",
+        "defaultConfiguration": "development",
+        "configurations": {
+          "development": {},
+          "e2e": {
+            "seed": true
+          }
+        }
+      },
+      "tear-down": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "cwd": "libs/diet-orm"
+        },
+        "configurations": {
+          "development": {
+            "command": "docker compose -f docker-compose.development.yml down -v"
+          },
+          "e2e": {
+            "command": "docker compose -f docker-compose.e2e.yml down -v"
+          }
+        }
+      },
+      "create-migration": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "dotenv -e .env.dev -- npx prisma migrate dev",
+          "cwd": "libs/diet-orm"
+        }
+      },
+      "apply-migration": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "dotenv -e .env.dev -- npx prisma db push",
+          "cwd": "libs/diet-orm"
+        },
+        "dependsOn": ["docker-up-dev"]
+      },
+      "create-client": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "dotenv -e .env.dev -- npx prisma generate",
+          "cwd": "libs/diet-orm"
+        }
+      },
+      "pgadmin": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "cwd": "libs/diet-orm"
+        },
+        "configurations": {
+          "development": {
+            "command": "docker compose -f docker-compose.development.yml up pgadmin -d"
+          },
+          "e2e": {
+            "command": "docker compose -f docker-compose.e2e.yml up pgadmin -d"
+          }
+        }
+      },
+      "prisma-studio": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "cwd": "libs/diet-orm"
+        },
+        "configurations": {
+          "development": {
+            "command": "dotenv -e .env.development -- npx prisma studio --schema=src/schema.prisma"
+          },
+          "e2e": {
+            "command": "dotenv -e .env.e2e -- npx prisma studio --schema=src/schema.prisma"
+          }
+        }
+      }
+    }
   },
   "prisma": {
-    "schema": "src/schema.prisma",
-    "seed": "node --import tsx src/seed/index.ts src/seed/index.ts"
-  },
-  "scripts": {
-    "docker:up": "docker compose -f tools/diet.docker-compose.yml up diet-db-dev pgadmin -d",
-    "docker:down": "docker compose -f tools/diet.docker-compose.yml down -v",
-    "prisma:migrate:reset": "npx prisma migrate reset",
-    "prisma:migrate:dev": "npx prisma migrate dev",
-    "prisma:migrate:apply": "npx prisma db push",
-    "prisma:create-client": "npx prisma generate",
-    "prisma:seed": "npx prisma db seed"
-  },
-  "devDependencies": {
-    "tslib": "^2.3.0",
-    "@types/node": "^22.14.1",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.19.3",
-    "typescript": "^5.8.3"
+    "schema": "src/schema.prisma"
   }
 }

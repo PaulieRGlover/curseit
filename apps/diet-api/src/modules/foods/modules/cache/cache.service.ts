@@ -5,7 +5,7 @@ import {
   type CacheEntry as FoodsPrismaCacheEntry,
 } from '@curseit/diet-orm';
 import objectHash from 'object-hash';
-import { Nullable } from '@curseit/basic-types';
+import { Nullable } from '@curseit/types';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 
 @Injectable()

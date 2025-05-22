@@ -4,9 +4,6 @@
   "private": true,
   "nx": {
     "name": "diet-api-e2e",
-    "implicitDependencies": [
-      "diet-api"
-    ],
     "targets": {
       "e2e": {
         "executor": "@nx/jest:jest",
@@ -16,10 +13,10 @@
         "options": {
           "jestConfig": "apps/diet-api-e2e/jest.config.ts",
           "passWithNoTests": true
-        },
-        "dependsOn": [
-          "diet-api:build"
-        ]
+        }
+      },
+      "serve-and-e2e": {
+        "executor": "@curseit/tools:serve-and-e2e"
       }
     }
   }

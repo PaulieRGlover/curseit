@@ -5,7 +5,7 @@
       "Group": "Development",
       "Host": "host.docker.internal",
       "Port": 5434,
-      "MaintenanceDB": "diet",
+      "MaintenanceDB": "diet-dev",
       "Username": "postgres",
       "Password": "eadeadeadA1",
       "SSLMode": "prefer"

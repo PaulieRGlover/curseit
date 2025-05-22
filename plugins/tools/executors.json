@@ -1,0 +1,14 @@
+{
+  "executors": {
+    "bootstrap-prisma": {
+      "implementation": "./executors/bootstrap-prisma/bootstrap-prisma",
+      "schema": "./executors/bootstrap-prisma/schema.json",
+      "description": "Run docker with db and bootstrap prisma in it"
+    },
+    "serve-and-e2e": {
+      "implementation": "./executors/serve-and-e2e/serve-and-e2e",
+      "schema": "./executors/serve-and-e2e/schema.json",
+      "description": "serve-and-e2e executor"
+    }
+  }
+}

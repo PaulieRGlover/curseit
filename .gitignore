@@ -45,6 +45,9 @@ Thumbs.db
 test-output
 
 # always
-.env
+.env*
+!.env.development
+!.env.e2e
+
 node_modules
 generated

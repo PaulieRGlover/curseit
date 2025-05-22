@@ -28,11 +28,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/basic-types/*", "libs/diet-orm/*"]
+      "exclude": ["libs/diet-orm/*"]
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/basic-types/*", "libs/diet-orm/*"],
+      "include": ["libs/diet-orm/*"],
       "options": {
         "typecheck": {
           "targetName": "typecheck"
@@ -66,6 +66,11 @@
   "targetDefaults": {
     "test": {
       "dependsOn": ["^build"]
+    },
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   }
 }

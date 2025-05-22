@@ -4,9 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./libs/basic-types"
-    },
-    {
       "path": "./apps/diet-api"
     },
     {
@@ -23,6 +20,12 @@
     },
     {
       "path": "./libs/ms"
+    },
+    {
+      "path": "./libs/types"
+    },
+    {
+      "path": "./plugins/tools"
     }
   ],
   "compilerOptions": {

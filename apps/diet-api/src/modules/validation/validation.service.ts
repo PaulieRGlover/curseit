@@ -2,7 +2,7 @@ import { HttpException, Injectable, InternalServerErrorException } from '@nestjs
 
 import { ZodSchema, z } from 'zod';
 
-import { Nullable } from '@curseit/basic-types';
+import { Nullable } from '@curseit/types';
 
 @Injectable()
 export class ValidationService {
