@@ -8,23 +8,23 @@ export const getUsers = async (hashSecret: string): Promise<Array<UserWithPasswo
     const password = faker.internet.password();
     const passwordHash = await argon2.hash(password, { secret: Buffer.from(hashSecret, 'utf-8') });
     return {
-      login: faker.internet.email({ provider: 'curseit.io' }),
+      login: faker.internet.email({ provider: 'seed.curseit.io' }),
       password,
       passwordHash,
     };
   }))),
   {
-    login: 'test@test.test',
+    login: 'test@curseit.io',
     password: 'test',
     passwordHash: '$argon2id$v=19$m=65536,t=3,p=4$Gk1FoPbRSz2Z9WJRbRDKaw$zu+z+mRdXwS9DXgv3a6jSjdlRtHudnP7P0LXOV3vT6Q',
   },
   {
-    login: 'test2@test.test',
+    login: 'test2@curseit.io',
     password: 'test',
     passwordHash: '$argon2id$v=19$m=65536,t=3,p=4$Gk1FoPbRSz2Z9WJRbRDKaw$zu+z+mRdXwS9DXgv3a6jSjdlRtHudnP7P0LXOV3vT6Q',
   },
   {
-    login: 'test3@test.test',
+    login: 'test3@curseit.io',
     password: 'test',
     passwordHash: '$argon2id$v=19$m=65536,t=3,p=4$Gk1FoPbRSz2Z9WJRbRDKaw$zu+z+mRdXwS9DXgv3a6jSjdlRtHudnP7P0LXOV3vT6Q',
   },

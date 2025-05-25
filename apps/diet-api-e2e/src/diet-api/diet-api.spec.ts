@@ -1,10 +1,13 @@
-import axios from 'axios';
+import { api } from './client';
 
-describe('GET /api', () => {
-  it('should return a message', async () => {
-    const res = await axios.get(`/api/health`);
-
-    expect(res.status).toBe(200);
-    expect(res.data).toEqual('ok');
+describe('GET /api/health', () => {
+  it('is healthy', async () => {
+    await api
+      .get('/health')
+      .send()
+      .expect(200)
+      .then(response => {
+        expect(response.text).toBe('ok');
+      });
   });
 });

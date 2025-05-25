@@ -26,6 +26,12 @@
     },
     {
       "path": "./plugins/tools"
+    },
+    {
+      "path": "./libs/testing"
+    },
+    {
+      "path": "./libs/utils"
     }
   ],
   "compilerOptions": {

@@ -5,6 +5,19 @@
   "nx": {
     "name": "diet-api",
     "targets": {
+      "typecheck": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            {
+              "command": "tsc --noEmit -p apps/diet-api/tsconfig.app.json || true",
+              "color": "red",
+              "prefix": "typecheck: ",
+              "prefixColor": "magenta"
+            }
+          ]
+        }
+      },
       "build": {
         "executor": "nx:run-commands",
         "options": {
@@ -24,7 +37,8 @@
               "node-env=e2e"
             ]
           }
-        }
+        },
+        "dependsOn": ["typecheck"]
       },
       "serve": {
         "executor": "@nx/js:node",

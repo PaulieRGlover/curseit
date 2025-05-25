@@ -72,7 +72,7 @@ describe('AuthController', () => {
   });
 
   describe('signUp', () => {
-    it('should call the auth service passing the sign up DTO and set cookies', async () => {
+    it('calls the auth service passing the sign up DTO and set cookies', async () => {
       const MOCK_DTO = generateMock(SignUpSchema);
       const MOCK_RESPONSE = createMockResponse() as FastifyReply;
 
@@ -98,7 +98,7 @@ describe('AuthController', () => {
   });
 
   describe('signIn', () => {
-    it('should call the auth service passing the sign in DTO and set cookies', async () => {
+    it('calls the auth service passing the sign in DTO and set cookies', async () => {
       const MOCK_DTO = generateMock(SignInSchema);
       const MOCK_RESPONSE = createMockResponse() as FastifyReply;
 
@@ -124,7 +124,7 @@ describe('AuthController', () => {
   });
 
   describe('signOut', () => {
-    it('should clear cookies and call the auth service', async () => {
+    it('clears cookies and call the auth service', async () => {
       const MOCK_RESPONSE = createMockResponse() as FastifyReply;
       const MOCK_ACCESS_TOKEN = generateMock(JwtReadSchema);
       const MOCK_REFRESH_TOKEN = generateMock(JwtReadSchema);
@@ -141,7 +141,7 @@ describe('AuthController', () => {
   });
 
   describe('refresh', () => {
-    it('should call the auth service passing the user DTO and set cookies', async () => {
+    it('calls the auth service passing the user DTO and set cookies', async () => {
       const response = createMockResponse() as FastifyReply;
 
       MOCK_AUTH_SERVICE.signTokens.mockResolvedValue(MOCK_TOKENS);

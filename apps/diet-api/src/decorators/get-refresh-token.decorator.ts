@@ -1,22 +1,14 @@
+import { ExecutionContext, UnauthorizedException, createParamDecorator } from '@nestjs/common';
+
 import { type FastifyRequest } from 'fastify';
 import { decode } from 'jsonwebtoken';
-import { JwtReadSchema, JwtReadDto } from '@/dto';
-import {
-  createParamDecorator,
-  ExecutionContext,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { REFRESH_TOKEN_COOKIE_NAME } from '@/constants';
+
+import { JwtReadDto, JwtReadSchema } from '@/dto';
+import { REFRESH_TOKEN_COOKIE_NAME } from '@/modules/auth/constants';
 
 export const GetRefreshToken = createParamDecorator<undefined, JwtReadDto>(
-  (
-    _: unknown,
-    ctx: ExecutionContext,
-  ) => {
-    const request = ctx
-      .switchToHttp()
-      .getRequest<FastifyRequest>();
-
+  (_: unknown, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest<FastifyRequest>();
 
     const token = request.cookies[REFRESH_TOKEN_COOKIE_NAME];
     if (!token) {

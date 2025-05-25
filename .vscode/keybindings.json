@@ -119,7 +119,8 @@
     },
     {
         "key": "ctrl+l ctrl+l",
-        "command": "eslint.executeAutofix"
+        "command": "editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
     },
     {
         "key": "shift+f2",

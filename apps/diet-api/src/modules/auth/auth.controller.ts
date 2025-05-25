@@ -50,6 +50,7 @@ export class AuthController {
     };
   }
 
+  @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(
     @Body() dto: SignUpDto,

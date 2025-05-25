@@ -111,7 +111,7 @@ describe('AuthService', () => {
   });
 
   describe('signUp', () => {
-    it('should create a user replacing their password with hash and return the result', async () => {
+    it('creates a user replacing their password with hash and return the result', async () => {
       const MOCK_DTO = { login: MOCK_LOGIN, password: MOCK_PASSWORD };
 
       const TARGET_PRISMA_CREATE_INPUT = {
@@ -134,7 +134,7 @@ describe('AuthService', () => {
       expect(MOCK_VALIDATION_SERVICE.validate).toHaveBeenCalledWith(UserSchema, MOCK_PRISMA_USER);
     });
 
-    it('should throw a conflict exception if PrismaService throws a unique constraint failure', async () => {
+    it('throws a conflict exception if PrismaService throws a unique constraint failure', async () => {
       const MOCK_DTO = { login: MOCK_LOGIN, password: MOCK_PASSWORD };
 
       MOCK_HASH_SERVICE.hashPassword.mockResolvedValue(MOCK_HASH);
@@ -150,7 +150,7 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw an internal server error exception if PrismaService throws', async () => {
+    it('throws an internal server error exception if PrismaService throws', async () => {
       const MOCK_DTO = { login: MOCK_LOGIN, password: MOCK_PASSWORD };
 
       MOCK_HASH_SERVICE.hashPassword.mockResolvedValue(MOCK_HASH);
@@ -161,7 +161,7 @@ describe('AuthService', () => {
   });
 
   describe('signIn', () => {
-    it('should return the existing user if the password hash is verified', async () => {
+    it('returns the existing user if the password hash is verified', async () => {
       const MOCK_DTO = { login: MOCK_LOGIN, password: MOCK_PASSWORD };
 
       const TARGET_PRISMA_FIND_UNIQUE_INPUT = { where: { login: MOCK_DTO.login } };
@@ -181,7 +181,7 @@ describe('AuthService', () => {
       expect(MOCK_VALIDATION_SERVICE.validate).toHaveBeenCalledWith(UserSchema, MOCK_PRISMA_USER);
     });
 
-    it('should throw unauthorized exception if there is no user found', async () => {
+    it('throws unauthorized exception if there is no user found', async () => {
       const MOCK_DTO = { login: MOCK_LOGIN, password: MOCK_PASSWORD };
 
       MOCK_PRISMA_SERVICE.user.findUnique.mockResolvedValue(null);
@@ -191,7 +191,7 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw unauthorized exception if the password hash is not verified', async () => {
+    it('throws unauthorized exception if the password hash is not verified', async () => {
       const MOCK_DTO = { login: MOCK_LOGIN, password: MOCK_PASSWORD };
 
       MOCK_PRISMA_SERVICE.user.findUnique.mockResolvedValue(MOCK_PRISMA_USER);
@@ -211,7 +211,7 @@ describe('AuthService', () => {
       refreshToken: MOCK_REFRESH_TOKEN,
     };
 
-    it('should invalidate access and refresh tokens', async () => {
+    it('invalidates access and refresh tokens', async () => {
       const fixedNow = new Date();
       jest.useFakeTimers().setSystemTime(fixedNow);
 
@@ -240,7 +240,7 @@ describe('AuthService', () => {
       jest.useRealTimers();
     });
 
-    it('should throw an internal server error exception if PrismaService throws', async () => {
+    it('throws an internal server error exception if PrismaService throws', async () => {
       MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockRejectedValue('error');
 
       await expect(service.signOut(MOCK_DTO)).rejects.toThrow(new InternalServerErrorException());
@@ -257,7 +257,7 @@ describe('AuthService', () => {
     const MOCK_ACCESS_JWT = faker.string.alpha(12);
     const MOCK_REFRESH_JWT = faker.string.alpha(12);
 
-    it('should sign three tokens and return them', async () => {
+    it('signs three tokens and return them', async () => {
       const MOCK_DTO = {
         id: MOCK_ID,
         login: MOCK_LOGIN,
@@ -307,7 +307,7 @@ describe('AuthService', () => {
   describe('validateTokenPayload', () => {
     const MOCK_PAYLOAD = generateMock(JwtReadSchema);
 
-    it('should return the user if they exist and the token is valid', async () => {
+    it('returns the user if they exist and the token is valid', async () => {
       const TARGET_PRISMA_USER_FIND_UNIQUE_INPUT = {
         where: { id: MOCK_PAYLOAD.sub },
       };
@@ -342,7 +342,7 @@ describe('AuthService', () => {
       );
     });
 
-    it('should return null if the token payload is invalid', async () => {
+    it('returns null if the token payload is invalid', async () => {
       MOCK_VALIDATION_SERVICE.validate.mockReturnValueOnce(null);
 
       const result = await service.validateTokenPayload(MOCK_PAYLOAD);
@@ -350,7 +350,7 @@ describe('AuthService', () => {
       expect(result).toBe(null);
     });
 
-    it("should return null if the user doesn't exist", async () => {
+    it("returns null if the user doesn't exist", async () => {
       MOCK_VALIDATION_SERVICE.validate.mockReturnValueOnce(MOCK_PAYLOAD);
       MOCK_PRISMA_SERVICE.user.findUnique.mockResolvedValue(null);
 
@@ -359,7 +359,7 @@ describe('AuthService', () => {
       expect(result).toBe(null);
     });
 
-    it('should return null if the user is not valid in prisma service', async () => {
+    it('returns null if the user is not valid in prisma service', async () => {
       MOCK_VALIDATION_SERVICE.validate.mockReturnValueOnce(MOCK_PAYLOAD);
       MOCK_PRISMA_SERVICE.user.findUnique.mockResolvedValue(MOCK_PRISMA_USER);
       MOCK_VALIDATION_SERVICE.validate.mockReturnValueOnce(null);
@@ -369,7 +369,7 @@ describe('AuthService', () => {
       expect(result).toBe(null);
     });
 
-    it('should return null if the token is invalidated', async () => {
+    it('returns null if the token is invalidated', async () => {
       const MOCK_PRISMA_TOKEN = { id: faker.string.alpha(12), expiresAt: new Date() };
 
       MOCK_VALIDATION_SERVICE.validate.mockReturnValueOnce(MOCK_PAYLOAD);
