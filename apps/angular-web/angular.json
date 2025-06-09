@@ -60,7 +60,7 @@
               }
             ],
             "styles": [
-              "projects/diet-web/src/scss/styles.scss"
+              "projects/diet-web/src/scss/_styles.scss"
             ]
           },
           "configurations": {
