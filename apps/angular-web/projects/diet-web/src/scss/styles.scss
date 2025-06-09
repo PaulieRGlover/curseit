@@ -1,0 +1,24 @@
+@use 'variables';
+@use 'fonts';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 4px; // 1rem
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto', verdana;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--text-gray-blue);
+  font-size: 4rem;
+}

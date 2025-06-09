@@ -1,0 +1,17 @@
+{
+  "name": "@curseit/angular-ciui",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "angular-ciui",
+    "targets": {
+      "build": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "npx ng build ciui",
+          "cwd": "apps/angular-web"
+        }
+      }
+    }
+  }
+}

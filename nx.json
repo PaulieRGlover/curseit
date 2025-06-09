@@ -41,6 +41,7 @@
     },
     {
       "plugin": "@nx/eslint/plugin",
+      "exclude": ["apps/angular-web/**/*"],
       "options": {
         "targetName": "lint"
       }

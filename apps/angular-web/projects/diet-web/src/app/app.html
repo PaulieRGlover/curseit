@@ -1,0 +1,19 @@
+@switch (layout$ | async) {
+  @case ('home') {
+    <cid-home>
+      <div slot="header">
+        <cid-profile-dropdown />
+      </div>
+
+      <router-outlet slot="main" />
+    </cid-home>
+  }
+  @case ('guest') {
+    <cid-guest>
+      <router-outlet slot="main" />
+    </cid-guest>
+  }
+  @default {
+    <router-outlet />
+  }
+}

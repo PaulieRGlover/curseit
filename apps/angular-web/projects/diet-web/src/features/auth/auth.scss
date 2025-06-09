@@ -1,0 +1,13 @@
+@use '@curseit/ciui' as ciui;
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.auth-card {
+  @include ciui.card;
+}

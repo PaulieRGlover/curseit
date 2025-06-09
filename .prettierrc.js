@@ -1,7 +1,7 @@
 module.exports = {
   arrowParens: 'avoid',
   decorators: true,
-  plugins: ['@trivago/prettier-plugin-sort-imports'],
+  plugins: ['@trivago/prettier-plugin-sort-imports', 'prettier-plugin-css-order'],
   singleQuote: true,
   printWidth: 100,
   trailingComma: 'all',
@@ -16,5 +16,5 @@ module.exports = {
   ],
   importOrderParserPlugins: ["typescript", "decorators-legacy"],
   importOrderSeparation: true,
-  importOrderSortSpecifiers: true
+  importOrderSortSpecifiers: true,
 };
