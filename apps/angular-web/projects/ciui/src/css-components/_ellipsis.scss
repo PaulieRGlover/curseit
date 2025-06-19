@@ -1,0 +1,11 @@
+.ciui-ellipsis {
+  overflow: hidden;
+  
+  &__text {
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: right;
+    overflow: hidden;
+  }
+}

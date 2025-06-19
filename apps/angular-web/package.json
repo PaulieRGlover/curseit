@@ -8,11 +8,15 @@
       "build": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "npx ng build diet-web",
-          "cwd": "apps/angular-web"
+          "commands": [
+            "npm link ./dist/ciui",
+            "npx ng build diet-web --stats-json"
+          ],
+          "cwd": "apps/angular-web",
+          "parallel": false
         },
         "dependsOn": [
-          "angular-ciui:build"
+          "ciui-angular:build"
         ]
       },
       "serve": {
@@ -26,7 +30,7 @@
           "parallel": false
         },
         "dependsOn": [
-          "angular-ciui:build"
+          "ciui-angular:serve"
         ]
       }
     }

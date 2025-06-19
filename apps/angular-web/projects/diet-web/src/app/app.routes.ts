@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
+
 import { Auth, Dashboard } from '../features';
+import { authRoutes } from '../features/auth/auth.routes';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
-    path: '',
+    path: 'dashboard',
     component: Dashboard,
     data: { layout: 'home' },
   },
@@ -11,11 +14,6 @@ export const routes: Routes = [
     path: 'auth',
     component: Auth,
     data: { layout: 'guest' },
-    children: [
-      {
-        path: 'lala',
-        component: Dashboard,
-      },
-    ],
-  }
+    children: authRoutes,
+  },
 ];

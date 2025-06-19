@@ -4,7 +4,11 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": {
+      "@curseit/ciui": ["../../dist/ciui"],
+      "@/*": ["./src/*"]
+    },
   },
   "include": [
     "src/**/*.ts"

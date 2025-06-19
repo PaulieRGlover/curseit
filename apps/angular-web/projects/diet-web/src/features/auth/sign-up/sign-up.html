@@ -1,0 +1,24 @@
+<form
+  [formGroup]="signUpData"
+  class="cid-auth-form"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="ciui-title">Sign Up to CoolShrank</div>
+  <ciui-input
+    label="login"
+    name="login"
+    placeholder="email@domain.com"
+    formControlName="login"
+    [control]="signUpData.controls.login"
+  />
+  <ciui-input
+    label="password"
+    name="password"
+    placeholder="_myStr0nG--pa55WORd//"
+    type="password"
+    formControlName="password"
+    [control]="signUpData.controls.password"
+  />
+  <button ciui-button [disabled]="!signUpData.valid" type="submit">Sign Up</button>
+  <div class="cid-auth-form__navigation">or <a routerLink="../sign-in">Sign In</a></div>
+</form>

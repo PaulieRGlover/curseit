@@ -1,0 +1,52 @@
+.ciui-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 1rem;
+  padding: 0 4rem;
+  font-weight: 400;
+  line-height: 1.1666;
+  text-transform: uppercase;
+
+  &:focus {
+    outline: none;
+    border: none;
+  }
+
+  &.ciui-button--disabled {
+    cursor: not-allowed;
+  }
+
+  &.ciui-button--theme-primary {
+    background: var(--background-gradient-main);
+    color: var(--text-white);
+
+    &.ciui-button--disabled {
+      background: var(--background-gradient-disabled);
+      color: var(--text-white-disabled);
+    }
+  }
+
+  &.ciui-button--theme-secondary {
+    background-color: var(--background-white-less-dimm);
+    color: var(--text-blue-accented);
+
+    &.ciui-button--disabled {
+      background-color: var(--background-white-disabled);
+    }
+  }
+
+  &.ciui-button--size-default {
+    height: 12rem;
+    font-size: 5rem;
+    letter-spacing: 1px;
+  }
+
+  &.ciui-button--size-small {
+    height: 6rem;
+    font-size: 3rem;
+  }
+}

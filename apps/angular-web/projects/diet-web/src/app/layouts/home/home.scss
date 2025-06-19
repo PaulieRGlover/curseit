@@ -39,7 +39,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  border: 1px solid var(--border-gray);
+  border: var(--border-gray);
   border-right: none;
   border-radius: 8rem 0 0 8rem;
   background-color: var(--background-white);

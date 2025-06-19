@@ -11,6 +11,9 @@ import fastifyCookie from 'fastify-cookie';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { AppModule } from './modules/app/app.module';
 import { AppConfig } from './config';
+import fastifyCors from '@fastify/cors';
+
+const LOCALHOST_REG_EXP = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
@@ -24,7 +27,25 @@ async function bootstrap() {
   fastifyInstance.register(fastifyCookie);
 
   const configService = app.get(ConfigService);
-  const { port } = configService.get<ConfigType<typeof AppConfig>>('app') ?? {};
+  const appConfig = configService.get<ConfigType<typeof AppConfig>>('app');
+  if (!appConfig) {
+    throw new Error('No appConfig present');
+  }
+
+  if (appConfig.mode === 'local_development') {
+    await fastifyInstance.register(fastifyCors, {
+      origin: (origin, callback) => {
+        if (!origin || LOCALHOST_REG_EXP.test(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed'), false);
+        }
+      },
+      credentials: true,
+    })
+  }
+
+  const { port } = appConfig;
 
   await app.listen(port ?? 3000);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);

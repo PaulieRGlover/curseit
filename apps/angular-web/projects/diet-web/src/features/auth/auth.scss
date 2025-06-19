@@ -1,5 +1,3 @@
-@use '@curseit/ciui' as ciui;
-
 :host {
   display: flex;
   justify-content: center;
@@ -8,6 +6,21 @@
   height: 100%;
 }
 
-.auth-card {
-  @include ciui.card;
+.cid-auth-card {
+  width: 340px;
+}
+
+.cid-auth-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  gap: 4rem;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  &__navigation {
+    text-align: center;
+  }
 }

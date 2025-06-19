@@ -4,9 +4,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@curseit/ciui": [
-        "./dist/ciui"
-      ]
+      "@curseit/ciui": ["./dist/ciui"]
     },
     "strict": true,
     "noImplicitOverride": true,
@@ -29,6 +27,9 @@
   },
   "files": [],
   "references": [
+    {
+      "path": "../../libs/types"
+    },
     {
       "path": "./projects/ciui/tsconfig.lib.json"
     },

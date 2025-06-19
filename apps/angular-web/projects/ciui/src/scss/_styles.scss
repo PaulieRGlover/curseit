@@ -1,24 +1,57 @@
 @use 'variables';
 @use 'fonts';
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
   font-size: 4px; // 1rem
 }
 
 body {
   display: flex;
   flex-direction: column;
-  font-family: 'Roboto', verdana;
   min-height: 100vh;
   min-height: 100dvh;
   color: var(--text-gray-blue);
+  font-weight: 300;
   font-size: 4rem;
+  line-height: 1.1666;
+  font-family: 'Roboto', verdana;
+}
+
+router-outlet {
+  // keeps children in DOM but prevents router-outlet from participating in flex flow
+  display: contents;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--text-gray-blue);
+
+  &:hover {
+    color: var(--text-blue-accented);
+  }
+}
+
+.ciui-a11y-hidden {
+  position: absolute;
+  clip-path: inset(50%);
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }

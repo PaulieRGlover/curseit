@@ -31,5 +31,8 @@
   },
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
-  "javascript.updateImportsOnFileMove.enabled": "never"
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "files.associations": {
+    "*.svg.ts": "html"
+  }
 }
