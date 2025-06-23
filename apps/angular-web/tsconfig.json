@@ -28,6 +28,9 @@
   "files": [],
   "references": [
     {
+      "path": "../../libs/jwt"
+    },
+    {
       "path": "../../libs/types"
     },
     {

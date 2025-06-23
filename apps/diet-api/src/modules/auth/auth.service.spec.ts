@@ -90,6 +90,7 @@ describe('AuthService', () => {
               createMany: jest.fn(),
               deleteMany: jest.fn(),
               findUnique: jest.fn(),
+              findMany: jest.fn(),
             },
           },
         },
@@ -225,6 +226,7 @@ describe('AuthService', () => {
         where: { expiresAt: { lte: new Date() } },
       };
 
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([]);
       MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockResolvedValue({ count: 1 });
       MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany.mockResolvedValue({ count: 1 });
 
@@ -241,10 +243,16 @@ describe('AuthService', () => {
     });
 
     it('throws an internal server error exception if PrismaService throws', async () => {
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockRejectedValue('error');
+
+      await expect(service.signOut(MOCK_DTO)).rejects.toThrow(new InternalServerErrorException());
+
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([]);
       MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockRejectedValue('error');
 
       await expect(service.signOut(MOCK_DTO)).rejects.toThrow(new InternalServerErrorException());
 
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([]);
       MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockResolvedValue({ count: 1 });
       MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany.mockRejectedValue('error');
 

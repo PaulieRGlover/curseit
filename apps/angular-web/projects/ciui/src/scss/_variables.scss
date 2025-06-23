@@ -18,6 +18,7 @@ body {
     #7E86C880 100%
   );
   --background-white-disabled: #C8C6C9;
+  --background-error: #D94C58;
 
   // text colors
   --text-gray-blue: #565682;
@@ -33,9 +34,9 @@ body {
 
   // box shadows
   --ambient-shadow:
-    0 0 2rem rgba(18, 18, 19, 0.18),
-    0 1rem 1rem rgba(18, 18, 19, 0.18);
-  --ambient-shadow-small:
     0 0 1rem rgba(18, 18, 19, 0.18),
     0 0.5rem 0.5rem rgba(18, 18, 19, 0.18);
+  --ambient-shadow-small:
+    0 0 0.5rem rgba(18, 18, 19, 0.18),
+    0 0.25rem 0.25rem rgba(18, 18, 19, 0.18);
 }

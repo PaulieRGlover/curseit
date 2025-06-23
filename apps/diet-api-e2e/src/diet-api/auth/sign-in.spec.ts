@@ -1,8 +1,8 @@
 import { api } from '../client';
 import {
-  ACCESS_TOKEN_REGEXP,
-  ID_TOKEN_COOKIE_REGEXP,
-  REFRESH_TOKEN_COOKIE_REGEXP,
+  ACCESS_TOKEN_REGEX,
+  ID_TOKEN_COOKIE_REGEX,
+  REFRESH_TOKEN_COOKIE_REGEX,
 } from '../constants';
 import { MockUserData } from '../helpers';
 
@@ -22,11 +22,11 @@ describe('POST /api/auth/sign-in', () => {
       .send({ login: MOCK_LOGIN, password: MOCK_PASSWORD })
       .expect(200)
       .then(response => {
-        expect(response.body.access_token).toMatch(ACCESS_TOKEN_REGEXP);
+        expect(response.body.access_token).toMatch(ACCESS_TOKEN_REGEX);
         expect(response.headers['set-cookie']).toEqual(
           expect.arrayContaining([
-            expect.stringMatching(ID_TOKEN_COOKIE_REGEXP),
-            expect.stringMatching(REFRESH_TOKEN_COOKIE_REGEXP),
+            expect.stringMatching(ID_TOKEN_COOKIE_REGEX),
+            expect.stringMatching(REFRESH_TOKEN_COOKIE_REGEX),
           ]),
         );
       });

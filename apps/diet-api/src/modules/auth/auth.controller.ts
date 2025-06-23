@@ -8,16 +8,19 @@ import {
   Post,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 
 import type { FastifyReply } from 'fastify';
 import { CookieSerializeOptions } from 'fastify-cookie';
 
-import { JwtConfig } from '@/config';
+import type { Nullable } from '@curseit/types';
+
+import { AppConfig, JwtConfig } from '@/config';
 import { GetAccessToken, GetRefreshToken, GetUser } from '@/decorators';
 import { JwtReadDto, UserDto } from '@/dto';
-import { AccessJwtGuard, RefreshJwtGuard } from '@/guards';
+import { RefreshJwtGuard } from '@/guards';
 import { AUTH_MESSAGES } from '@/messages';
 
 import { AuthService } from './auth.service';
@@ -34,10 +37,13 @@ import {
   SignUpDto,
   SignUpResponseDto,
 } from './dto';
+import { AuthDelayInterceptor } from './interceptors/auth-delay.interceptor';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    @Inject(AppConfig.KEY)
+    private readonly appConfig: ConfigType<typeof AppConfig>,
     @Inject(JwtConfig.KEY)
     private readonly jwtConfig: ConfigType<typeof JwtConfig>,
     private readonly authService: AuthService,
@@ -47,9 +53,18 @@ export class AuthController {
     return {
       ...REFRESH_TOKEN_COOKIE_OPTIONS,
       maxAge: this.jwtConfig.refreshTokenTtlInMs / 1000,
+      sameSite: this.appConfig.mode === 'local_development' ? 'none' : 'strict',
     };
   }
 
+  private get idTokenCookieOptions(): CookieSerializeOptions {
+    return {
+      ...ID_TOKEN_COOKIE_OPTIONS,
+      sameSite: this.appConfig.mode === 'local_development' ? 'none' : 'lax',
+    };
+  }
+
+  @UseInterceptors(AuthDelayInterceptor)
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(
@@ -60,12 +75,13 @@ export class AuthController {
 
     const { idToken, accessToken, refreshToken } = await this.authService.signTokens(user);
 
-    response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, ID_TOKEN_COOKIE_OPTIONS);
+    response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, this.idTokenCookieOptions);
     response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, this.refreshTokenCookieOptions);
 
     return { access_token: accessToken };
   }
 
+  @UseInterceptors(AuthDelayInterceptor)
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
   async signIn(
@@ -76,18 +92,18 @@ export class AuthController {
 
     const { idToken, accessToken, refreshToken } = await this.authService.signTokens(user);
 
-    response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, ID_TOKEN_COOKIE_OPTIONS);
+    response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, this.idTokenCookieOptions);
     response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, this.refreshTokenCookieOptions);
 
     return { access_token: accessToken };
   }
 
-  @UseGuards(RefreshJwtGuard, AccessJwtGuard)
+  @UseInterceptors(AuthDelayInterceptor)
   @HttpCode(HttpStatus.OK)
   @Post('sign-out')
   async signOut(
-    @GetAccessToken() accessToken: JwtReadDto,
-    @GetRefreshToken() refreshToken: JwtReadDto,
+    @GetAccessToken(false) accessToken: Nullable<JwtReadDto>,
+    @GetRefreshToken(false) refreshToken: Nullable<JwtReadDto>,
     @Res({ passthrough: true }) response: FastifyReply,
   ): Promise<string> {
     response.clearCookie(ID_TOKEN_COOKIE_NAME);
@@ -106,7 +122,7 @@ export class AuthController {
   ): Promise<RefreshResponseDto> {
     const { idToken, accessToken, refreshToken } = await this.authService.signTokens(user);
 
-    response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, ID_TOKEN_COOKIE_OPTIONS);
+    response.setCookie(ID_TOKEN_COOKIE_NAME, idToken, this.idTokenCookieOptions);
     response.setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, this.refreshTokenCookieOptions);
 
     return { access_token: accessToken };

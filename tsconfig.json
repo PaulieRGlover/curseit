@@ -32,6 +32,9 @@
     },
     {
       "path": "./libs/utils"
+    },
+    {
+      "path": "./libs/jwt"
     }
   ],
   "compilerOptions": {

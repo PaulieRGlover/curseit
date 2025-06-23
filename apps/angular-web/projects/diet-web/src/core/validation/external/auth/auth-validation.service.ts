@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { errorResponseSchema } from '@/core/dtos/external/auth';
+import { errorResponseSchema, successResponseSchema } from '@/core/dtos/external/auth.dto';
 
 import { zodValidate } from '../../zod-validate.util';
 
@@ -8,5 +8,9 @@ import { zodValidate } from '../../zod-validate.util';
 export class AuthValidationService {
   get errorResponse() {
     return zodValidate<typeof errorResponseSchema>(errorResponseSchema);
+  }
+
+  get successResponse() {
+    return zodValidate<typeof successResponseSchema>(successResponseSchema);
   }
 }

@@ -1,15 +1,17 @@
 import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
 
 export type BUTTON_THEMES = 'primary' | 'secondary';
-export type BUTTON_SIZES = 'default' | 'small';
+export type BUTTON_SIZES = 'default' | 'big' | 'small';
 
 @Component({
   selector: '[ciui-button]',
   templateUrl: './button.html',
 })
 export class CiuiButton {
-  @HostBinding('class.ciui-button--disabled')
   @Input({ transform: booleanAttribute }) disabled = false;
+  @Input({ transform: booleanAttribute }) loading = false;
+  @Input({ transform: booleanAttribute }) error = false;
+
   @Input() theme: BUTTON_THEMES = 'primary';
   @Input() size: BUTTON_SIZES = 'default';
 
@@ -17,6 +19,9 @@ export class CiuiButton {
   get hostClasses() {
     return `
       ciui-button
+      ${this.disabled ? 'ciui-button--disabled' : ''}
+      ${this.loading ? 'ciui-button--loading' : ''}
+      ${this.error ? 'ciui-button--error' : ''}
       ciui-button--theme-${this.theme}
       ciui-button--size-${this.size}
     `;

@@ -6,7 +6,7 @@ import { environment } from '../environments/environment';
 
 const ABSOLUTE_URL_REG_EXP = /^https?:\/\//;
 
-export const baseUrlInterceptor = (
+export const baseInterceptor = (
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
@@ -14,7 +14,10 @@ export const baseUrlInterceptor = (
     return next(request);
   }
 
-  const apiRequest = request.clone({ url: `${environment.apiBaseUrl}/${request.url}` });
+  const apiRequest = request.clone({
+    url: `${environment.apiBaseUrl}/${request.url}`,
+    withCredentials: true,
+  });
 
   return next(apiRequest);
 };

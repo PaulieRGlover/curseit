@@ -4,7 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/types"
+      "path": "../../libs/jwt"
+    },
+    {
+      "path": "../../libs/utils"
     },
     {
       "path": "../../libs/prisma-errors"
@@ -14,6 +17,9 @@
     },
     {
       "path": "../../libs/time"
+    },
+    {
+      "path": "../../libs/types"
     },
     {
       "path": "../../libs/ms"

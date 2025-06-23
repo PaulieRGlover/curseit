@@ -2,18 +2,22 @@ import { Routes } from '@angular/router';
 
 import { Auth, Dashboard } from '../features';
 import { authRoutes } from '../features/auth/auth.routes';
+import { ANIMATIONS, LAYOUTS, ROUTES_DECLARATION } from '@/core/constants/router.constants';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: ROUTES_DECLARATION.DASHBOARD, pathMatch: 'full' },
   {
-    path: 'dashboard',
+    path: ROUTES_DECLARATION.DASHBOARD,
     component: Dashboard,
-    data: { layout: 'home' },
+    data: {
+      layout: LAYOUTS.HOME,
+      animation: ANIMATIONS.DASHBOARD,
+    },
   },
   {
-    path: 'auth',
+    path: ROUTES_DECLARATION.AUTH,
     component: Auth,
-    data: { layout: 'guest' },
+    data: { layout: LAYOUTS.GUEST },
     children: authRoutes,
   },
 ];

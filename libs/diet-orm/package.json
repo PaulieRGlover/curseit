@@ -22,7 +22,9 @@
         "executor": "@curseit/tools:bootstrap-prisma",
         "defaultConfiguration": "development",
         "configurations": {
-          "development": {},
+          "development": {
+            "seed": true
+          },
           "e2e": {
             "seed": true
           }

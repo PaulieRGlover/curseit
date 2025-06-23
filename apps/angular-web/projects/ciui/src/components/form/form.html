@@ -1,0 +1,21 @@
+<h2 class="ciui-title"><ng-content select="ciui-form-title">Title</ng-content></h2>
+
+<ng-content />
+
+<ng-content select="ciui-form-submit-button">
+  <button
+    ciui-button
+    type="submit"
+    [disabled]="!control.valid || loading"
+    [loading]="loading"
+    [error]="formErrorService.hasErrors()"
+  >
+    @if (formErrorService.hasErrors()) {
+      <span>{{ formErrorService.firstError() }}</span>
+    } @else {
+      <ng-content select="ciui-form-submit">Submit</ng-content>
+    }
+  </button>
+</ng-content>
+
+<ng-content select="ciui-form-footer" />

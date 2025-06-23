@@ -1,9 +1,12 @@
 <form
-  [formGroup]="signUpData"
+  ciui-form
   class="cid-auth-form"
+  [formGroup]="signUpData"
+  [loading]="loading"
   (ngSubmit)="onSubmit()"
 >
-  <div class="ciui-title">Sign Up to CoolShrank</div>
+  <span ngProjectAs="ciui-form-title">Sign Up to CoolShrank</span>
+
   <ciui-input
     label="login"
     name="login"
@@ -19,6 +22,10 @@
     formControlName="password"
     [control]="signUpData.controls.password"
   />
-  <button ciui-button [disabled]="!signUpData.valid" type="submit">Sign Up</button>
-  <div class="cid-auth-form__navigation">or <a routerLink="../sign-in">Sign In</a></div>
+
+  <span ngProjectAs="ciui-form-submit">Sign Up</span>
+
+  <div ngProjectAs="ciui-form-footer" class="cid-auth-form__navigation">
+    or <a routerLink="../sign-in">Sign In</a>
+  </div>
 </form>

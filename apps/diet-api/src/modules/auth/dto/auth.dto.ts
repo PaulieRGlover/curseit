@@ -2,6 +2,8 @@ import { createZodDto } from '@anatine/zod-nestjs';
 
 import z from 'zod';
 
+import { JWT_REGEX } from '@curseit/jwt';
+
 import { JwtReadSchema } from '@/dto';
 
 export const SignUpSchema = z.object({
@@ -14,20 +16,20 @@ export const SignInSchema = SignUpSchema.extend({});
 export class SignInDto extends createZodDto(SignInSchema) {}
 
 export const SignOutSchema = z.object({
-  accessToken: JwtReadSchema,
-  refreshToken: JwtReadSchema,
+  accessToken: JwtReadSchema.nullable(),
+  refreshToken: JwtReadSchema.nullable(),
 });
 export class SignOutDto extends createZodDto(SignOutSchema) {}
 
 export const TokensSchema = z.object({
-  idToken: z.string(),
-  accessToken: z.string(),
-  refreshToken: z.string(),
+  idToken: z.string().regex(JWT_REGEX),
+  accessToken: z.string().regex(JWT_REGEX),
+  refreshToken: z.string().regex(JWT_REGEX),
 });
 export class TokensDto extends createZodDto(TokensSchema) {}
 
 export const SignInResponseSchema = z.object({
-  access_token: z.string(),
+  access_token: z.string().regex(JWT_REGEX),
 });
 export class SignInResponseDto extends createZodDto(SignInResponseSchema) {}
 

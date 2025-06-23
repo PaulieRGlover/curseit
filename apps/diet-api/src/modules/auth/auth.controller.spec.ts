@@ -7,7 +7,7 @@ import { FastifyReply } from 'fastify';
 
 import { DAY, MINUTE } from '@curseit/time';
 
-import { JwtConfig, JwtConfigSchema } from '@/config';
+import { AppConfig, JwtConfig, JwtConfigSchema } from '@/config';
 import { JwtReadSchema, UserSchema } from '@/dto';
 
 import { AuthController } from './auth.controller';
@@ -23,8 +23,10 @@ import { CookieSerializeOptions } from 'fastify-cookie';
 
 describe('AuthController', () => {
   let controller: AuthController;
+  let MOCK_APP_CONFIG: jest.Mocked<ConfigType<typeof AppConfig>>;
   let MOCK_JWT_CONFIG: jest.Mocked<ConfigType<typeof JwtConfig>>;
   let MOCK_AUTH_SERVICE: jest.Mocked<AuthService>;
+  let TARGET_ID_TOKEN_COOKIE_OPTIONS: CookieSerializeOptions;
   let TARGET_REFRESH_TOKEN_COOKIE_OPTIONS: CookieSerializeOptions;
 
   const MOCK_USER = generateMock(UserSchema);
@@ -41,6 +43,12 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
+        {
+          provide: AppConfig.KEY,
+          useValue: {
+            mode: 'e2e',
+          },
+        },
         {
           provide: JwtConfig.KEY,
           useValue: {
@@ -62,12 +70,19 @@ describe('AuthController', () => {
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
+    MOCK_APP_CONFIG = module.get(AppConfig.KEY);
     MOCK_JWT_CONFIG = module.get(JwtConfig.KEY);
     MOCK_AUTH_SERVICE = module.get(AuthService);
 
     TARGET_REFRESH_TOKEN_COOKIE_OPTIONS = {
       ...REFRESH_TOKEN_COOKIE_OPTIONS,
       maxAge: MOCK_JWT_CONFIG.refreshTokenTtlInMs / 1000,
+      sameSite: 'strict',
+    };
+
+    TARGET_ID_TOKEN_COOKIE_OPTIONS = {
+      ...ID_TOKEN_COOKIE_OPTIONS,
+      sameSite: 'lax',
     };
   });
 
@@ -86,7 +101,7 @@ describe('AuthController', () => {
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         ID_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.idToken,
-        ID_TOKEN_COOKIE_OPTIONS,
+        TARGET_ID_TOKEN_COOKIE_OPTIONS,
       );
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         REFRESH_TOKEN_COOKIE_NAME,
@@ -94,6 +109,36 @@ describe('AuthController', () => {
         TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
       );
       expect(result).toEqual({ access_token: MOCK_TOKENS.accessToken });
+    });
+
+    it('sets id and refresh token cookie options to less strict in development mode', async () => {
+      const MOCK_DTO = generateMock(SignUpSchema);
+      const MOCK_RESPONSE = createMockResponse() as FastifyReply;
+
+      const TARGET_ID_TOKEN_COOKIE_OPTIONS_MODIFIED = {
+        ...TARGET_ID_TOKEN_COOKIE_OPTIONS,
+        sameSite: 'none',
+      };
+      const TARGET_REFRESH_TOKEN_COOKIE_OPTIONS_MODIFIED = {
+        ...TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
+        sameSite: 'none',
+      };
+
+      MOCK_AUTH_SERVICE.signUp.mockResolvedValue(MOCK_USER);
+      MOCK_AUTH_SERVICE.signTokens.mockResolvedValue(MOCK_TOKENS);
+      MOCK_APP_CONFIG.mode = 'local_development';
+
+      await controller.signUp(MOCK_DTO, MOCK_RESPONSE);
+      expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
+        ID_TOKEN_COOKIE_NAME,
+        MOCK_TOKENS.idToken,
+        TARGET_ID_TOKEN_COOKIE_OPTIONS_MODIFIED,
+      );
+      expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
+        REFRESH_TOKEN_COOKIE_NAME,
+        MOCK_TOKENS.refreshToken,
+        TARGET_REFRESH_TOKEN_COOKIE_OPTIONS_MODIFIED,
+      );
     });
   });
 
@@ -112,7 +157,7 @@ describe('AuthController', () => {
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         ID_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.idToken,
-        ID_TOKEN_COOKIE_OPTIONS,
+        TARGET_ID_TOKEN_COOKIE_OPTIONS,
       );
       expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
         REFRESH_TOKEN_COOKIE_NAME,
@@ -120,6 +165,36 @@ describe('AuthController', () => {
         TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
       );
       expect(result).toEqual({ access_token: MOCK_TOKENS.accessToken });
+    });
+
+    it('sets id and refresh token cookie options to less strict in development mode', async () => {
+      const MOCK_DTO = generateMock(SignInSchema);
+      const MOCK_RESPONSE = createMockResponse() as FastifyReply;
+
+      const TARGET_ID_TOKEN_COOKIE_OPTIONS_MODIFIED = {
+        ...TARGET_ID_TOKEN_COOKIE_OPTIONS,
+        sameSite: 'none',
+      };
+      const TARGET_REFRESH_TOKEN_COOKIE_OPTIONS_MODIFIED = {
+        ...TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
+        sameSite: 'none',
+      };
+
+      MOCK_AUTH_SERVICE.signIn.mockResolvedValue(MOCK_USER);
+      MOCK_AUTH_SERVICE.signTokens.mockResolvedValue(MOCK_TOKENS);
+      MOCK_APP_CONFIG.mode = 'local_development';
+
+      await controller.signIn(MOCK_DTO, MOCK_RESPONSE);
+      expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
+        ID_TOKEN_COOKIE_NAME,
+        MOCK_TOKENS.idToken,
+        TARGET_ID_TOKEN_COOKIE_OPTIONS_MODIFIED,
+      );
+      expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
+        REFRESH_TOKEN_COOKIE_NAME,
+        MOCK_TOKENS.refreshToken,
+        TARGET_REFRESH_TOKEN_COOKIE_OPTIONS_MODIFIED,
+      );
     });
   });
 
@@ -152,7 +227,7 @@ describe('AuthController', () => {
       expect(response.setCookie).toHaveBeenCalledWith(
         ID_TOKEN_COOKIE_NAME,
         MOCK_TOKENS.idToken,
-        ID_TOKEN_COOKIE_OPTIONS,
+        TARGET_ID_TOKEN_COOKIE_OPTIONS,
       );
       expect(response.setCookie).toHaveBeenCalledWith(
         REFRESH_TOKEN_COOKIE_NAME,
@@ -160,6 +235,34 @@ describe('AuthController', () => {
         TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
       );
       expect(result).toEqual({ access_token: MOCK_TOKENS.accessToken });
+    });
+
+    it('sets id and refresh token cookie options to less strict in development mode', async () => {
+      const MOCK_RESPONSE = createMockResponse() as FastifyReply;
+
+      const TARGET_ID_TOKEN_COOKIE_OPTIONS_MODIFIED = {
+        ...TARGET_ID_TOKEN_COOKIE_OPTIONS,
+        sameSite: 'none',
+      };
+      const TARGET_REFRESH_TOKEN_COOKIE_OPTIONS_MODIFIED = {
+        ...TARGET_REFRESH_TOKEN_COOKIE_OPTIONS,
+        sameSite: 'none',
+      };
+
+      MOCK_AUTH_SERVICE.signTokens.mockResolvedValue(MOCK_TOKENS);
+      MOCK_APP_CONFIG.mode = 'local_development';
+
+      await controller.refresh(MOCK_USER, MOCK_RESPONSE);
+      expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
+        ID_TOKEN_COOKIE_NAME,
+        MOCK_TOKENS.idToken,
+        TARGET_ID_TOKEN_COOKIE_OPTIONS_MODIFIED,
+      );
+      expect(MOCK_RESPONSE.setCookie).toHaveBeenCalledWith(
+        REFRESH_TOKEN_COOKIE_NAME,
+        MOCK_TOKENS.refreshToken,
+        TARGET_REFRESH_TOKEN_COOKIE_OPTIONS_MODIFIED,
+      );
     });
   });
 });

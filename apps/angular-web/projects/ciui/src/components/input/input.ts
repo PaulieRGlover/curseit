@@ -1,13 +1,18 @@
-import { Component, EventEmitter, Input, Optional, Output, Self, booleanAttribute, forwardRef } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, PristineChangeEvent, ReactiveFormsModule, StatusChangeEvent, TouchedChangeEvent } from '@angular/forms';
+import { Component, Input, booleanAttribute, forwardRef, inject } from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 import type { HTMLInputTypeAttribute } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { MaybeUndefined } from '@curseit/types';
 
+import { FormErrorService } from '../../shared/services/form-error.service';
 import { CiuiIcon } from '../icon/icon';
-import { filter } from 'rxjs';
 
 export const ControlErrorsMap: Record<string, string> = {
   required: 'This field is required',
@@ -27,43 +32,44 @@ export type INPUT_SIZES = 'small' | 'default';
       useExisting: forwardRef(() => CiuiInput),
       multi: true,
     },
+    FormErrorService,
   ],
 })
 export class CiuiInput implements ControlValueAccessor {
+  formErrorService = inject(FormErrorService);
   private uuid = uuidv4();
   private onChange = (value: any) => {};
   private onTouched = () => {};
 
+  @Input({ required: true }) control!: AbstractControl;
   @Input({ required: true }) label!: string;
+
   @Input() type: HTMLInputTypeAttribute = 'text';
   @Input() name: MaybeUndefined<string>;
   @Input() value = '';
-  @Input({ transform: booleanAttribute }) labelInvisible = false;
   @Input() placeholder: MaybeUndefined<string>;
+
+  @Input({ transform: booleanAttribute }) labelInvisible = false;
   @Input() theme: INPUT_THEMES = 'white';
-  @Input({ transform: booleanAttribute }) transparent = false;
   @Input() size: INPUT_SIZES = 'default';
-  @Input({ required: true }) control!: AbstractControl;
+  @Input({ transform: booleanAttribute }) transparent = false;
 
   id: string = '';
-  errors: Array<string> = [];
-  isTouched = false;
-
-  get showErrors() {
-    return this.errors.length > 0 && this.isTouched;
-  }
 
   get hasOneError() {
-    return this.errors.length === 1;
+    return this.formErrorService.errors().length === 1;
   }
 
   get tempFormattedErrors() {
-    return this.errors.map(error => `- ${error}`).join('\n');
+    return this.formErrorService
+      .errors()
+      .map(error => `- ${error}`)
+      .join('\n');
   }
 
   ngOnInit() {
     this.id = this.computeId();
-    this.subscribeToControlEvents();
+    this.formErrorService.initialize(this.control);
   }
 
   writeValue(value: string) {
@@ -87,48 +93,9 @@ export class CiuiInput implements ControlValueAccessor {
   onBlur() {
     this.control?.markAsTouched();
   }
-  
-  
+
   private computeId() {
     const validReadableId = (this.label ?? CiuiInput.name).replace(/[\W]/g, '-').toLowerCase();
     return `${validReadableId}_${this.uuid}`;
-  }
-
-  private subscribeToControlEvents() {
-    this.control.events.subscribe(event => {
-      switch (true) {
-        case (event instanceof StatusChangeEvent): {
-          this.errors = this.computeErrors();
-          break;
-        }
-        case (event instanceof TouchedChangeEvent): {
-          this.errors = this.computeErrors();
-          this.isTouched = true;
-          break;
-        }
-        case (event instanceof PristineChangeEvent): {
-          if (event.pristine) {
-            this.isTouched = false;
-          }
-
-          break;
-        }
-      }
-    });
-  }
-
-  private computeErrors() {
-    return this.control.errors
-      ? Object.keys(this.control.errors)
-        .map(key => {
-          const errorDescription = this.control.errors?.[key];
-          return (
-            (typeof errorDescription === 'string' ? errorDescription : null) ??
-            ControlErrorsMap[key] ??
-            null
-          );
-        })
-        .filter(error => error)
-      : [];
   }
 }

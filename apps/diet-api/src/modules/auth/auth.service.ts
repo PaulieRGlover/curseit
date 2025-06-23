@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Nullable } from '@curseit/types';
 import { Prisma } from '@curseit/diet-orm';
 import { PRISMA_ERRORS } from '@curseit/prisma-errors';
+import { isNotNull } from '@curseit/utils';
 
 import { JwtConfig } from '@/config';
 import { UUIDV4 } from '@/constants';
@@ -76,8 +77,16 @@ export class AuthService {
 
   async signOut(dto: SignOutDto) {
     try {
+      const tokens = [dto.accessToken, dto.refreshToken].filter(isNotNull);
+      const alreadyInvalidatedTokens = await this.prismaService.invalidatedToken.findMany({
+        where: { id: { in: tokens.map(({ jti }) => jti) } },
+      });
+      const tokensToInvalidate = tokens.filter(({ jti }) => {
+        return alreadyInvalidatedTokens.every(({ id }) => jti !== id);
+      });
+
       await this.prismaService.invalidatedToken.createMany({
-        data: [dto.accessToken, dto.refreshToken].map(({ jti, exp }) => ({
+        data: tokensToInvalidate.map(({ jti, exp }) => ({
           id: jti,
           expiresAt: new Date(exp * 1000),
         })),

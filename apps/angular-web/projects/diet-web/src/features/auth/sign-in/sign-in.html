@@ -1,7 +1,31 @@
-<form class="cid-auth-form">
-  <div class="ciui-title">Sign In to CoolShrank</div>
-  <!-- <ciui-input label="login" placeholder="email@domain.com" />
-  <ciui-input label="password" placeholder="_myStr0nG--pa55WORd//" type="password" /> -->
-  <button ciui-button>Sign In</button>
-  <div class="cid-auth-form__navigation">or <a routerLink="../sign-up">Sign Up</a></div>
+<form
+  ciui-form
+  class="cid-auth-form"
+  [formGroup]="signInData"
+  [loading]="loading"
+  (ngSubmit)="onSubmit()"
+>
+  <span ngProjectAs="ciui-form-title">Sign In to CoolShrank</span>
+
+  <ciui-input
+    label="login"
+    name="login"
+    placeholder="email@domain.com"
+    formControlName="login"
+    [control]="signInData.controls.login"
+  />
+  <ciui-input
+    label="password"
+    name="password"
+    placeholder="_myStr0nG--pa55WORd//"
+    type="password"
+    formControlName="password"
+    [control]="signInData.controls.password"
+  />
+
+  <span ngProjectAs="ciui-form-submit">Sign In</span>
+
+  <div ngProjectAs="ciui-form-footer" class="cid-auth-form__navigation">
+    or <a routerLink="../sign-up">Sign Up</a>
+  </div>
 </form>

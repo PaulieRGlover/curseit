@@ -5,6 +5,10 @@ export const loginSchema = z.string().check(
 );
 
 export const passwordSchema = z.string().check(
+  z.minLength(1, { message: 'Password is required' }),
+);
+
+export const passwordCreateSchema = z.string().check(
   z.regex(/[a-z]/, { message: 'Must contain lower-case letters' }),
   z.regex(/[A-Z]/, { message: 'Must contain upper-case letters' }),
   z.regex(/[^a-zA-Z0-9]/, { message: 'Must contain special characters' }),

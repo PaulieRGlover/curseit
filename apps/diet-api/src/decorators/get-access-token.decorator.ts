@@ -7,10 +7,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AUTHORIZATION_HEADER } from '@/constants';
+import { Nullable } from '@curseit/types';
 
-export const GetAccessToken = createParamDecorator<undefined, JwtReadDto>(
+export const GetAccessToken = createParamDecorator<boolean, Nullable<JwtReadDto>>(
   (
-    _: unknown,
+    throwOnNotFound = true,
     ctx: ExecutionContext,
   ) => {
     const request = ctx
@@ -20,18 +21,25 @@ export const GetAccessToken = createParamDecorator<undefined, JwtReadDto>(
 
     const header = request.headers[AUTHORIZATION_HEADER];  
     const token = header?.replace('Bearer ', '');
-    if (!token) {
+    if (!token && throwOnNotFound) {
       throw new UnauthorizedException();
+    } else if (!token) {
+      return null;
     }
 
     const decodedToken = decode(token);
-    if (!decodedToken || typeof decodedToken === 'string') {
+    const hasToken = decodedToken && typeof decodedToken !== 'string';
+    if (!hasToken && throwOnNotFound) {
       throw new UnauthorizedException();
+    } else if (!hasToken) {
+      return null;
     }
 
     const validatedToken = JwtReadSchema.safeParse(decodedToken);
-    if (!validatedToken.success) {
+    if (!validatedToken.success && throwOnNotFound) {
       throw new UnauthorizedException();
+    } else if (!validatedToken.success) {
+      return null;
     }
 
     return validatedToken.data;

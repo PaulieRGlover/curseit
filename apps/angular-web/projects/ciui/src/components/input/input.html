@@ -1,6 +1,6 @@
 <div
   class="ciui-input"
-  [class.ciui-input--errored]="showErrors"
+  [class.ciui-input--errored]="formErrorService.hasErrors()"
   [class.ciui-input--theme-white]="theme === 'white'"
   [class.ciui-input--theme-black]="theme === 'black'"
   [class.ciui-input--transparent]="transparent"
@@ -9,7 +9,7 @@
 >
   <div
     class="ciui-input__info"
-    [class.ciui-a11y-hidden]="labelInvisible && !showErrors"
+    [class.ciui-a11y-hidden]="labelInvisible && !formErrorService.hasErrors()"
   >
     <label
       [for]="id"
@@ -17,12 +17,12 @@
       [class.ciui-a11y-hidden]="labelInvisible"
     >{{ label }}</label>
 
-    @if (showErrors && hasOneError) {
+    @if (formErrorService.hasErrors() && hasOneError) {
       <div
-        [title]="errors[0]"
+        [title]="formErrorService.firstError()"
         class="ciui-input__errors ciui-ellipsis"
-      ><span class="ciui-ellipsis__text">{{ errors[0] }}</span></div>
-    } @else if (showErrors) {
+      ><span class="ciui-ellipsis__text">{{ formErrorService.firstError() }}</span></div>
+    } @else if (formErrorService.hasErrors()) {
       <div class="ciui-input__errors"><ciui-icon [title]="tempFormattedErrors" name="info" /></div>
     }
   </div>
