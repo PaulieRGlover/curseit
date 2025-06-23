@@ -16,7 +16,8 @@
               "prefixColor": "magenta"
             }
           ]
-        }
+        },
+        "dependsOn": ["build-deps"]
       },
       "build": {
         "executor": "nx:run-commands",
@@ -49,7 +50,7 @@
         ],
         "options": {
           "buildTarget": "diet-api:build",
-          "runBuildTargetDependencies": false
+          "runBuildTargetDependencies": true
         },
         "configurations": {
           "development": {

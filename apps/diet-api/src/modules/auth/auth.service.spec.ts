@@ -242,6 +242,136 @@ describe('AuthService', () => {
       jest.useRealTimers();
     });
 
+    it('invalidates only the access token if refresh token is not provided', async () => {
+      const fixedNow = new Date();
+      jest.useFakeTimers().setSystemTime(fixedNow);
+
+      const MOCK_DTO = {
+        accessToken: MOCK_ACCESS_TOKEN,
+        refreshToken: null,
+      };
+
+      const TARGET_PRISMA_CREATE_MANY_INPUT = {
+        data: [{ id: MOCK_ACCESS_TOKEN.jti, expiresAt: new Date(MOCK_ACCESS_TOKEN.exp * 1000) }],
+      };
+
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([]);
+      MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockResolvedValue({ count: 1 });
+
+      await service.signOut(MOCK_DTO);
+
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.createMany).toHaveBeenCalledWith(
+        TARGET_PRISMA_CREATE_MANY_INPUT,
+      );
+
+      jest.useRealTimers();
+    });
+
+    it('invalidates only the refresh token if access token is not provided', async () => {
+      const fixedNow = new Date();
+      jest.useFakeTimers().setSystemTime(fixedNow);
+
+      const MOCK_DTO = {
+        accessToken: null,
+        refreshToken: MOCK_REFRESH_TOKEN,
+      };
+
+      const TARGET_PRISMA_CREATE_MANY_INPUT = {
+        data: [{ id: MOCK_REFRESH_TOKEN.jti, expiresAt: new Date(MOCK_REFRESH_TOKEN.exp * 1000) }],
+      };
+
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([]);
+      MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockResolvedValue({ count: 1 });
+
+      await service.signOut(MOCK_DTO);
+
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.createMany).toHaveBeenCalledWith(
+        TARGET_PRISMA_CREATE_MANY_INPUT,
+      );
+
+      jest.useRealTimers();
+    });
+
+    it('does nothing if no token is provided', async () => {
+      const MOCK_DTO = { accessToken: null, refreshToken: null };
+
+      await service.signOut(MOCK_DTO);
+
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.findMany).not.toHaveBeenCalled();
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.createMany).not.toHaveBeenCalled();
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany).not.toHaveBeenCalled();
+    });
+
+    it('invalidates only the access token if refresh token is already invalidated', async () => {
+      const fixedNow = new Date();
+      jest.useFakeTimers().setSystemTime(fixedNow);
+
+      const TARGET_PRISMA_CREATE_MANY_INPUT = {
+        data: [{ id: MOCK_ACCESS_TOKEN.jti, expiresAt: new Date(MOCK_ACCESS_TOKEN.exp * 1000) }],
+      };
+      const TARGET_PRISMA_DELETE_MANY_INPUT = {
+        where: { expiresAt: { lte: new Date() } },
+      };
+
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([
+        { id: MOCK_REFRESH_TOKEN.jti, expiresAt: new Date(MOCK_REFRESH_TOKEN.exp * 1000) },
+      ]);
+      MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockResolvedValue({ count: 1 });
+      MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany.mockResolvedValue({ count: 1 });
+
+      await service.signOut(MOCK_DTO);
+
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.createMany).toHaveBeenCalledWith(
+        TARGET_PRISMA_CREATE_MANY_INPUT,
+      );
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany).toHaveBeenCalledWith(
+        TARGET_PRISMA_DELETE_MANY_INPUT,
+      );
+
+      jest.useRealTimers();
+    });
+
+    it('invalidates only the refresh token if access token is already invalidated', async () => {
+      const fixedNow = new Date();
+      jest.useFakeTimers().setSystemTime(fixedNow);
+
+      const TARGET_PRISMA_CREATE_MANY_INPUT = {
+        data: [{ id: MOCK_REFRESH_TOKEN.jti, expiresAt: new Date(MOCK_REFRESH_TOKEN.exp * 1000) }],
+      };
+      const TARGET_PRISMA_DELETE_MANY_INPUT = {
+        where: { expiresAt: { lte: new Date() } },
+      };
+
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([
+        { id: MOCK_ACCESS_TOKEN.jti, expiresAt: new Date(MOCK_ACCESS_TOKEN.exp * 1000) },
+      ]);
+      MOCK_PRISMA_SERVICE.invalidatedToken.createMany.mockResolvedValue({ count: 1 });
+      MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany.mockResolvedValue({ count: 1 });
+
+      await service.signOut(MOCK_DTO);
+
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.createMany).toHaveBeenCalledWith(
+        TARGET_PRISMA_CREATE_MANY_INPUT,
+      );
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany).toHaveBeenCalledWith(
+        TARGET_PRISMA_DELETE_MANY_INPUT,
+      );
+
+      jest.useRealTimers();
+    });
+
+    it('does nothing if both tokens are already invalidated', async () => {
+      MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockResolvedValue([
+        { id: MOCK_ACCESS_TOKEN.jti, expiresAt: new Date(MOCK_ACCESS_TOKEN.exp * 1000) },
+        { id: MOCK_REFRESH_TOKEN.jti, expiresAt: new Date(MOCK_REFRESH_TOKEN.exp * 1000) },
+      ]);
+
+      await service.signOut(MOCK_DTO);
+
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.createMany).not.toHaveBeenCalled();
+      expect(MOCK_PRISMA_SERVICE.invalidatedToken.deleteMany).not.toHaveBeenCalled();
+    });
+
     it('throws an internal server error exception if PrismaService throws', async () => {
       MOCK_PRISMA_SERVICE.invalidatedToken.findMany.mockRejectedValue('error');
 

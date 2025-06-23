@@ -78,12 +78,20 @@ export class AuthService {
   async signOut(dto: SignOutDto) {
     try {
       const tokens = [dto.accessToken, dto.refreshToken].filter(isNotNull);
+      if (!tokens.length) {
+        return;
+      }
+
       const alreadyInvalidatedTokens = await this.prismaService.invalidatedToken.findMany({
         where: { id: { in: tokens.map(({ jti }) => jti) } },
       });
       const tokensToInvalidate = tokens.filter(({ jti }) => {
         return alreadyInvalidatedTokens.every(({ id }) => jti !== id);
       });
+
+      if (!tokensToInvalidate.length) {
+        return;
+      }
 
       await this.prismaService.invalidatedToken.createMany({
         data: tokensToInvalidate.map(({ jti, exp }) => ({
