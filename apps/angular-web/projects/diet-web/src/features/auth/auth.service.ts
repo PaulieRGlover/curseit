@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { DOCUMENT, Inject, Injectable, PLATFORM_ID, inject } from '@angular/core';
 
 import { firstValueFrom } from 'rxjs';
 
@@ -8,13 +8,24 @@ import { Nullable } from '@curseit/types';
 import { GENERAL_MESSAGES } from '@/core/messages/general.messages';
 import { AuthValidationService } from '@/core/validation/external/auth/auth-validation.service';
 import { API } from '@/core/constants/api.constants';
+import { CookieService } from '@/core/browser/cookie.service';
+import { JwtService } from '@/core/jwt/jwt.service';
+
+type IdToken {
+  
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private authValidationService: AuthValidationService) {}
+  constructor(
+    private cookieService: CookieService,
+    private jwtService: JwtService,
+    private authValidationService: AuthValidationService,
+  ) {}
 
   private http = inject(HttpClient);
   private _accessToken: Nullable<string> = null;
+  private _idToken: Nullable<IdToken
 
   public get accessToken() {
     return this._accessToken;
