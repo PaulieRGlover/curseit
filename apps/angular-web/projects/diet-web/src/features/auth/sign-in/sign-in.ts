@@ -35,7 +35,7 @@ export class SignIn {
     try {
       await this.authService.signIn(login, password);
 
-      this.router.navigate(ROUTES_NAVIGATION.DASHBOARD, { replaceUrl: true });
+      await this.router.navigate(ROUTES_NAVIGATION.DASHBOARD, { replaceUrl: true });
     } catch (error) {
       const errorResponse = this.authValidationService.errorResponse(error);
       if (errorResponse?.status === ErrorStatusCodes.UNAUTHORIZED) {

@@ -3,10 +3,6 @@ export const LAYOUTS = {
   GUEST: 'guest',
 } as const;
 
-export const ANIMATIONS = {
-  DASHBOARD: 'DashboardAnimation',
-} as const;
-
 export const ROUTES_NAVIGATION = {
   DASHBOARD: ['/', 'dashboard'],
   AUTH: ['/', 'auth'],

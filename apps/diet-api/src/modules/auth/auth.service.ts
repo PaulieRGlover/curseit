@@ -109,13 +109,21 @@ export class AuthService {
   }
 
   async signTokens(user: UserDto): Promise<TokensDto> {
-    const idTokenPayload = { sub: user.id, login: user.login };
+    const idTokenPayload = {
+      sub: user.id,
+      login: user.login,
+      given_name: user.firstName,
+      family_name: user.lastName,
+    };
     const accessTokenPayload: JwtCreateDto = { sub: user.id, jti: this.uuidv4() };
     const refreshTokenPayload: JwtCreateDto = { sub: user.id, jti: this.uuidv4() };
     const { idJwtSecret, accessJwtSecret, refreshJwtSecret } = this.jwtConfig;
 
     const [idToken, accessToken, refreshToken] = await Promise.all([
-      await this.jwtService.signAsync(idTokenPayload, { secret: idJwtSecret }),
+      await this.jwtService.signAsync(idTokenPayload, {
+        expiresIn: this.jwtConfig.refreshTokenTtlInMs / 1000,
+        secret: idJwtSecret,
+      }),
       await this.jwtService.signAsync(accessTokenPayload, {
         expiresIn: this.jwtConfig.accessTokenTtlInMs / 1000,
         secret: accessJwtSecret,

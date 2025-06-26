@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterOutlet } from '@angular/router';
 
 import { Observable, map } from 'rxjs';
 
-import { AuthService } from '@/features/auth/auth.service';
-
-import { ProfileDropdown } from '../features';
+import { ProfileDropdown } from '@/features';
+import { AuthFlowService } from '@/features/auth/auth-flow.service';
 
 import { Guest, Home } from './layouts';
+import { RouterService } from '@/core/router/router.service';
+import { Nullable } from '@curseit/types';
 
 @Component({
   selector: 'app-root',
@@ -17,16 +18,16 @@ import { Guest, Home } from './layouts';
   styleUrl: './app.scss',
 })
 export class App {
-  constructor(
-    private route: ActivatedRoute,
-    private authService: AuthService,
-  ) {}
+  routerService = inject(RouterService);
+  authFlowService = inject(AuthFlowService);
 
   get layout$(): Observable<string | undefined> | undefined {
-    return this.route.firstChild?.data.pipe(map(data => data['layout']));
+    return this.routerService.base$.pipe(
+      map((base: Nullable<ActivatedRouteSnapshot>) => base?.data['layout']),
+    );
   }
 
   ngOnInit() {
-    this.authService.initialize();
+    this.authFlowService.initialize();
   }
 }

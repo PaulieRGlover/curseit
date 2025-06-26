@@ -13,8 +13,12 @@ export const getUsers = async (hashSecret: string): Promise<Array<UserWithPasswo
         const passwordHash = await argon2.hash(password, {
           secret: Buffer.from(hashSecret, 'utf-8'),
         });
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
         return {
           login: faker.internet.email({ provider: 'seed.curseit.io' }),
+          firstName,
+          lastName,
           password,
           passwordHash,
         };
@@ -22,21 +26,27 @@ export const getUsers = async (hashSecret: string): Promise<Array<UserWithPasswo
     ...[
       {
         login: 'test@curseit.io',
+        firstName: 'Test',
+        lastName: 'Testovic',
         password: 'eadeadeadA1!',
       },
       {
         login: 'test2@curseit.io',
+        firstName: 'Test',
+        lastName: 'Testovic',
         password: 'eadeadeadA1!',
       },
       {
         login: 'test3@curseit.io',
+        firstName: 'Test',
+        lastName: 'Testovic',
         password: 'eadeadeadA1!',
       },
-    ].map(async ({ login, password }) => {
+    ].map(async ({ password, ...rest }) => {
       const passwordHash = await argon2.hash(password, {
         secret: Buffer.from(hashSecret, 'utf-8'),
       });
-      return { login, password, passwordHash };
+      return { password, passwordHash, ...rest };
     }),
   ])),
 ];

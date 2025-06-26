@@ -47,23 +47,26 @@
       },
       "create-migration": {
         "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
         "options": {
-          "command": "dotenv -e .env.dev -- npx prisma migrate dev",
+          "command": "npx prisma migrate dev",
           "cwd": "libs/diet-orm"
         }
       },
       "apply-migration": {
         "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
         "options": {
-          "command": "dotenv -e .env.dev -- npx prisma db push",
+          "command": "npx prisma db push",
           "cwd": "libs/diet-orm"
         },
         "dependsOn": ["docker-up-dev"]
       },
       "create-client": {
         "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
         "options": {
-          "command": "dotenv -e .env.dev -- npx prisma generate",
+          "command": "npx prisma generate",
           "cwd": "libs/diet-orm"
         }
       },
@@ -90,10 +93,10 @@
         },
         "configurations": {
           "development": {
-            "command": "dotenv -e .env.development -- npx prisma studio --schema=src/schema.prisma"
+            "command": "npx prisma studio --schema=src/schema.prisma"
           },
           "e2e": {
-            "command": "dotenv -e .env.e2e -- npx prisma studio --schema=src/schema.prisma"
+            "command": "npx prisma studio --schema=src/schema.prisma"
           }
         }
       }

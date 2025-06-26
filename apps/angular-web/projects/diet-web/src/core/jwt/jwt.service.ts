@@ -1,24 +1,14 @@
 import { Injectable } from '@angular/core';
-
-import { ZodMiniAny, z } from 'zod/v4-mini';
+import { jwtVerify } from 'jose';
 
 @Injectable({ providedIn: 'root' })
 export class JwtService {
-  private jwt = import('jsonwebtoken');
-
-  async read<T extends ZodMiniAny>(
+  async read(
     token: string,
     secret: string,
-    schema: T,
-  ): Promise<z.infer<T> | null> {
-    const { verify } = await this.jwt;
-    const decoded = verify(token, secret);
+  ): Promise<unknown | null> {
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
 
-    const result = schema.safeParse(decoded);
-    if (result.error) {
-      throw result.error;
-    }
-
-    return result.data;
+    return payload;
   }
 }

@@ -6,6 +6,7 @@ export const REFRESH_TOKEN_COOKIE_NAME = 'refresh_token';
 
 export const ID_TOKEN_COOKIE_OPTIONS: CookieSerializeOptions = {
   path: '/',
+  secure: true,
 };
 
 export const REFRESH_TOKEN_COOKIE_OPTIONS: CookieSerializeOptions = {

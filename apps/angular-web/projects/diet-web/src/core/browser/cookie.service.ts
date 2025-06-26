@@ -16,6 +16,7 @@ export class CookieService {
     }
 
     const match = this.document.cookie.split('; ').find(cookie => cookie.startsWith(`${name}=`));
+
     return match ? decodeURIComponent(match.split('=')[1]) : null;
   }
 }
