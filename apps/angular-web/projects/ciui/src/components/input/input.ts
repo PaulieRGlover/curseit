@@ -1,4 +1,12 @@
-import { Component, Input, booleanAttribute, forwardRef, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  booleanAttribute,
+  computed,
+  forwardRef,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -36,10 +44,7 @@ export type INPUT_SIZES = 'small' | 'default';
   ],
 })
 export class CiuiInput implements ControlValueAccessor {
-  formErrorService = inject(FormErrorService);
-  private uuid = uuidv4();
-  private onChange = (value: any) => {};
-  private onTouched = () => {};
+  public formErrorService = inject(FormErrorService);
 
   @Input({ required: true }) control!: AbstractControl;
   @Input({ required: true }) label!: string;
@@ -54,21 +59,17 @@ export class CiuiInput implements ControlValueAccessor {
   @Input() size: INPUT_SIZES = 'default';
   @Input({ transform: booleanAttribute }) transparent = false;
 
-  id: string = '';
-
-  get hasOneError() {
-    return this.formErrorService.errors().length === 1;
-  }
-
-  get tempFormattedErrors() {
+  public id = signal('');
+  public hasOneError = computed(() => this.formErrorService.errors().length === 1);
+  public tempFormattedErrors = computed(() => {
     return this.formErrorService
       .errors()
       .map(error => `- ${error}`)
       .join('\n');
-  }
+  });
 
   ngOnInit() {
-    this.id = this.computeId();
+    this.id.set(this.computeId());
     this.formErrorService.initialize(this.control);
   }
 
@@ -93,6 +94,10 @@ export class CiuiInput implements ControlValueAccessor {
   onBlur() {
     this.control?.markAsTouched();
   }
+
+  private readonly uuid = uuidv4();
+  private onChange = (value: any) => {};
+  private onTouched = () => {};
 
   private computeId() {
     const validReadableId = (this.label ?? CiuiInput.name).replace(/[\W]/g, '-').toLowerCase();

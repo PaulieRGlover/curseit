@@ -2,7 +2,7 @@
   ciui-form
   class="cid-auth-form"
   [formGroup]="signUpData"
-  [loading]="loading"
+  [loading]="loading()"
   (ngSubmit)="onSubmit()"
 >
   <span ngProjectAs="ciui-form-title">Sign Up to CoolShrank</span>

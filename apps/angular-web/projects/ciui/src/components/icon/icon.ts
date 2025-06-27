@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 type CiuiIcons =
@@ -19,11 +19,11 @@ export class CiuiIcon {
 
   @Input({ required: true }) name!: CiuiIcons;
 
-  svg: SafeHtml = '';
+  svg = signal<SafeHtml>('');
 
   async ngOnInit() {
     const entry = SvgMap[this.name];
     const svg = typeof entry === 'string' ? entry : (await entry()).default;
-    this.svg = this.sanitizer.bypassSecurityTrustHtml(svg);
+    this.svg.set(this.sanitizer.bypassSecurityTrustHtml(svg));
   }
 }

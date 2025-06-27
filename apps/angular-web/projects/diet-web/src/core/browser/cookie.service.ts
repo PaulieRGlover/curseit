@@ -1,14 +1,12 @@
 import { isPlatformBrowser } from '@angular/common';
-import { DOCUMENT, Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, inject, Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 import { Nullable } from '@curseit/types';
 
 @Injectable({ providedIn: 'root' })
 export class CookieService {
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object,
-  ) {}
+  private document = inject(DOCUMENT);
+  private platformId = inject(PLATFORM_ID);
 
   public getCookie(name: string): Nullable<string> {
     if (!isPlatformBrowser(this.platformId)) {

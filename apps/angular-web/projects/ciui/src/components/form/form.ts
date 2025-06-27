@@ -16,10 +16,7 @@ export class CiuiForm {
   @Input({ alias: 'formGroup', required: true }) control!: AbstractControl;
   @Input({ transform: booleanAttribute }) loading = false;
 
-  @HostBinding('class')
-  get hostClasses() {
-    return 'ciui-form';
-  }
+  @HostBinding('class') hostClasses = 'ciui-form';
 
   constructor(private form: ElementRef<HTMLFormElement>) {
     this.form.nativeElement.addEventListener('submit', event => {

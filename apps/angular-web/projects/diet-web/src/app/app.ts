@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterOutlet } from '@angular/router';
 
 import { Observable, map } from 'rxjs';
@@ -18,14 +18,10 @@ import { Nullable } from '@curseit/types';
   styleUrl: './app.scss',
 })
 export class App {
-  routerService = inject(RouterService);
-  authFlowService = inject(AuthFlowService);
+  private routerService = inject(RouterService);
+  private authFlowService = inject(AuthFlowService);
 
-  get layout$(): Observable<string | undefined> | undefined {
-    return this.routerService.base$.pipe(
-      map((base: Nullable<ActivatedRouteSnapshot>) => base?.data['layout']),
-    );
-  }
+  layout = computed(() => this.routerService.base()?.data['layout']);
 
   ngOnInit() {
     this.authFlowService.initialize();

@@ -12,18 +12,19 @@
     [class.ciui-a11y-hidden]="labelInvisible && !formErrorService.hasErrors()"
   >
     <label
-      [for]="id"
+      [for]="id()"
       class="ciui-input__label"
       [class.ciui-a11y-hidden]="labelInvisible"
     >{{ label }}</label>
 
-    @if (formErrorService.hasErrors() && hasOneError) {
-      <div
-        [title]="formErrorService.firstError()"
-        class="ciui-input__errors ciui-ellipsis"
-      ><span class="ciui-ellipsis__text">{{ formErrorService.firstError() }}</span></div>
+    @if (formErrorService.hasErrors() && hasOneError()) {
+    <div [title]="formErrorService.firstError()" class="ciui-input__errors ciui-ellipsis">
+      <span class="ciui-ellipsis__text">{{ formErrorService.firstError() }}</span>
+    </div>
     } @else if (formErrorService.hasErrors()) {
-      <div class="ciui-input__errors"><ciui-icon [title]="tempFormattedErrors" name="info" /></div>
+    <div class="ciui-input__errors">
+      <ciui-icon [title]="tempFormattedErrors()" name="info" />
+    </div>
     }
   </div>
 
@@ -36,6 +37,6 @@
       class="ciui-input__input ciui-input-label"
       (input)="onInput($event)"
       (blur)="onBlur()"
-    >
+    />
   </div>
 </div>

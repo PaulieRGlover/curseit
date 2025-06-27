@@ -10,7 +10,7 @@ export const notAuthenticated: CanActivateFn = () => {
   const router = inject(Router);
 
   return (
-    !authService.isAuthenticatedUnsafe ||
+    !authService.isAuthenticatedUnsafe() ||
     router.createUrlTree(ROUTES_NAVIGATION.DASHBOARD)
   );
 };

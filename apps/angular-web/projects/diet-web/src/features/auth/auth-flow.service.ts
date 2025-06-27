@@ -11,17 +11,9 @@ import { authenticated } from './guards/authenticated.guard';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFlowService {
-  router = inject(Router);
-  routeService = inject(RouterService);
-  authService = inject(AuthService);
-
-  private get isAuthProtected(): boolean {
-    return (
-      this.routeService.base?.routeConfig?.canActivate?.some(guard => {
-        return guard === authenticated;
-      }) ?? false
-    );
-  }
+  private router = inject(Router);
+  private routeService = inject(RouterService);
+  private authService = inject(AuthService);
 
   async initialize() {
     try {
@@ -40,6 +32,12 @@ export class AuthFlowService {
 
   async signIn() {
     // TODO: implement sign in with query params and redirects
+  }
+
+  private get isAuthProtected(): boolean {
+    const baseConfig = this.routeService.base()?.routeConfig;
+
+    return baseConfig?.canActivate?.some(guard => guard === authenticated) ?? false;
   }
 
   private async checkPromisedAuthStatus() {

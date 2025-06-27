@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { zodValidate } from '../../zod-validate-for-form-control.util';
-import { loginSchema, passwordCreateSchema, passwordSchema } from '@/core/dtos/internal/user.dto';
+import { AbstractControl } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class UserValidationService {
-  get login() {
-    return zodValidate(loginSchema);
+  public async login(control: AbstractControl) {
+    const schema = (await import('@/core/dtos/internal/login.dto')).loginSchema;
+    return (await import('../../zod-validate-for-form-control.util')).zodValidate(schema, control);
   }
 
-  get password() {
-    return zodValidate(passwordSchema);
+  public async password(control: AbstractControl) {
+    const schema = (await import('@/core/dtos/internal/password.dto')).passwordSchema;
+    return (await import('../../zod-validate-for-form-control.util')).zodValidate(schema, control);
   }
 
-  get passwordCreate() {
-    return zodValidate(passwordCreateSchema);
+  public async passwordCreate(control: AbstractControl) {
+    const schema = (await import('@/core/dtos/internal/password-create.dto')).passwordCreateSchema;
+    return (await import('../../zod-validate-for-form-control.util')).zodValidate(schema, control);
   }
 }

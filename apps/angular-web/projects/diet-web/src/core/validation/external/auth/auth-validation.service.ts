@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
-
-import {
-  errorResponseSchema,
-  idTokenPayloadSchema,
-  successResponseSchema,
-} from '@/core/dtos/external/auth.dto';
-
-import { zodValidate } from '../../zod-validate.util';
-
 @Injectable({ providedIn: 'root' })
 export class AuthValidationService {
-  get idTokenPayload() {
-    return zodValidate<typeof idTokenPayloadSchema>(idTokenPayloadSchema);
+  private util = import('../../zod-validate.util');
+
+  public async idTokenPayload(input: any) {
+    const schema = (await import('@/core/dtos/external/id-token-payload.dto')).idTokenPayloadSchema;
+    return (await this.util).zodValidate(schema, input);
   }
 
-  get errorResponse() {
-    return zodValidate<typeof errorResponseSchema>(errorResponseSchema);
+  public async errorResponse(input: any) {
+    const schema = (await import('@/core/dtos/external/auth-error-response.dto'))
+      .errorResponseSchema;
+    return (await this.util).zodValidate(schema, input);
   }
 
-  get successResponse() {
-    return zodValidate<typeof successResponseSchema>(successResponseSchema);
+  public async successResponse(input: any) {
+    const schema = (await import('@/core/dtos/external/auth-success-response.dto'))
+      .successResponseSchema;
+    return (await this.util).zodValidate(schema, input);
   }
 }

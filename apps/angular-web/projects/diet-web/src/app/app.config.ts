@@ -2,7 +2,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter, withViewTransitions } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { routes } from './app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZonelessChangeDetection(),
     provideRouter(routes, withViewTransitions()),
     provideHttpClient(withFetch(), withInterceptors([baseInterceptor])),
   ],

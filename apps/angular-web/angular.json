@@ -24,11 +24,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "tsConfig": "projects/ciui/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "tsConfig": "projects/ciui/tsconfig.spec.json"
           }
         }
       }
@@ -48,9 +44,6 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/diet-web/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "projects/diet-web/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -105,10 +98,6 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "projects/diet-web/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [

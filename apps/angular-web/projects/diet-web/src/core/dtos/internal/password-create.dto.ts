@@ -1,13 +1,5 @@
 import * as z from 'zod/v4-mini';
 
-export const loginSchema = z.string().check(
-  z.email({ message: 'Login must be a valid email' }),
-);
-
-export const passwordSchema = z.string().check(
-  z.minLength(1, { message: 'Password is required' }),
-);
-
 export const passwordCreateSchema = z.string().check(
   z.regex(/[a-z]/, { message: 'Must contain lower-case letters' }),
   z.regex(/[A-Z]/, { message: 'Must contain upper-case letters' }),
