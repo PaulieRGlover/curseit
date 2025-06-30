@@ -1,12 +1,13 @@
 import type { ZodMiniType } from 'zod/v4-mini';
 
 import type { Nullable } from '@curseit/types';
+import { AbstractControl } from '@angular/forms';
 
 export const zodValidate = <T extends ZodMiniType>(
   schema: T,
-  input: unknown,
+  control: AbstractControl,
 ): Nullable<Record<string, string>> => {
-  const result = schema.safeParse(input);
+  const result = schema.safeParse(control.value);
   return (
     result.error?.issues.reduce<Nullable<Record<string, string>>>((errorObject, error) => {
       return {
