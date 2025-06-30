@@ -1,0 +1,122 @@
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
+import type { MaybeUndefined } from '@curseit/types';
+import { ApiResult } from './types';
+import {
+  AUTHORIZATION_TOKEN_FROM_BODY,
+  AUTHORIZATION_TOKEN_KEY,
+  PATH,
+  USE_AUTHORIZATION,
+  VALIDATION_FAILURE,
+  VALIDATION_SUCCESS,
+} from './constants';
+
+type ValidationService = {
+  [k: string]: MaybeUndefined<(input: unknown) => any>,
+};
+
+type AuthService = {
+  [k: string]: string,
+};
+
+type Method = 'get' | 'post' | 'patch' | 'options' | 'delete';
+
+export const createAction = (method: Method) => {
+  return function(path: string): MethodDecorator {
+    return function(target, propertyKey, descriptor: PropertyDescriptor) {
+      const reportError = (error: unknown) => {
+        console.error(`At ${target.constructor.name}, in ${propertyKey.toString()}`);
+        console.error(error);
+      };
+
+      descriptor.value = async function (
+        this: {
+          http: HttpClient,
+          validation?: ValidationService,
+          authService?: AuthService,
+          [key: string]: any,
+        },
+        body: any = {},
+      ): ApiResult<any, any> {
+        const base = Reflect.getMetadata(PATH, target.constructor) ?? '/';
+        const fullPath = `${base}/${path}`;
+
+        const options = {
+          headers: ({} as Record<string, string>),
+          withCredentials: true,
+        };
+
+        const useAuthorization = Reflect.getMetadata(USE_AUTHORIZATION, target, propertyKey);
+        if (useAuthorization) {
+          const tokenKey = Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target, propertyKey);
+          const tokenFromBody = Reflect.getMetadata(
+            AUTHORIZATION_TOKEN_FROM_BODY,
+            target,
+            propertyKey,
+          );
+          let token: MaybeUndefined<string>;
+          if (tokenFromBody) {
+            token = body;
+            body = undefined;
+          } else if (tokenKey) {
+            token = this.authService?.[tokenKey] ??
+            typeof this[tokenKey] === 'string'
+              ? this[tokenKey]
+              : null;
+          }
+
+          if (!token) {
+            reportError(`No token by address this[${tokenKey}] or this.authService[${tokenKey}]`);
+          } else {
+            options.headers['Authorization'] = `Bearer ${token}`;
+          }
+        }
+
+        try {
+          let result = await firstValueFrom(
+            method === 'delete'
+              ? this.http[method](fullPath)
+              : this.http[method](fullPath, body),
+          );
+
+          const validationName = Reflect.getMetadata(VALIDATION_SUCCESS, target, propertyKey);
+          const validator = this.validation?.[validationName];
+          if (validator) {
+            try {
+              result = await validator(result);
+            } catch (error) {
+              reportError(`API result validation failed: ${error}`);
+            }
+          } else if (validationName) {
+            reportError(`No validator by address this.validation[${validationName}]`);
+          }
+
+          return { success: result };
+        } catch (error) {
+          const validationName = Reflect.getMetadata(VALIDATION_FAILURE, target, propertyKey);
+          const validator = this.validation?.[validationName];
+          if (validator) {
+            try {
+              error = await validator(error);
+            } catch (error) {
+              reportError(`API error validation failed: ${error}`);
+            }
+          }
+
+          return { failure: error };
+        }
+      };
+    }
+  }
+}
+
+export const Post = createAction('post');
+
+export const Get = createAction('get');
+
+export const Patch = createAction('patch');
+
+export const Options = createAction('options');
+
+export const Delete = createAction('delete');

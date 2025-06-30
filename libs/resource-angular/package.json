@@ -1,0 +1,18 @@
+{
+  "name": "@curseit/resource-angular",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "resource-angular",
+    "targets": {
+      "serve": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "npx ng build resource --watch",
+          "readyWhen": "Compilation complete.",
+          "cwd": "apps/angular-web"
+        }
+      }
+    }
+  }
+}

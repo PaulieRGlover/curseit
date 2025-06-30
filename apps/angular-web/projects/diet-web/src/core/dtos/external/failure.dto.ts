@@ -8,8 +8,9 @@ export const errorSchema = z.object({
   statusCode: z.enum(ERROR_STATUS_CODES),
 });
 
-export const errorResponseSchema = z.object({
+export const failureSchema = z.object({
   status: z.enum(ERROR_STATUS_CODES),
   ok: z.literal(false),
   error: errorSchema,
 });
+export type Failure = z.infer<typeof failureSchema>;

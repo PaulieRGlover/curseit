@@ -25,7 +25,9 @@ export class RouterService {
         if (!snapshot.firstChild) {
           this._leaf.set(snapshot as LeafRouteSnapshot);
           this._tree.set(snapshot.pathFromRoot);
-        } else if (snapshot.parent && !snapshot.parent.parent) {
+        }
+
+        if (snapshot.parent && !snapshot.parent.parent) {
           this._base.set(snapshot);
         }
       });

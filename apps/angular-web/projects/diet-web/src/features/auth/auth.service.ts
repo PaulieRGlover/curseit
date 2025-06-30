@@ -1,26 +1,23 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-
-import { firstValueFrom } from 'rxjs';
 
 import { Nullable } from '@curseit/types';
 
 import { CookieService } from '@/core/browser/cookie.service';
-import { API } from '@/core/constants/api.constants';
-import type { IdTokenPayload } from '@/core/dtos/external/id-token-payload.dto';
+import type { IdTokenPayload } from '@/features/auth/dtos/id-token-payload.dto';
 import { JwtService } from '@/core/jwt/jwt.service';
 import { GENERAL_MESSAGES } from '@/core/messages/general.messages';
-import { AuthValidationService } from '@/core/validation/external/auth/auth-validation.service';
 import { environment } from '@/environments/environment';
 
+import { AuthApiResult, AuthResource } from './auth.resource';
 import { ID_TOKEN_COOKIE_NAME } from './constants';
+import { AuthExternalValidationService } from './validation/auth-external-validation.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
   private cookieService = inject(CookieService);
   private jwtService = inject(JwtService);
-  private authValidationService = inject(AuthValidationService);
+  private authValidationService = inject(AuthExternalValidationService);
+  private authResource = inject(AuthResource);
 
   public readonly isAuthenticatedUnsafe = computed(() => Boolean(this._idToken()));
   public readonly isAuthenticated = computed(() => Boolean(this._idTokenDecoded()));
@@ -38,51 +35,49 @@ export class AuthService {
     }
   }
 
-  async refresh() {
-    const response = await firstValueFrom(this.http.get(API.REFRESH));
+  async refresh(): AuthApiResult {
+    const result = await this.authResource.refresh();
 
-    const successResponse = await this.authValidationService.successResponse(response);
-    if (successResponse) {
-      this._accessToken.set(successResponse.access_token);
+    if (result.success) {
+      this._accessToken.set(result.success.access_token);
+
+      await this.handleIdToken();
     }
+
+    return result;
   }
 
-  async signUp(login: string, password: string) {
-    const response = await firstValueFrom(this.http.post(API.SIGN_UP, { login, password }));
+  async signUp(login: string, password: string): AuthApiResult {
+    const result = await this.authResource.signUp({ login, password });
 
-    const successResponse = await this.authValidationService.successResponse(response);
-    if (!successResponse) {
-      throw new Error(GENERAL_MESSAGES.API_RESPONSE_INVALID);
+    if (result.success) {
+      this._accessToken.set(result.success.access_token);
+
+      await this.handleIdToken();
     }
 
-    this._accessToken.set(successResponse.access_token);
-
-    await this.handleIdToken();
+    return result;
   }
 
-  async signIn(login: string, password: string) {
-    const response = await firstValueFrom(this.http.post(API.SIGN_IN, { login, password }));
+  async signIn(login: string, password: string): AuthApiResult {
+    const result = await this.authResource.signIn({ login, password });
 
-    const successResponse = await this.authValidationService.successResponse(response);
-    if (!successResponse) {
-      throw new Error(GENERAL_MESSAGES.API_RESPONSE_INVALID);
+    if (result.success) {
+      this._accessToken.set(result.success.access_token);
+      await this.handleIdToken();
     }
 
-    this._accessToken.set(successResponse.access_token);
-
-    await this.handleIdToken();
+    return result;
   }
 
   async signOut() {
-    try {
-      await firstValueFrom(
-        this.http.post(API.SIGN_OUT, {}, { headers: { Auth: `Bearer ${this._idToken}` } }),
-      );
-    } catch (_error) {}
+    const idToken = this._idToken();
 
     this._accessToken.set(null);
     this._idToken.set(null);
     this._idTokenDecoded.set(null);
+
+    return this.authResource.signOut(idToken);
   }
 
   private _idToken = signal<Nullable<string>>(null);

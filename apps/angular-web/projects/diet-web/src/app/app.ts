@@ -1,15 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
-import { Observable, map } from 'rxjs';
-
+import { RouterService } from '@/core/router/router.service';
 import { ProfileDropdown } from '@/features';
 import { AuthFlowService } from '@/features/auth/auth-flow.service';
 
 import { Guest, Home } from './layouts';
-import { RouterService } from '@/core/router/router.service';
-import { Nullable } from '@curseit/types';
 
 @Component({
   selector: 'app-root',

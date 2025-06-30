@@ -4,7 +4,12 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@curseit/ciui": ["./dist/ciui"]
+      "@curseit/ciui": [
+        "./dist/ciui"
+      ],
+      "@curseit/resource": [
+        "./dist/resource"
+      ]
     },
     "strict": true,
     "noImplicitOverride": true,
@@ -12,11 +17,11 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "isolatedModules": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "emitDecoratorMetadata": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -44,6 +49,12 @@
     },
     {
       "path": "./projects/diet-web/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/resource/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/resource/tsconfig.spec.json"
     }
   ]
 }

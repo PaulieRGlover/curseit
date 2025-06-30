@@ -1,10 +1,13 @@
-import type { Nullable } from '@curseit/types';
 import type { ZodMiniType, infer as ZInfer } from 'zod/v4-mini';
 
 export const zodValidate = <T extends ZodMiniType>(
   schema: T,
   input: unknown,
-): Nullable<ZInfer<T>> => {
+): ZInfer<T> => {
   const result = schema.safeParse(input);
-  return result.success ? result.data : null;
+  if (!result.success) {
+    throw new Error(`Backend to Frontend Validation Error: ${result.error}`)
+  } else {
+    return result.data;
+  }
 };

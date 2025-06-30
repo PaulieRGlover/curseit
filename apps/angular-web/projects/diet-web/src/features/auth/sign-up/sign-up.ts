@@ -6,8 +6,9 @@ import { CiuiForm, CiuiInput } from '@curseit/ciui';
 
 import { ERROR_STATUS_CODES } from '@/core/constants/api.constants';
 import { ROUTES_NAVIGATION } from '@/core/constants/router.constants';
-import { AuthValidationService } from '@/core/validation/external/auth/auth-validation.service';
-import { UserValidationService } from '@/core/validation/internal/user/user-validation.service';
+import {
+  AuthInternalValidationService,
+} from '@/features/auth/validation/auth-internal-validation.service';
 
 import { AuthService } from '../auth.service';
 
@@ -20,27 +21,27 @@ import { AuthService } from '../auth.service';
 export class SignUp {
   private router = inject(Router);
   private authService = inject(AuthService);
-  private authValidationService = inject(AuthValidationService);
-  private userValidationService = inject(UserValidationService);
+  private authInternalValidationService = inject(AuthInternalValidationService);
 
   signUpData = new FormGroup({
-    login: new FormControl('', { asyncValidators: this.userValidationService.login }),
-    password: new FormControl('', { asyncValidators: this.userValidationService.passwordCreate }),
+    login: new FormControl('', {
+      asyncValidators: this.authInternalValidationService.login,
+    }),
+    password: new FormControl('', {
+      asyncValidators: this.authInternalValidationService.passwordCreate,
+    }),
   });
   loading = signal(false);
 
   async signUp(login: string, password: string) {
     this.loading.set(true);
 
-    try {
-      await this.authService.signUp(login, password);
+    const { failure } = await this.authService.signUp(login, password);
 
-      this.router.navigate(ROUTES_NAVIGATION.DASHBOARD, { replaceUrl: true });
-    } catch (error) {
-      const errorResponse = await this.authValidationService.errorResponse(error);
-      if (errorResponse?.status === ERROR_STATUS_CODES.CONFLICT) {
-        this.signUpData.controls.login.setErrors({ conflict: errorResponse.error.message });
-      }
+    if (!failure) {
+      await this.router.navigate(ROUTES_NAVIGATION.DASHBOARD, { replaceUrl: true });
+    } else if (failure.status === ERROR_STATUS_CODES.CONFLICT) {
+      this.signUpData.controls.login.setErrors({ conflict: failure.error.message });
     }
 
     this.loading.set(false);

@@ -9,28 +9,30 @@
         "executor": "nx:run-commands",
         "options": {
           "commands": [
-            "npm link ./dist/ciui",
+            "npm link ./dist/ciui ./dist/resource",
             "npx ng build diet-web --stats-json"
           ],
           "cwd": "apps/angular-web",
           "parallel": false
         },
         "dependsOn": [
-          "ciui-angular:build"
+          "ciui-angular:build",
+          "resource-angular:build"
         ]
       },
       "serve": {
         "executor": "nx:run-commands",
         "options": {
           "commands": [
-            "npm link ./dist/ciui",
+            "npm link ./dist/ciui ./dist/resource",
             "npx ng serve diet-web"
           ],
           "cwd": "apps/angular-web",
           "parallel": false
         },
         "dependsOn": [
-          "ciui-angular:serve"
+          "ciui-angular:serve",
+          "resource-angular:serve"
         ]
       }
     }
