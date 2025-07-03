@@ -20,24 +20,24 @@ export class AuthResource {
 
   @Post(API.SIGN_UP)
   @UseValidation()
-  async signUp(
-    body: { login: string; password: string },
-    /* @ts-ignore: Decorator ensures return type */
-  ): AuthApiResult {}
+  async signUp(body: { login: string; password: string }): AuthApiResult {
+    return undefined!;
+  }
 
   @Post(API.SIGN_IN)
   @UseValidation()
-  async signIn(
-    body: { login: string; password: string },
-    /* @ts-ignore: Decorator ensures return type */
-  ): AuthApiResult {}
+  async signIn(body: { login: string; password: string }): AuthApiResult {
+    return undefined!;
+  }
 
   @Get(API.REFRESH)
-  /* @ts-ignore: Decorator ensures return type */
-  async refresh(): AuthApiResult {}
+  async refresh(): AuthApiResult {
+    return undefined!;
+  }
 
   @Post(API.SIGN_OUT)
   @UseAuthorization({ fromBody: true })
-  /* @ts-ignore: Decorator ensures return type */
-  async signOut(token: Nullable<string>): ApiResult<{}, Failure> {}
+  async signOut(token: Nullable<string>): ApiResult<{}, Failure> {
+    return undefined!;
+  }
 }

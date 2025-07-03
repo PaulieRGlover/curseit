@@ -22,6 +22,14 @@ type AuthService = {
 
 type Method = 'get' | 'post' | 'patch' | 'options' | 'delete';
 
+const ERRORS = {
+  NO_HTTP_CLIENT: `No HttpClient injected. Please, inject HttpClient.`,
+  NO_TOKEN: (key: any) => `No token by address this[${key}] or this.authService[${key}]`,
+  API_VALIDATION_FAILED: (error: any) => `API result validation failed: ${error}`,
+  NO_VALIDATOR: (key: any) => `No validator by address this.validation[${key}]`,
+  API_ERROR_VALIDATION_FAILED: (error: any) => `API error validation failed: ${error}`,
+} as const;
+
 export const createAction = (method: Method) => {
   return function(path: string): MethodDecorator {
     return function(target, propertyKey, descriptor: PropertyDescriptor) {
@@ -32,13 +40,19 @@ export const createAction = (method: Method) => {
 
       descriptor.value = async function (
         this: {
-          http: HttpClient,
+          http?: HttpClient,
           validation?: ValidationService,
           authService?: AuthService,
           [key: string]: any,
         },
         body: any = {},
       ): ApiResult<any, any> {
+        if (!this.http) {
+          reportError(ERRORS.NO_HTTP_CLIENT);
+
+          throw ERRORS.NO_HTTP_CLIENT;
+        }
+
         const base = Reflect.getMetadata(PATH, target.constructor) ?? '/';
         const fullPath = `${base}/${path}`;
 
@@ -67,7 +81,7 @@ export const createAction = (method: Method) => {
           }
 
           if (!token) {
-            reportError(`No token by address this[${tokenKey}] or this.authService[${tokenKey}]`);
+            reportError(ERRORS.NO_TOKEN(tokenKey));
           } else {
             options.headers['Authorization'] = `Bearer ${token}`;
           }
@@ -86,10 +100,10 @@ export const createAction = (method: Method) => {
             try {
               result = await validator(result);
             } catch (error) {
-              reportError(`API result validation failed: ${error}`);
+              reportError(ERRORS.API_VALIDATION_FAILED(error));
             }
           } else if (validationName) {
-            reportError(`No validator by address this.validation[${validationName}]`);
+            reportError(ERRORS.NO_VALIDATOR(validationName));
           }
 
           return { success: result };
@@ -100,7 +114,7 @@ export const createAction = (method: Method) => {
             try {
               error = await validator(error);
             } catch (error) {
-              reportError(`API error validation failed: ${error}`);
+              reportError(ERRORS.API_ERROR_VALIDATION_FAILED(error));
             }
           }
 
