@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../dist"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Food {
+  id       String @id @default(uuid())
+  name     String
+  provider String
+
+  nutrients    NutrientInFood[]
+  cacheEntries CachedFood[]
+
+  @@unique([name, provider])
+  @@map("foods")
+}
+
+model Nutrient {
+  id   String @id @default(uuid())
+  name String @unique
+
+  foods NutrientInFood[]
+
+  @@map("nutrients")
+}
+
+model NutrientInFood {
+  value Float?
+
+  food       Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  foodId     String   @map("food_id")
+  nutrient   Nutrient @relation(fields: [nutrientId], references: [id], onDelete: Cascade)
+  nutrientId String   @map("nutrient_id")
+
+  @@id([foodId, nutrientId])
+  @@map("nutrients_in_food")
+}
+
+model CacheEntry {
+  id        String   @id @default(uuid())
+  hash      String   @unique
+  expiresAt DateTime @map("expires_at")
+
+  foods CachedFood[]
+
+  @@map("cache_entries")
+}
+
+model CachedFood {
+  food         Food       @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  foodId       String     @map("food_id")
+  cacheEntry   CacheEntry @relation(fields: [cacheEntryId], references: [hash], onDelete: Cascade)
+  cacheEntryId String     @map("cache_entry_id")
+
+  @@id([foodId, cacheEntryId])
+  @@map("cached_foods")
+}

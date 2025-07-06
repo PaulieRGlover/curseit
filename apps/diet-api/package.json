@@ -46,7 +46,8 @@
         "defaultConfiguration": "development",
         "dependsOn": [
           "build",
-          "diet-orm:bootstrap"
+          "diet-orm:bootstrap",
+          "foods-orm:bootstrap"
         ],
         "options": {
           "buildTarget": "diet-api:build",

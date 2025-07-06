@@ -28,11 +28,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/diet-orm/*"]
+      "exclude": ["libs/diet-orm/*", "libs/foods-orm/*"]
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/diet-orm/*"],
+      "include": ["libs/diet-orm/*", "libs/foods-orm/*"],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

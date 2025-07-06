@@ -40,10 +40,14 @@ describe('AuthService', () => {
   const MOCK_ID = faker.string.alpha(12);
   const MOCK_UUID = faker.string.alpha(12);
   const MOCK_HASH = faker.string.alpha(12);
+  const MOCK_FIRST_NAME = faker.person.firstName();
+  const MOCK_LAST_NAME = faker.person.lastName();
   const MOCK_PRISMA_USER = {
     id: MOCK_ID,
     login: MOCK_LOGIN,
     passwordHash: MOCK_HASH,
+    firstName: MOCK_FIRST_NAME,
+    lastName: MOCK_LAST_NAME,
   };
   const MOCK_USER = {
     id: MOCK_ID,
@@ -141,7 +145,7 @@ describe('AuthService', () => {
       MOCK_HASH_SERVICE.hashPassword.mockResolvedValue(MOCK_HASH);
       MOCK_PRISMA_SERVICE.user.create.mockRejectedValue(
         new Prisma.PrismaClientKnownRequestError('', {
-          code: PRISMA_ERRORS.UNIQUE_CONTRAINT_FAILED,
+          code: PRISMA_ERRORS.UNIQUE_CONSTRAINT_FAILED,
           clientVersion: '',
         }),
       );

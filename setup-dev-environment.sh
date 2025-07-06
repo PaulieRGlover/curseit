@@ -44,6 +44,26 @@ install_docker() {
   fi
 }
 
+install_git_lfs() {
+  if command -v git-lfs &>/dev/null; then
+    echo "✅ Git LFS already installed: $(git-lfs --version)"
+  else
+    echo "📦 Installing Git LFS..."
+    sudo apt-get install -y git-lfs
+    echo "🔧 Initializing Git LFS..."
+    git lfs install
+  fi
+}
+
+install_postgres_client() {
+  if command -v pg_dump &>/dev/null; then
+    echo "✅ PostgreSQL client tools already installed: $(pg_dump --version)"
+  else
+    echo "📦 Installing PostgreSQL client tools (pg_dump, pg_restore)..."
+    sudo apt-get install -y postgresql-client
+  fi
+}
+
 install_ohmyzsh() {
   if [ "$SHELL" = "/bin/zsh" ] || [ "$SHELL" = "/usr/bin/zsh" ]; then
     echo "✅ Zsh already the default shell."
@@ -76,6 +96,8 @@ install_vscode_extensions() {
 
 install_node
 install_docker
+install_git_lfs
+install_postgres_client
 install_ohmyzsh
 install_vscode_extensions
 

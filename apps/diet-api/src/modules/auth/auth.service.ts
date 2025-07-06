@@ -47,7 +47,7 @@ export class AuthService {
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === PRISMA_ERRORS.UNIQUE_CONTRAINT_FAILED) {
+        if (error.code === PRISMA_ERRORS.UNIQUE_CONSTRAINT_FAILED) {
           throw new ConflictException(AUTH_MESSAGES.CREDENTIALS_TAKEN);
         }
       }

@@ -1,0 +1,106 @@
+{
+  "name": "@curseit/foods-orm",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "nx": {
+    "tags": [
+      "server-side",
+      "diet",
+      "foods-orm"
+    ],
+    "name": "foods-orm",
+    "targets": {
+      "bootstrap": {
+        "executor": "@curseit/tools:bootstrap-prisma",
+        "defaultConfiguration": "development",
+        "configurations": {
+          "development": {},
+          "e2e": {
+            "seed": true
+          }
+        }
+      },
+      "tear-down": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "cwd": "libs/foods-orm"
+        },
+        "configurations": {
+          "development": {
+            "command": "docker compose -f docker-compose.development.yml down -v"
+          },
+          "e2e": {
+            "command": "docker compose -f docker-compose.e2e.yml down -v"
+          }
+        }
+      },
+      "create-migration": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "command": "npx prisma migrate dev",
+          "cwd": "libs/foods-orm"
+        }
+      },
+      "apply-migration": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "command": "npx prisma db push",
+          "cwd": "libs/foods-orm"
+        },
+        "dependsOn": ["docker-up-dev"]
+      },
+      "create-client": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "command": "npx prisma generate",
+          "cwd": "libs/foods-orm"
+        }
+      },
+      "pgadmin": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "cwd": "libs/foods-orm"
+        },
+        "configurations": {
+          "development": {
+            "command": "docker compose -f docker-compose.development.yml up pgadmin -d"
+          },
+          "e2e": {
+            "command": "docker compose -f docker-compose.e2e.yml up pgadmin -d"
+          }
+        }
+      },
+      "prisma-studio": {
+        "executor": "nx:run-commands",
+        "defaultConfiguration": "development",
+        "options": {
+          "cwd": "libs/foods-orm"
+        },
+        "configurations": {
+          "development": {
+            "command": "npx prisma studio --schema=src/schema.prisma"
+          },
+          "e2e": {
+            "command": "npx prisma studio --schema=src/schema.prisma"
+          }
+        }
+      }
+    }
+  },
+  "prisma": {
+    "schema": "src/schema.prisma"
+  }
+}

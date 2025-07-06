@@ -4,7 +4,7 @@ services:
     ports:
       - 5435:5432
     volumes:
-      - postgres-data-e2e:/var/lib/postgresql/data
+      - postgres-data-diet-e2e:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: eadeadeadA1
@@ -27,7 +27,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: eadeadeadA1
       PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
     volumes:
-      - pgadmin-data-e2e:/var/lib/pgadmin
+      - pgadmin-data-diet-e2e:/var/lib/pgadmin
       - ./servers.json:/pgadmin4/servers.json
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -40,5 +40,5 @@ networks:
     driver: bridge
 
 volumes:
-  pgadmin-data-e2e:
-  postgres-data-e2e:
+  pgadmin-data-diet-e2e:
+  postgres-data-diet-e2e:

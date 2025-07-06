@@ -8,6 +8,7 @@ export const fdcFoodToFoodWithNutrients = (fdcFood: FdcSearchResultFood): FoodWi
   return {
     id: uuidv4(),
     name: fdcFood.description,
+    provider: `FDC, ${fdcFood.dataType}`,
     nutrients: fdcFood.foodNutrients ? fdcFood.foodNutrients.map(fdcNutrient => {
       let name = fdcNutrient.nutrientName;
       if (name === ENERGY_NUTRIENT_NAME) {

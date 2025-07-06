@@ -1,28 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { SearchDto } from '../../dto/search.dto';
-import {
-  type Food as FoodsPrismaFood,
-  type CacheEntry as FoodsPrismaCacheEntry,
-} from '@curseit/diet-orm';
+
 import objectHash from 'object-hash';
+
+import {
+  type CacheEntry as FoodsPrismaCacheEntry,
+  type Food as FoodsOrmFood,
+} from '@curseit/foods-orm';
 import { Nullable } from '@curseit/types';
-import { PrismaService } from '@/modules/prisma/prisma.service';
+
+import { FoodsPrismaService } from '@/modules/prisma/foods-prisma.service';
+
+import { SearchDto } from '../../dto/search.dto';
 
 @Injectable()
 export class CacheService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly foodsPrismaService: FoodsPrismaService) {}
 
   private async removeCacheEntry(id: FoodsPrismaCacheEntry['id']) {
-    await this.prismaService.cacheEntry.delete({ where: { id } });
+    await this.foodsPrismaService.cacheEntry.delete({ where: { id } });
   }
 
   async createSearchCache(
     searchDto: SearchDto,
-    foodsPrismaFoods: FoodsPrismaFood[],
-  ): Promise<FoodsPrismaCacheEntry> {
+    foodsPrismaFoods: FoodsOrmFood[],
+  ) {
     const hash = objectHash(searchDto);
 
-    return await this.prismaService.cacheEntry.create({
+    return await this.foodsPrismaService.cacheEntry.create({
       data: {
         hash,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60),
@@ -39,10 +43,10 @@ export class CacheService {
     });
   }
 
-  async getSearchCache(searchDto: SearchDto): Promise<Nullable<FoodsPrismaFood[]>> {
+  async getSearchCache(searchDto: SearchDto): Promise<Nullable<FoodsOrmFood[]>> {
     const hash = objectHash(searchDto);
 
-    const cacheEntry = await this.prismaService.cacheEntry.findUnique({
+    const cacheEntry = await this.foodsPrismaService.cacheEntry.findUnique({
       where: { hash },
       include: {
         foods: {

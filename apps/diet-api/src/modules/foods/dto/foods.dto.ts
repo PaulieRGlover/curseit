@@ -5,6 +5,7 @@ import { createZodDto } from '@anatine/zod-nestjs';
 export const FoodSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
+  provider: z.string(),
 });
 export type Food = z.infer<typeof FoodSchema>;
 

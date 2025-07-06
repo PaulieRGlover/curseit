@@ -42,6 +42,9 @@
       "path": "../../libs/diet-orm/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/foods-orm/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/time/tsconfig.lib.json"
     },
     {

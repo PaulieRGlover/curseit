@@ -4,8 +4,10 @@ import z from 'zod';
 
 export const DatabaseConfigSchema = z.object({
   DATABASE_URL: z.string(),
+  FOODS_DATABASE_URL: z.string(),
 }).transform(env => ({
   url: env.DATABASE_URL,
+  foodsUrl: env.FOODS_DATABASE_URL,
 }));
 export const DatabaseConfig = registerAs('database', async () => {
   const result = DatabaseConfigSchema.safeParse(process.env);

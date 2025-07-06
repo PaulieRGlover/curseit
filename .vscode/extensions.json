@@ -1,9 +1,12 @@
 {
   "recommendations": [
+    "angular.ng-template",
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "firsttris.vscode-jest-runner",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "prisma.prisma",
+    "streetsidesoftware.code-spell-checker"
   ]
 }

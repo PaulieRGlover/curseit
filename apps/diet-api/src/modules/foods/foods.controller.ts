@@ -10,4 +10,9 @@ export class FoodsController {
   search(@Query() query: SearchDto) {
     return this.foodsService.searchFoods(query);
   }
+
+  @Get('nutrients')
+  getNutrients() {
+    return this.foodsService.getNutrients();
+  }
 }

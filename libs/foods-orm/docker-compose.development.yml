@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:14-alpine
+    ports:
+      - 5436:5432
+    volumes:
+      - postgres-data-foods-dev:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: eadeadeadA1
+      POSTGRES_DB: foods-dev
+    networks:
+      - foods
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - 8889:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: king.of.the.localhost@localhost.com
+      PGADMIN_DEFAULT_PASSWORD: eadeadeadA1
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    volumes:
+      - pgadmin-data-foods-dev:/var/lib/pgadmin
+      - ./servers.json:/pgadmin4/servers.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  foods:
+    driver: bridge
+
+volumes:
+  pgadmin-data-foods-dev:
+  postgres-data-foods-dev:

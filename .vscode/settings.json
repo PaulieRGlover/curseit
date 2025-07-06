@@ -34,5 +34,16 @@
   "javascript.updateImportsOnFileMove.enabled": "never",
   "files.associations": {
     "*.svg.ts": "html"
-  }
+  },
+  "cSpell.words": [
+    "anatine",
+    "curseit",
+    "dbname",
+    "dpage",
+    "healthcheck",
+    "isready",
+    "pgadmin",
+    "psql",
+    "UUIDV"
+  ]
 }

@@ -1,37 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { FdcService } from './modules/fdc/fdc.service';
-import { CacheService } from './modules/cache/cache.service';
-import { SearchDto } from './dto/search.dto';
-import { foodWithNutrientsToFoodsPrismaFoodCreate } from './transformers/food-with-nutrients-to-foods-prisma-food-create.transformer';
+
+import { FoodsPrismaService } from '../prisma/foods-prisma.service';
+
 import { Food, FoodsWithNutrientsDto } from './dto/foods.dto';
-import { fdcFoodToFoodWithNutrients } from './transformers/fdc-food-to-food-with-nutrients.transformer';
+import { SearchDto } from './dto/search.dto';
+import { CacheService } from './modules/cache/cache.service';
+import { FdcService } from './modules/fdc/fdc.service';
 import { dietPrismaFoodToFood } from './transformers/diet-prisma-food-to-food.transformer';
+import { fdcFoodToFoodWithNutrients } from './transformers/fdc-food-to-food-with-nutrients.transformer';
 import { foodWithNutrientsToFood } from './transformers/food-with-nutrients-to-food.transformer';
-import { PrismaService } from '../prisma/prisma.service';
+import { foodWithNutrientsToFoodsPrismaFoodCreate } from './transformers/food-with-nutrients-to-foods-prisma-food-create.transformer';
 
 @Injectable()
 export class FoodsService {
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly foodsPrismaService: FoodsPrismaService,
     private readonly fdcService: FdcService,
     private readonly cacheService: CacheService,
   ) {}
 
   private async saveAndCacheFoods(
     foodsWithNutrientsDto: FoodsWithNutrientsDto,
-    searchDto: SearchDto,
+    // searchDto: SearchDto,
   ) {
     const { foodsWithNutrients } = foodsWithNutrientsDto;
 
-    const foodsPrisma = await this.prismaService.$transaction(
-      foodsWithNutrients.map((foodWithNutrients) => {
-        return this.prismaService.food.create({
+    const foodsPrisma = await Promise.allSettled(
+      foodsWithNutrients.map(foodWithNutrients => {
+        return this.foodsPrismaService.food.create({
           data: foodWithNutrientsToFoodsPrismaFoodCreate(foodWithNutrients),
         });
       }),
     );
 
-    this.cacheService.createSearchCache(searchDto, foodsPrisma);
+    // const successes = foodsPrisma
+    //   .filter(result => result.status === 'fulfilled')
+    //   .map(result => result.value);
+
+    const failures = foodsPrisma
+      .filter(result => result.status === 'rejected')
+      .map(result => result.reason);
+      
+    console.log(`failures: `, failures);
+
+    // this.cacheService.createSearchCache(searchDto, successes);
   }
 
   async searchFoods(searchDto: SearchDto): Promise<Food[]> {
@@ -43,8 +55,12 @@ export class FoodsService {
     const fdcFoods = await this.fdcService.searchFoods(searchDto);
     const foodsWithNutrients = fdcFoods.map(fdcFoodToFoodWithNutrients);
 
-    this.saveAndCacheFoods({ foodsWithNutrients }, searchDto);
+    this.saveAndCacheFoods({ foodsWithNutrients });
 
     return foodsWithNutrients.map(foodWithNutrientsToFood);
+  }
+
+  async getNutrients() {
+    return this.foodsPrismaService.nutrient.findMany({ where: {} });
   }
 }

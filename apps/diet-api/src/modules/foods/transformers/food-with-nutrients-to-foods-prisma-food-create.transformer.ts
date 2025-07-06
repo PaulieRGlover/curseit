@@ -6,6 +6,7 @@ export const foodWithNutrientsToFoodsPrismaFoodCreate = (
   return {
     id: foodWithNutrients.id,
     name: foodWithNutrients.name,
+    provider: foodWithNutrients.provider,
     nutrients: {
       create: foodWithNutrients.nutrients.map(nutrient => {
         return {

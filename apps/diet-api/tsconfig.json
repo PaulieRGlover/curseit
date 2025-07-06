@@ -16,6 +16,9 @@
       "path": "../../libs/diet-orm"
     },
     {
+      "path": "../../libs/foods-orm"
+    },
+    {
       "path": "../../libs/time"
     },
     {
