@@ -36,10 +36,10 @@
         },
         "configurations": {
           "development": {
-            "command": "docker compose -f docker-compose.development.yml down -v"
+            "command": "docker compose -f docker-compose.development.yml down"
           },
           "e2e": {
-            "command": "docker compose -f docker-compose.e2e.yml down -v"
+            "command": "docker compose -f docker-compose.e2e.yml down"
           }
         }
       },
@@ -96,6 +96,13 @@
           "e2e": {
             "command": "npx prisma studio --schema=src/schema.prisma"
           }
+        }
+      },
+      "create-seed": {
+        "executor": "@curseit/tools:pg-dump",
+        "defaultConfiguration": "development",
+        "options": {
+          "tables": ["foods", "nutrients", "nutrients_in_food"]
         }
       }
     }

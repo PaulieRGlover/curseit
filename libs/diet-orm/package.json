@@ -22,9 +22,6 @@
         "executor": "@curseit/tools:bootstrap-prisma",
         "defaultConfiguration": "development",
         "configurations": {
-          "development": {
-            "seed": true
-          },
           "e2e": {
             "seed": true
           }
@@ -34,14 +31,15 @@
         "executor": "nx:run-commands",
         "defaultConfiguration": "development",
         "options": {
-          "cwd": "libs/diet-orm"
+          "cwd": "libs/diet-orm",
+          "forwardAllArgs": true
         },
         "configurations": {
           "development": {
-            "command": "docker compose -f docker-compose.development.yml down -v"
+            "command": "docker compose -f docker-compose.development.yml down"
           },
           "e2e": {
-            "command": "docker compose -f docker-compose.e2e.yml down -v"
+            "command": "docker compose -f docker-compose.e2e.yml down"
           }
         }
       },

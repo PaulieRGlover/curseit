@@ -12,9 +12,11 @@ async function main() {
     throw envDto.error;
   }
 
+  await client.user.deleteMany({ where: {} });
+
   const users = await getUsers(envDto.data.hashSecret);
   const getExcerpt = (user: UserWithPassword) => `\n\t${user.login}\n\t${user.password}`;
-  const exerpt = [users[0], users[1], users[2]].reduce(
+  const excerpt = [users[0], users[1], users[2]].reduce(
     (excerpt, user) => excerpt += getExcerpt(user),
     '',
   );
@@ -23,7 +25,7 @@ async function main() {
     data: users,
   });
 
-  console.log(`✅ Successfully seeded ${result.count} users:${exerpt}`);
+  console.log(`✅ Successfully seeded ${result.count} users:${excerpt}`);
 }
 
 main()
@@ -35,4 +37,3 @@ main()
     await client.$disconnect();
     process.exit(1);
   });
-  

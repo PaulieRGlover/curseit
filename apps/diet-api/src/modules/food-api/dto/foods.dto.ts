@@ -6,6 +6,9 @@ export const FoodSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
   provider: z.string(),
+  providerId: z.string().optional().nullable(),
+  providerCategory: z.string().optional().nullable(),
+  providerSubcategory: z.string().optional().nullable(),
 });
 export type Food = z.infer<typeof FoodSchema>;
 

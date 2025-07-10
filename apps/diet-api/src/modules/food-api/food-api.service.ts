@@ -3,16 +3,17 @@ import { Injectable } from '@nestjs/common';
 import { FoodsPrismaService } from '../prisma/foods-prisma.service';
 
 import { Food, FoodsWithNutrientsDto } from './dto/foods.dto';
-import { SearchDto } from './dto/search.dto';
+import { GetFoodDto, SearchDto } from './dto/search.dto';
 import { CacheService } from './modules/cache/cache.service';
 import { FdcService } from './modules/fdc/fdc.service';
 import { dietPrismaFoodToFood } from './transformers/diet-prisma-food-to-food.transformer';
 import { fdcFoodToFoodWithNutrients } from './transformers/fdc-food-to-food-with-nutrients.transformer';
 import { foodWithNutrientsToFood } from './transformers/food-with-nutrients-to-food.transformer';
 import { foodWithNutrientsToFoodsPrismaFoodCreate } from './transformers/food-with-nutrients-to-foods-prisma-food-create.transformer';
+import { Nullable } from '@curseit/types';
 
 @Injectable()
-export class FoodsService {
+export class FoodApiService {
   constructor(
     private readonly foodsPrismaService: FoodsPrismaService,
     private readonly fdcService: FdcService,
@@ -25,7 +26,7 @@ export class FoodsService {
   ) {
     const { foodsWithNutrients } = foodsWithNutrientsDto;
 
-    const foodsPrisma = await Promise.allSettled(
+    await Promise.allSettled(
       foodsWithNutrients.map(foodWithNutrients => {
         return this.foodsPrismaService.food.create({
           data: foodWithNutrientsToFoodsPrismaFoodCreate(foodWithNutrients),
@@ -37,11 +38,9 @@ export class FoodsService {
     //   .filter(result => result.status === 'fulfilled')
     //   .map(result => result.value);
 
-    const failures = foodsPrisma
-      .filter(result => result.status === 'rejected')
-      .map(result => result.reason);
-      
-    console.log(`failures: `, failures);
+    // const failures = foodsPrisma
+    //   .filter(result => result.status === 'rejected')
+    //   .map(result => result.reason);
 
     // this.cacheService.createSearchCache(searchDto, successes);
   }
@@ -62,5 +61,18 @@ export class FoodsService {
 
   async getNutrients() {
     return this.foodsPrismaService.nutrient.findMany({ where: {} });
+  }
+
+  async getFood(getFoodDto: GetFoodDto): Promise<Nullable<Food>> {
+    return this.foodsPrismaService.food.findUnique({
+      where: { id: getFoodDto.id },
+      include: {
+        nutrients: {
+          include: {
+            nutrient: true,
+          },
+        },
+      },
+    });
   }
 }

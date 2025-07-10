@@ -15,9 +15,12 @@ datasource db {
 }
 
 model Food {
-  id       String @id @default(uuid())
-  name     String
-  provider String
+  id                  String  @id @default(uuid())
+  name                String
+  provider            String
+  providerId          String? @map("provider_id")
+  providerCategory    String? @map("provider_category")
+  providerSubcategory String? @map("provider_subcategory")
 
   nutrients    NutrientInFood[]
   cacheEntries CachedFood[]
@@ -36,7 +39,7 @@ model Nutrient {
 }
 
 model NutrientInFood {
-  value Float?
+  valueInGrams Float? @map("value_in_grams")
 
   food       Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
   foodId     String   @map("food_id")

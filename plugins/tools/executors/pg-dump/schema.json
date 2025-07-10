@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "PgDump executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "tables": {
+      "type": "array",
+      "description": "What tables to dump",
+      "items": {
+        "type": "string"
+      }
+    },
+    "file": {
+      "type": "string",
+      "description": "Where to dump",
+      "default": "src/seed/seed.dump"
+    }
+  },
+  "required": ["tables"]
+}

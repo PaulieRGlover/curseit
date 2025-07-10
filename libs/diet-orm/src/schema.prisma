@@ -21,6 +21,8 @@ model User {
   lastName     String? @map("last_name")
   passwordHash String  @map("password_hash")
 
+  foods Food[]
+
   @@map("users")
 }
 
@@ -33,11 +35,17 @@ model InvalidatedToken {
 }
 
 model Food {
-  id   String @id @default(uuid())
-  name String @unique
+  id          String  @id @default(uuid())
+  name        String  @unique
+  counter     String  @default("🥫")
+  description String?
+  favorite    Boolean
+  perishable  Boolean @default(true)
+  picture     String?
 
-  nutrients    NutrientInFood[]
-  cacheEntries CachedFood[]
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String          @map("user_id")
+  variations FoodVariation[]
 
   @@map("foods")
 }
@@ -46,39 +54,52 @@ model Nutrient {
   id   String @id @default(uuid())
   name String @unique
 
-  foods NutrientInFood[]
+  foodVariations NutrientInFoodVariation[]
 
   @@map("nutrients")
 }
 
-model NutrientInFood {
-  value Float?
+model FoodVariation {
+  id                       String  @id
+  name                     String  @unique
+  referenceSizeInGrams     Float   @default(100) @map("reference_size_in_grams")
+  referenceSizeDisplayUnit String  @default("g") @map("reference_size_display_unit")
+  portionSizeInGrams       Float   @default(100) @map("portion_size_in_grams")
+  portionSizeDisplayUnit   String  @default("g") @map("portion_size_display_unit")
+  energyAuto               Boolean @default(true) @map("energy_auto")
+  provider                 String?
+  providerId               String? @map("provider_id")
 
-  food       Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-  foodId     String   @map("food_id")
-  nutrient   Nutrient @relation(fields: [nutrientId], references: [id], onDelete: Cascade)
-  nutrientId String   @map("nutrient_id")
+  food      Food                      @relation(fields: [foodId], references: [id])
+  foodId    String
+  portions  FoodPortion[]
+  nutrients NutrientInFoodVariation[]
 
-  @@id([foodId, nutrientId])
-  @@map("nutrients_in_food")
+  @@map("food_variations")
 }
 
-model CacheEntry {
-  id        String   @id @default(uuid())
-  hash      String   @unique
-  expiresAt DateTime @map("expires_at")
+model NutrientInFoodVariation {
+  valueInGrams     Float  @map("value_in_grams")
+  valueDisplayUnit String @default("g") @map("value_display_unit")
 
-  foods CachedFood[]
+  foodVariation   FoodVariation @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
+  foodVariationId String        @map("food_variation_id")
+  nutrient        Nutrient      @relation(fields: [nutrientId], references: [id], onDelete: Cascade)
+  nutrientId      String        @map("nutrient_id")
 
-  @@map("cache_entries")
+  @@id([foodVariationId, nutrientId])
+  @@map("nutrients_in_food_variations")
 }
 
-model CachedFood {
-  food         Food       @relation(fields: [foodId], references: [id], onDelete: Cascade)
-  foodId       String     @map("food_id")
-  cacheEntry   CacheEntry @relation(fields: [cacheEntryId], references: [hash], onDelete: Cascade)
-  cacheEntryId String     @map("cache_entry_id")
+model FoodPortion {
+  id              String   @id
+  timeAdded       DateTime @default(now()) @map("time_added")
+  timeExpiring    DateTime @map("time_expiring")
+  sizeInGrams     Float    @map("size_in_grams")
+  sizeDisplayUnit String   @map("size_display_unit")
 
-  @@id([foodId, cacheEntryId])
-  @@map("cached_foods")
+  foodVariation   FoodVariation @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
+  foodVariationId String        @map("food_variation_id")
+
+  @@map("food_portions")
 }

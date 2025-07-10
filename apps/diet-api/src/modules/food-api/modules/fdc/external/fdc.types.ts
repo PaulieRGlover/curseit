@@ -3,44 +3,52 @@ import * as z from 'zod';
 export const FdcDateSchema = z.string().date();
 export type FdcDate = z.infer<typeof FdcDateSchema>;
 
-export const FdcDataTypeEnumSchema = z.enum([
-  'Branded',
-  'Foundation',
-  'Survey (FNDDS)',
-  'SR Legacy',
-]);
-export type FdcDataTypeEnum = z.infer<typeof FdcDataTypeEnumSchema>;
+export const FDC_DATA_TYPE = {
+  BRANDED: 'Branded',
+  FOUNDATION: 'Foundation',
+  SURVEY: 'Survey (FNDDS)',
+  LEGACY: 'SR Legacy',
+} as const;
 
-export const FdcSortByEnumSchema = z.enum([
-  'dataType.keyword',
-  'lowercaseDescription.keyword',
-  'fdcId',
-  'publishedDate',
-]);
-export type FdcSortByEnum = z.infer<typeof FdcSortByEnumSchema>;
+export const FDC_UNIT_NAME = {
+  UG: 'UG',
+  MG: 'MG',
+  G: 'G',
+  IU: 'IU',
+  KJ: 'kJ',
+  KCAL: 'KCAL',
+  MG_ATE: 'MG_ATE',
+} as const;
 
-export const FdcSortOrderEnumSchema = z.enum(['asc', 'desc']);
-export type FdcSortOrderEnum = z.infer<typeof FdcSortOrderEnumSchema>;
+export const FDC_SORT_BY = {
+  DATA_TYPE_KEYWORD: 'dataType.keyword',
+  LOWERCASE_DESCRIPTION_KEYWORD: 'lowercaseDescription.keyword',
+  FDC_ID: 'fdcId',
+  PUBLISHED_DATE: 'publishedDate',
+};
 
-export const FdcDataTypeSchema = z.array(FdcDataTypeEnumSchema).min(1).max(4);
-export type FdcDataType = z.infer<typeof FdcDataTypeSchema>;
+export const FDC_SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
+
+export const FdcDataTypeSchema = z.array(z.nativeEnum(FDC_DATA_TYPE)).min(1).max(4);
 
 export const FdcFoodSearchCriteriaSchema = z.object({
   query: z.string(),
   dataType: FdcDataTypeSchema.optional(),
   pageSize: z.number().min(1).max(200).optional(),
   pageNumber: z.number().nonnegative().optional(),
-  sortBy: FdcSortByEnumSchema.optional(),
-  sortOrder: FdcSortOrderEnumSchema.optional(),
+  sortBy: z.nativeEnum(FDC_SORT_BY).optional(),
+  sortOrder: z.nativeEnum(FDC_SORT_ORDER).optional(),
   brandOwner: z.string().optional(),
 });
-export type FdcFoodSearchCriteria = z.infer<typeof FdcFoodSearchCriteriaSchema>;
 
 export const FdcFoodNutrientAbridgedSchema = z.object({
   nutrientId: z.number().nonnegative(),
   nutrientName: z.string(),
   nutrientNumber: z.string(),
-  unitName: z.string(),
+  unitName: z.nativeEnum(FDC_UNIT_NAME),
   derivationCode: z.string().optional(),
   derivationDescription: z.string().optional(),
   value: z.number().optional(),
@@ -49,8 +57,9 @@ export type FdcFoodNutrientAbridged = z.infer<typeof FdcFoodNutrientAbridgedSche
 
 export const FdcSearchResultFoodSchema = z.object({
   fdcId: z.number().nonnegative(),
-  dataType: FdcDataTypeEnumSchema.optional(),
+  dataType: z.nativeEnum(FDC_DATA_TYPE).optional(),
   description: z.string(),
+  foodCategory: z.string().optional(),
   foodCode: z.number().optional(),
   foodNutrients: z.array(FdcFoodNutrientAbridgedSchema).optional(),
   publishedDate: FdcDateSchema.optional(),

@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import {
-  FdcDataTypeEnumSchema,
+  FDC_DATA_TYPE,
   FdcSearchResponseDataSchema,
   FdcSearchResultFood,
 } from './external/fdc.types';
@@ -16,7 +16,7 @@ export class FdcService {
     const response = this.httpService.get('/foods/search', {
       params: {
         query: search.name,
-        dataType: FdcDataTypeEnumSchema.Values['SR Legacy'],
+        dataType: FDC_DATA_TYPE.BRANDED,
       },
     });
 

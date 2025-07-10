@@ -9,6 +9,11 @@
       "implementation": "./executors/serve-and-e2e/serve-and-e2e",
       "schema": "./executors/serve-and-e2e/schema.json",
       "description": "serve-and-e2e executor"
+    },
+    "pg-dump": {
+      "implementation": "./executors/pg-dump/pg-dump",
+      "schema": "./executors/pg-dump/schema.json",
+      "description": "pg-dump executor"
     }
   }
 }
