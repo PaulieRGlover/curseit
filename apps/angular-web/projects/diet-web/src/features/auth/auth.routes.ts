@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { ROUTES_DECLARATION } from '@/core/constants/router.constants';
-
 import { SignIn } from './sign-in/sign-in';
 import { SignUp } from './sign-up/sign-up';
+import { RouterService } from '@/core/router/router.service';
 
 export const authRoutes: Routes = [
-  { path: '', redirectTo: ROUTES_DECLARATION.SIGN_IN, pathMatch: 'full' },
-  { path: ROUTES_DECLARATION.SIGN_IN, component: SignIn },
-  { path: ROUTES_DECLARATION.SIGN_UP, component: SignUp },
+  { path: '', redirectTo: RouterService.ROUTES.AUTH.SIGN_IN.declare(), pathMatch: 'full' },
+  { path: RouterService.ROUTES.AUTH.SIGN_IN.declare(), component: SignIn },
+  { path: RouterService.ROUTES.AUTH.SIGN_UP.declare(), component: SignUp },
 ];

@@ -3,7 +3,6 @@ import { NavigationEnd, Router } from '@angular/router';
 
 import { filter, firstValueFrom } from 'rxjs';
 
-import { ROUTES_NAVIGATION } from '@/core/constants/router.constants';
 import { RouterService } from '@/core/router/router.service';
 
 import { AuthService } from './auth.service';
@@ -12,7 +11,7 @@ import { authenticated } from './guards/authenticated.guard';
 @Injectable({ providedIn: 'root' })
 export class AuthFlowService {
   private router = inject(Router);
-  private routeService = inject(RouterService);
+  private routerService = inject(RouterService);
   private authService = inject(AuthService);
 
   async initialize() {
@@ -35,7 +34,7 @@ export class AuthFlowService {
   }
 
   private get isAuthProtected(): boolean {
-    const baseConfig = this.routeService.base()?.routeConfig;
+    const baseConfig = this.routerService.base()?.routeConfig;
 
     return baseConfig?.canActivate?.some(guard => guard === authenticated) ?? false;
   }
@@ -43,7 +42,7 @@ export class AuthFlowService {
   private async checkPromisedAuthStatus() {
     if (!this.authService.isAuthenticated && this.isAuthProtected) {
       await this.authService.signOut();
-      this.router.navigate(ROUTES_NAVIGATION.SIGN_IN, { replaceUrl: true });
+      this.routerService.replaceWith(this.routerService.ROUTES.AUTH.SIGN_IN);
     }
   }
 }
