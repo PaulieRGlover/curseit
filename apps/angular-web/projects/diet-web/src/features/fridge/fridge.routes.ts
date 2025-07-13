@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { RouterService } from '@/core/router/router.service';
+import { ROUTES } from '@/core/router/routes';
 
 import { Food } from './food/food';
-import { Foods } from './foods/food';
+import { Foods } from './foods/foods';
 
 export const fridgeRoutes: Routes = [
   { path: '', component: Foods },
-  { path: RouterService.ROUTES.FRIDGE.FOOD.declare(), component: Food },
+  { path: ROUTES.FRIDGE.FOOD.declare(), component: Food },
 ];

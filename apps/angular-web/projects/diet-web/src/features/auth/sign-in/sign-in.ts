@@ -5,10 +5,11 @@ import { RouterLink } from '@angular/router';
 import { CiuiForm, CiuiInput } from '@curseit/ciui';
 
 import { ERROR_STATUS_CODES } from '@/core/constants/api.constants';
+import { NavigationService } from '@/core/router/navigation.service';
+import { ROUTES } from '@/core/router/routes';
 import { AuthInternalValidationService } from '@/features/auth/validation/auth-internal-validation.service';
 
 import { AuthService } from '../auth.service';
-import { RouterService } from '@/core/router/router.service';
 
 @Component({
   selector: 'cid-sign-in',
@@ -17,7 +18,7 @@ import { RouterService } from '@/core/router/router.service';
   styleUrls: ['../auth.scss'],
 })
 export class SignIn {
-  private routerService = inject(RouterService);
+  private navigationService = inject(NavigationService);
   private authService = inject(AuthService);
   private authInternalValidationService = inject(AuthInternalValidationService);
 
@@ -33,7 +34,7 @@ export class SignIn {
     const { failure } = await this.authService.signIn(login, password);
 
     if (!failure) {
-      await this.routerService.replaceWith(this.routerService.ROUTES.DASHBOARD);
+      await this.navigationService.replaceWith(ROUTES.DASHBOARD);
     } else if (failure?.status === ERROR_STATUS_CODES.UNAUTHORIZED) {
       this.signInData.setErrors({ unauthorized: failure.error.message });
     }

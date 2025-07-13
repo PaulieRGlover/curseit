@@ -3,7 +3,9 @@ import { NavigationEnd, Router } from '@angular/router';
 
 import { filter, firstValueFrom } from 'rxjs';
 
+import { NavigationService } from '@/core/router/navigation.service';
 import { RouterService } from '@/core/router/router.service';
+import { ROUTES } from '@/core/router/routes';
 
 import { AuthService } from './auth.service';
 import { authenticated } from './guards/authenticated.guard';
@@ -12,6 +14,7 @@ import { authenticated } from './guards/authenticated.guard';
 export class AuthFlowService {
   private router = inject(Router);
   private routerService = inject(RouterService);
+  private navigationService = inject(NavigationService);
   private authService = inject(AuthService);
 
   async initialize() {
@@ -42,7 +45,7 @@ export class AuthFlowService {
   private async checkPromisedAuthStatus() {
     if (!this.authService.isAuthenticated && this.isAuthProtected) {
       await this.authService.signOut();
-      this.routerService.replaceWith(this.routerService.ROUTES.AUTH.SIGN_IN);
+      this.navigationService.replaceWith(ROUTES.AUTH.SIGN_IN);
     }
   }
 }

@@ -34,6 +34,18 @@
           "ciui-angular:serve",
           "resource-angular:serve"
         ]
+      },
+      "serve-build": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            "cp serve.json ./dist/diet-web/browser",
+            "npx serve ./dist/diet-web/browser --config ./serve.json"
+          ],
+          "cwd": "apps/angular-web",
+          "parallel": false
+        },
+        "dependsOn": ["build"]
       }
     }
   },

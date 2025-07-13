@@ -68,8 +68,11 @@ export class CiuiInput implements ControlValueAccessor {
       .join('\n');
   });
 
-  ngOnInit() {
+  constructor() {
     this.id.set(this.computeId());
+  }
+
+  ngOnInit() {
     this.formErrorService.initialize(this.control);
   }
 

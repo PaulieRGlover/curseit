@@ -1,17 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
-import { RouterService } from '@/core/router/router.service';
+import { NavigationService } from '@/core/router/navigation.service';
+import { ROUTES } from '@/core/router/routes';
 
 import { AuthService } from '../auth.service';
 
 export const authenticated: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  const routerService = inject(RouterService);
+  const navigationService = inject(NavigationService);
 
   return (
     authService.isAuthenticatedUnsafe() ||
-    router.createUrlTree(routerService.getNavigation(routerService.ROUTES.AUTH.SIGN_IN) as string[])
+    router.createUrlTree(navigationService.getNavigation(ROUTES.AUTH.SIGN_IN) as string[])
   );
 };

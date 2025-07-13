@@ -1,13 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { RouterService } from '@/core/router/router.service';
+import { ROUTES } from '@/core/router/routes';
+import { authRoutes } from '@/features/auth/auth.routes';
 import { authenticated } from '@/features/auth/guards/authenticated.guard';
 import { notAuthenticated } from '@/features/auth/guards/not-authenticated.guard';
-import { Fridge } from '@/features/fridge/fridge';
 import { fridgeRoutes } from '@/features/fridge/fridge.routes';
-
-import { Auth, Dashboard } from '../features';
-import { authRoutes } from '../features/auth/auth.routes';
 
 export const LAYOUTS = {
   HOME: 'home',
@@ -15,23 +12,23 @@ export const LAYOUTS = {
 } as const;
 
 export const routes: Routes = [
-  { path: '', redirectTo: RouterService.ROUTES.DASHBOARD.declare(), pathMatch: 'full' },
+  { path: '', redirectTo: ROUTES.DASHBOARD.declare(), pathMatch: 'full' },
   {
-    path: RouterService.ROUTES.AUTH.ROOT.declare(),
-    component: Auth,
+    path: ROUTES.AUTH.ROOT.declare(),
+    loadComponent: async () => (await import('../features/auth/auth')).Auth,
     children: authRoutes,
     data: { layout: LAYOUTS.GUEST },
     canActivate: [notAuthenticated],
   },
   {
-    path: RouterService.ROUTES.DASHBOARD.declare(),
-    component: Dashboard,
+    path: ROUTES.DASHBOARD.declare(),
+    loadComponent: async () => (await import('../features/dashboard/dashboard')).Dashboard,
     data: { layout: LAYOUTS.HOME },
     canActivate: [authenticated],
   },
   {
-    path: RouterService.ROUTES.FRIDGE.ROOT.declare(),
-    component: Fridge,
+    path: ROUTES.FRIDGE.ROOT.declare(),
+    loadComponent: async () => (await import('../features/fridge/fridge')).Fridge,
     children: fridgeRoutes,
     data: { layout: LAYOUTS.HOME },
     canActivate: [authenticated],
