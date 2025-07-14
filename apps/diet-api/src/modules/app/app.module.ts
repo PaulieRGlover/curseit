@@ -5,7 +5,7 @@ import { AppConfig, DatabaseConfig, HashingConfig, JwtConfig } from '@/config';
 
 import { AuthModule } from '../auth/auth.module';
 import { FoodApiModule } from '../food-api/food-api.module';
-import { FoodModule } from '../food/food.module';
+import { FridgeModule } from '../fridge/fridge.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { UserModule } from '../user/user.module';
 import { ValidationModule } from '../validation/validation.module';
@@ -22,7 +22,7 @@ import { AppController } from './app.controller';
     ValidationModule,
     AuthModule,
     UserModule,
-    FoodModule,
+    FridgeModule,
     FoodApiModule,
   ],
   controllers: [AppController],

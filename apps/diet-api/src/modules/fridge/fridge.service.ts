@@ -6,13 +6,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ValidationService } from '../validation/validation.service';
 
 @Injectable()
-export class FoodService {
+export class FridgeService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly validationService: ValidationService,
   ) {}
 
-  async getUserFood(userId: UserDto['id']): Promise<FoodsWithPortionsDto> {
+  async getUserFoods(userId: UserDto['id']): Promise<FoodsWithPortionsDto> {
     const foods = await this.prismaService.food.findMany({
       where: { userId },
       include: {

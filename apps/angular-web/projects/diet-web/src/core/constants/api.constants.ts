@@ -1,3 +1,17 @@
+export const API = {
+  AUTH: {
+    BASE: 'auth',
+    REFRESH: 'refresh',
+    SIGN_UP: 'sign-up',
+    SIGN_IN: 'sign-in',
+    SIGN_OUT: 'sign-out',
+  },
+  FRIDGE: {
+    BASE: 'fridge',
+    FOODS: 'foods',
+  },
+} as const;
+
 export const ERROR_STATUS_CODES = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,

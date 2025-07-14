@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 import type { MaybeUndefined } from '@curseit/types';
 import { ApiResult } from './types';
@@ -11,24 +11,76 @@ import {
   VALIDATION_FAILURE,
   VALIDATION_SUCCESS,
 } from './constants';
+import type { Signal } from '@angular/core';
 
 type ValidationService = {
   [k: string]: MaybeUndefined<(input: unknown) => any>,
 };
 
 type AuthService = {
-  [k: string]: string,
+  isAuthenticated: Signal<boolean>
+  _isAuthenticated$: Observable<boolean>,
+  [k: string]: any,
 };
+
+type RequestOptions = {
+  headers: Record<string, string>,
+  withCredentials: true,
+}
 
 type Method = 'get' | 'post' | 'patch' | 'options' | 'delete';
 
 const ERRORS = {
-  NO_HTTP_CLIENT: `No HttpClient injected. Please, inject HttpClient.`,
+  NO_HTTP_CLIENT: 'No HttpClient injected. Please, inject HttpClient.',
+  NO_AUTH_SERVICE: 'No AuthService injected. Please, inject AuthService.',
   NO_TOKEN: (key: any) => `No token by address this[${key}] or this.authService[${key}]`,
+  AUTH_SERVICE_FAILURE: 'AuthService failed to authenticate, so the API cannot be accessed.',
   API_VALIDATION_FAILED: (error: any) => `API result validation failed: ${error}`,
   NO_VALIDATOR: (key: any) => `No validator by address this.validation[${key}]`,
   API_ERROR_VALIDATION_FAILED: (error: any) => `API error validation failed: ${error}`,
 } as const;
+
+const getToken = async (
+  authService: MaybeUndefined<AuthService>,
+  tokenKey: string,
+) => {
+  if (!authService) {
+    reportError(ERRORS.NO_AUTH_SERVICE);
+
+    throw ERRORS.NO_AUTH_SERVICE;
+  }
+
+  if (!authService.isAuthenticated()) {
+    try {
+      await new Promise((resolve, reject) => {
+        setTimeout(reject, 5000);
+
+        authService?._isAuthenticated$.subscribe(value => {
+          if (value) {
+            resolve(value);
+          }
+        });
+      });
+    } catch (error) {
+      reportError(ERRORS.AUTH_SERVICE_FAILURE);
+
+      throw ERRORS.AUTH_SERVICE_FAILURE;
+    }
+  }
+
+  let token: MaybeUndefined<string>;
+  if (tokenKey) {
+    token = authService[tokenKey]?.();
+  }
+
+  if (!token || typeof token !== 'string') {
+    reportError(ERRORS.NO_TOKEN(tokenKey));
+
+    throw new Error(ERRORS.NO_TOKEN(tokenKey));
+  } else {
+    return token;
+  }
+};
 
 export const createAction = (method: Method) => {
   return function(path: string): MethodDecorator {
@@ -56,8 +108,8 @@ export const createAction = (method: Method) => {
         const base = Reflect.getMetadata(PATH, target.constructor) ?? '/';
         const fullPath = `${base}/${path}`;
 
-        const options = {
-          headers: ({} as Record<string, string>),
+        const options: RequestOptions = {
+          headers: {},
           withCredentials: true,
         };
 
@@ -69,30 +121,41 @@ export const createAction = (method: Method) => {
             target,
             propertyKey,
           );
-          let token: MaybeUndefined<string>;
-          if (tokenFromBody) {
-            token = body;
-            body = undefined;
-          } else if (tokenKey) {
-            token = this.authService?.[tokenKey] ??
-            typeof this[tokenKey] === 'string'
-              ? this[tokenKey]
-              : null;
-          }
 
-          if (!token) {
-            reportError(ERRORS.NO_TOKEN(tokenKey));
-          } else {
-            options.headers['Authorization'] = `Bearer ${token}`;
-          }
+          const token = tokenFromBody ? body : await getToken(
+            this.authService,
+            tokenKey,
+          );
+
+          options.headers['Authorization'] = `Bearer ${token}`;
         }
 
         try {
-          let result = await firstValueFrom(
-            method === 'delete'
-              ? this.http[method](fullPath)
-              : this.http[method](fullPath, body),
-          );
+          let request;
+          switch (method) {
+            case 'get': {
+              request = this.http.get(fullPath, options);
+              break;
+            }
+            case 'post': {
+              request = this.http.post(fullPath, body, options);
+              break;
+            }
+            case 'delete': {
+              request = this.http.delete(fullPath, options);
+              break;
+            }
+            case 'options': {
+              request = this.http.options(fullPath, options);
+              break;
+            }
+            case 'patch': {
+              request = this.http.patch(fullPath, body, options);
+              break;
+            }
+          }
+
+          let result = await firstValueFrom(request);
 
           const validationName = Reflect.getMetadata(VALIDATION_SUCCESS, target, propertyKey);
           const validator = this.validation?.[validationName];

@@ -1,12 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 import { Nullable } from '@curseit/types';
 
 import { CookieService } from '@/core/browser/cookie.service';
-import type { IdTokenPayload } from '@/features/auth/dtos/id-token-payload.dto';
 import { JwtService } from '@/core/jwt/jwt.service';
 import { GENERAL_MESSAGES } from '@/core/messages/general.messages';
 import { environment } from '@/environments/environment';
+import type { IdTokenPayload } from '@/features/auth/dtos/id-token-payload.dto';
 
 import { AuthApiResult, AuthResource } from './auth.resource';
 import { ID_TOKEN_COOKIE_NAME } from './constants';
@@ -103,4 +104,7 @@ export class AuthService {
 
     return idTokenPayload;
   }
+
+  // Only to be used in the resource decorator
+  public _isAuthenticated$ = toObservable(this.isAuthenticated);
 }

@@ -4,7 +4,9 @@ import {
   USE_AUTHORIZATION,
 } from './constants';
 
-export function UseAuthorization(options: string | { fromBody: true }): MethodDecorator {
+export function UseAuthorization(
+  options: string | { fromBody: true } = '_accessToken',
+): MethodDecorator {
   return function (target, propertyKey) {
     Reflect.defineMetadata(USE_AUTHORIZATION, true, target, propertyKey);
     if (typeof options === 'string') {
