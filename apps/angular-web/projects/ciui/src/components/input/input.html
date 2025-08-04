@@ -1,42 +1,21 @@
-<div
-  class="ciui-input"
-  [class.ciui-input--errored]="formErrorService.hasErrors()"
-  [class.ciui-input--theme-white]="theme === 'white'"
-  [class.ciui-input--theme-black]="theme === 'black'"
-  [class.ciui-input--transparent]="transparent"
-  [class.ciui-input--size-small]="size === 'small'"
-  [class.ciui-input--size-default]="size === 'default'"
->
-  <div
-    class="ciui-input__info"
-    [class.ciui-a11y-hidden]="labelInvisible && !formErrorService.hasErrors()"
-  >
-    <label
-      [for]="id()"
-      class="ciui-input__label"
-      [class.ciui-a11y-hidden]="labelInvisible"
-    >{{ label }}</label>
+<ciui-input-info
+  [id]="id()"
+  [label]="label"
+  [labelInvisible]="labelInvisible"
+  [row]="row"
+  [size]="size"
+/>
 
-    @if (formErrorService.hasErrors() && hasOneError()) {
-    <div [title]="formErrorService.firstError()" class="ciui-input__errors ciui-ellipsis">
-      <span class="ciui-ellipsis__text">{{ formErrorService.firstError() }}</span>
-    </div>
-    } @else if (formErrorService.hasErrors()) {
-    <div class="ciui-input__errors">
-      <ciui-icon [title]="tempFormattedErrors()" name="info" />
-    </div>
-    }
-  </div>
-
-  <div class="ciui-input__wrapper">
-    <input
-      [id]="id()"
-      [type]="type"
-      [attr.name]="name"
-      [attr.placeholder]="placeholder"
-      class="ciui-input__input ciui-input-label"
-      (input)="onInput($event)"
-      (blur)="onBlur()"
-    />
-  </div>
+<div class="ciui-input__wrapper">
+  <input
+    [id]="id()"
+    [type]="type"
+    [attr.name]="name"
+    [attr.placeholder]="placeholder"
+    [attr.value]="value"
+    [attr.aria-label]="ariaLabel"
+    class="ciui-input__input"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
 </div>

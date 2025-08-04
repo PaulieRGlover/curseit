@@ -1,0 +1,24 @@
+<ciui-input-info
+  [id]="id()"
+  [label]="label"
+  [labelInvisible]="labelInvisible"
+  [row]="row"
+  [size]="size"
+/>
+
+<div class="ciui-input__wrapper">
+  <select
+    [id]="id()"
+    [attr.name]="name"
+    [attr.aria-label]="ariaLabel"
+    class="ciui-input__input"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  >
+    @for (option of options; track (typeof option === 'string' ? option : option.id)) {
+    <option
+      [value]="(typeof option === 'string' ? option : option.id)"
+    >{{ (typeof option === 'string') ? option : option[labelKey] }}</option>
+    }
+  </select>
+</div>

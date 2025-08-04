@@ -1,0 +1,25 @@
+.cid-food-variation {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &__main-inputs {
+    display: flex;
+    gap: 2rem;
+
+    // <TODO comment="remove when every major browser can style select or after resizing/redesign">
+    .ciui-input {
+      .ciui-input__input {
+        padding: 0.5rem;
+      }
+    }
+
+    .ciui-input.ciui-input--input-select {
+      .ciui-input__input.ciui-input__input--select {
+        flex: 0 0 10rem;
+        padding: 0 0.5rem 0 0;
+      }
+    }
+    // </TODO>
+  }
+}

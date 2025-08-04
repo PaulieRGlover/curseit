@@ -1,4 +1,13 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, booleanAttribute, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  Input,
+  ViewEncapsulation,
+  booleanAttribute,
+  inject,
+} from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 import { FormErrorService } from '../../shared/services/form-error.service';
@@ -9,6 +18,7 @@ import { CiuiButton } from '../button/button';
   imports: [CiuiButton],
   templateUrl: './form.html',
   providers: [FormErrorService],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CiuiForm {
   formErrorService = inject(FormErrorService);
@@ -19,12 +29,16 @@ export class CiuiForm {
   @HostBinding('class') hostClasses = 'ciui-form';
 
   constructor(private form: ElementRef<HTMLFormElement>) {
-    this.form.nativeElement.addEventListener('submit', event => {
-      if (this.loading || !this.control.valid) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }
-    }, true);
+    this.form.nativeElement.addEventListener(
+      'submit',
+      event => {
+        if (this.loading || !this.control.valid) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      },
+      true,
+    );
   }
 
   ngOnInit() {

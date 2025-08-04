@@ -39,6 +39,9 @@
       "path": "../../libs/types"
     },
     {
+      "path": "../../libs/units"
+    },
+    {
       "path": "./projects/ciui/tsconfig.lib.json"
     },
     {

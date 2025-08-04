@@ -8,6 +8,7 @@
     "paths": {
       "@curseit/ciui": ["../../dist/ciui"],
       "@curseit/resource": ["../../dist/resource"],
+      "@curseit/units": ["../../../../libs/units/dist"],
       "@/*": ["./src/*"]
     },
   },

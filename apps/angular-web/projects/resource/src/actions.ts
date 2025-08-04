@@ -113,13 +113,18 @@ export const createAction = (method: Method) => {
           withCredentials: true,
         };
 
-        const useAuthorization = Reflect.getMetadata(USE_AUTHORIZATION, target, propertyKey);
+        const useAuthorization = (
+          Reflect.getMetadata(USE_AUTHORIZATION, target, propertyKey) ||
+          Reflect.getMetadata(USE_AUTHORIZATION, target.constructor)
+        );
         if (useAuthorization) {
-          const tokenKey = Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target, propertyKey);
-          const tokenFromBody = Reflect.getMetadata(
-            AUTHORIZATION_TOKEN_FROM_BODY,
-            target,
-            propertyKey,
+          const tokenKey = (
+            Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target, propertyKey) ||
+            Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target.constructor)
+          );
+          const tokenFromBody = (
+            Reflect.getMetadata(AUTHORIZATION_TOKEN_FROM_BODY, target, propertyKey) ||
+            Reflect.getMetadata(AUTHORIZATION_TOKEN_FROM_BODY, target.constructor)
           );
 
           const token = tokenFromBody ? body : await getToken(

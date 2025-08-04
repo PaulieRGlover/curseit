@@ -1,8 +1,8 @@
 body {
   // backgrounds
   --background-white: #FFFFFF;
-  --background-white-less-dimm: #FFFCFF;
-  --background-white-dimm: #FAFAFF;
+  --background-white-less-dim: #FFFCFF;
+  --background-white-dim: #FAFAFF;
   --background-white-dimmer: #F2F3FF;
   --background-white-dimmest: #E0E3FF;
   --background-white-semitransparent: rgba(255, 252, 255, 0.5);
@@ -28,9 +28,14 @@ body {
   --text-blue-accented: #8080FF;
   --text-error: #D94C58;
 
-  // border colors
-  --border-gray: 1px solid #A3A3C1;
-  --border-gray-contrast: 1px solid #606080;
+  // border-colors
+  --border-color-gray: #A3A3C1;
+  --border-color-gray-contrast: #606080;
+
+  // borders
+  --border-gray: 1px solid var(--border-color-gray);
+  --border-gray-contrast: 1px solid var(--border-color-gray-contrast);
+  --border-delimiter: 1px dashed var(--border-color-gray-contrast);
 
   // box shadows
   --ambient-shadow:

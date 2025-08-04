@@ -21,7 +21,6 @@ import { AppConfig, JwtConfig } from '@/config';
 import { GetAccessToken, GetRefreshToken, GetUser } from '@/decorators';
 import { JwtReadDto, UserDto } from '@/dto';
 import { RefreshJwtGuard } from '@/guards';
-import { AUTH_MESSAGES } from '@/messages';
 
 import { AuthService } from './auth.service';
 import {
@@ -38,6 +37,7 @@ import {
   SignUpResponseDto,
 } from './dto';
 import { AuthDelayInterceptor } from './interceptors/auth-delay.interceptor';
+import { AUTH_MESSAGES } from './messages/auth.messages';
 
 @Controller('auth')
 export class AuthController {

@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
+import { Component, HostBinding, Input, ViewEncapsulation, booleanAttribute } from '@angular/core';
 
 export type BUTTON_THEMES = 'primary' | 'secondary';
 export type BUTTON_SIZES = 'default' | 'big' | 'small';
@@ -6,6 +6,7 @@ export type BUTTON_SIZES = 'default' | 'big' | 'small';
 @Component({
   selector: '[ciui-button]',
   templateUrl: './button.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class CiuiButton {
   @Input({ transform: booleanAttribute }) disabled = false;

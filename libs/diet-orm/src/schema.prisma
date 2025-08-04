@@ -36,10 +36,10 @@ model InvalidatedToken {
 
 model Food {
   id          String  @id @default(uuid())
-  name        String  @unique
+  name        String
   counter     String  @default("🥫")
   description String?
-  favorite    Boolean
+  favorite    Boolean @default(false)
   perishable  Boolean @default(true)
   picture     String?
 
@@ -48,6 +48,7 @@ model Food {
   variations FoodVariation[]
 
   @@map("foods")
+  @@unique([name, userId])
 }
 
 model Nutrient {
@@ -61,7 +62,7 @@ model Nutrient {
 
 model FoodVariation {
   id                       String  @id
-  name                     String  @unique
+  name                     String
   referenceSizeInGrams     Float   @default(100) @map("reference_size_in_grams")
   referenceSizeDisplayUnit String  @default("g") @map("reference_size_display_unit")
   portionSizeInGrams       Float   @default(100) @map("portion_size_in_grams")
@@ -76,6 +77,7 @@ model FoodVariation {
   nutrients NutrientInFoodVariation[]
 
   @@map("food_variations")
+  @@unique([name, foodId])
 }
 
 model NutrientInFoodVariation {

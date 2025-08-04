@@ -1,0 +1,32 @@
+<ciui-input
+  label="Nutrient name"
+  name="name"
+  placeholder="Name"
+  labelInvisible
+  row
+  transparent
+  size="small"
+  [formControl]="name"
+/>
+
+<div class="cid-food-nutrient__delimiter"></div>
+
+<ciui-input-select
+  label="Nutrient amount"
+  labelSelect="Nutrient unit"
+  labelInvisible
+  name="amount"
+  type="number"
+  row
+  transparent
+  size="small"
+  class="cid-food-nutrient__amount"
+  [formControl]="value"
+  [options]="valueOptions"
+/>
+
+@if (!isNew) {
+  <ciui-icon
+    name="close"
+  />
+}

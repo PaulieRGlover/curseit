@@ -3,6 +3,7 @@ import z from 'zod';
 
 export const FoodPortionSchema = z.object({
   id: z.string(),
+  variationId: z.string(),
   timeAdded: z.date(),
   timeExpiring: z.date(),
   sizeInGrams: z.number(),

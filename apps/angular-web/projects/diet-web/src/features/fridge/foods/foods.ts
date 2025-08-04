@@ -1,15 +1,17 @@
 import { Component, inject } from '@angular/core';
 
-import { FoodsService } from './foods.service';
+import { FridgeService } from '../fridge.service';
+import { CidFoodFull } from '../food-full/food-full';
 
 @Component({
   selector: 'cid-foods',
+  imports: [CidFoodFull],
   templateUrl: './foods.html',
 })
-export class Foods {
-  foodsService = inject(FoodsService);
+export class CidFoods {
+  fridgeService = inject(FridgeService);
 
   ngOnInit() {
-    this.foodsService.initialize();
+    this.fridgeService.initialize();
   }
 }

@@ -17,7 +17,7 @@ import { AuthService } from '../auth.service';
   templateUrl: './sign-in.html',
   styleUrls: ['../auth.scss'],
 })
-export class SignIn {
+export class CidSignIn {
   private navigationService = inject(NavigationService);
   private authService = inject(AuthService);
   private authInternalValidationService = inject(AuthInternalValidationService);

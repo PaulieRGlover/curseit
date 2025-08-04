@@ -17,6 +17,15 @@
     border: none;
   }
 
+  &:active:not(.ciui-button--disabled) {
+    filter: brightness(1.1);
+    transition: filter 0s;
+  }
+
+  &:not(:active) {
+    transition: filter 0.2s ease-out;
+  }
+
   &.ciui-button--disabled {
     cursor: not-allowed;
   }
@@ -32,7 +41,7 @@
   }
 
   &.ciui-button--theme-secondary {
-    background: var(--background-white-less-dimm);
+    background: var(--background-white-less-dim);
     color: var(--text-blue-accented);
 
     &.ciui-button--disabled {
@@ -72,7 +81,7 @@
   &.ciui-button--loading {
     &::after {
       display: inline-flex;
-      animation: ciuiButtonRotate 1s linear infinite;
+      animation: ciuiButtonSpinnerRotate 1s linear infinite;
       border-style: solid;
       border-radius: 50%;
       content: '';
@@ -116,7 +125,7 @@
   }
 }
 
-@keyframes ciuiButtonRotate {
+@keyframes ciuiButtonSpinnerRotate {
   from {
     transform: rotate(0deg);
   }

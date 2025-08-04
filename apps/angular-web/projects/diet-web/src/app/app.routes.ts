@@ -15,20 +15,20 @@ export const routes: Routes = [
   { path: '', redirectTo: ROUTES.DASHBOARD.declare(), pathMatch: 'full' },
   {
     path: ROUTES.AUTH.ROOT.declare(),
-    loadComponent: async () => (await import('../features/auth/auth')).Auth,
+    loadComponent: async () => (await import('../features/auth/auth')).CidAuth,
     children: authRoutes,
     data: { layout: LAYOUTS.GUEST },
     canActivate: [notAuthenticated],
   },
   {
     path: ROUTES.DASHBOARD.declare(),
-    loadComponent: async () => (await import('../features/dashboard/dashboard')).Dashboard,
+    loadComponent: async () => (await import('../features/dashboard/dashboard')).CidDashboard,
     data: { layout: LAYOUTS.HOME },
     canActivate: [authenticated],
   },
   {
     path: ROUTES.FRIDGE.ROOT.declare(),
-    loadComponent: async () => (await import('../features/fridge/fridge')).Fridge,
+    loadComponent: async () => (await import('../features/fridge/fridge')).CidFridge,
     children: fridgeRoutes,
     data: { layout: LAYOUTS.HOME },
     canActivate: [authenticated],

@@ -4,15 +4,31 @@ import {
   USE_AUTHORIZATION,
 } from './constants';
 
+export type UseAuthorizationOptions = string | { fromBody: true }
+
 export function UseAuthorization(
-  options: string | { fromBody: true } = '_accessToken',
-): MethodDecorator {
-  return function (target, propertyKey) {
-    Reflect.defineMetadata(USE_AUTHORIZATION, true, target, propertyKey);
-    if (typeof options === 'string') {
-      Reflect.defineMetadata(AUTHORIZATION_TOKEN_KEY, options, target, propertyKey);
+  options: UseAuthorizationOptions = '_accessToken',
+): MethodDecorator & ClassDecorator {
+  return (
+    target: any,
+    key?: string | symbol,
+  ) => {
+    if (typeof key === 'undefined') {
+      Reflect.defineMetadata(USE_AUTHORIZATION, true, target);
+
+      if (typeof options === 'string') {
+        Reflect.defineMetadata(AUTHORIZATION_TOKEN_KEY, options, target);
+      } else {
+        Reflect.defineMetadata(AUTHORIZATION_TOKEN_FROM_BODY, true, target);
+      }
     } else {
-      Reflect.defineMetadata(AUTHORIZATION_TOKEN_FROM_BODY, options, target, propertyKey);
+      Reflect.defineMetadata(USE_AUTHORIZATION, true, target, key);
+
+      if (typeof options === 'string') {
+        Reflect.defineMetadata(AUTHORIZATION_TOKEN_KEY, options, target, key);
+      } else {
+        Reflect.defineMetadata(AUTHORIZATION_TOKEN_FROM_BODY, true, target, key);
+      }
     }
   };
 }

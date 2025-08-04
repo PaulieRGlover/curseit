@@ -9,7 +9,7 @@ import { AuthService } from '@/features/auth/auth.service';
   templateUrl: './profile-dropdown.html',
   styleUrl: './profile-dropdown.scss',
 })
-export class ProfileDropdown {
+export class CidProfileDropdown {
   authService = inject(AuthService);
   navigationService = inject(NavigationService);
 

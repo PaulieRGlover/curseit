@@ -9,6 +9,7 @@ export const API = {
   FRIDGE: {
     BASE: 'fridge',
     FOODS: 'foods',
+    FOOD: 'food',
   },
 } as const;
 

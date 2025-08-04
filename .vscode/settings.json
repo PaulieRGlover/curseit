@@ -41,12 +41,12 @@
     "curseit",
     "dbname",
     "dpage",
-    "dtos",
     "Folate",
     "healthcheck",
     "isready",
     "pgadmin",
     "psql",
-    "UUIDV"
+    "UUIDV",
+    "viewbox"
   ]
 }

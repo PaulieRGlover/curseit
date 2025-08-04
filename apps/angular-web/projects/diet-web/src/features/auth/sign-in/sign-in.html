@@ -11,16 +11,14 @@
     label="login"
     name="login"
     placeholder="email@domain.com"
-    formControlName="login"
-    [control]="signInData.controls.login"
+    [formControl]="signInData.controls.login"
   />
   <ciui-input
     label="password"
     name="password"
     placeholder="_myStr0nG--pa55WORd//"
     type="password"
-    formControlName="password"
-    [control]="signInData.controls.password"
+    [formControl]="signInData.controls.password"
   />
 
   <span ngProjectAs="ciui-form-submit">Sign In</span>

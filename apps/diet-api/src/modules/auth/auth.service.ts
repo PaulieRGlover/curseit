@@ -8,21 +8,21 @@ import {
 import { type ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { Nullable } from '@curseit/types';
 import { Prisma } from '@curseit/diet-orm';
 import { PRISMA_ERRORS } from '@curseit/prisma-errors';
+import { Nullable } from '@curseit/types';
 import { isNotNull } from '@curseit/utils';
 
 import { JwtConfig } from '@/config';
 import { UUIDV4 } from '@/constants';
 import { JwtCreateDto, JwtReadSchema, UserDto, UserSchema } from '@/dto';
-import { AUTH_MESSAGES } from '@/messages';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { ValidationService } from '../validation/validation.service';
 
 import { SignInDto, SignOutDto, SignUpDto, TokensDto } from './dto';
 import { HashService } from './hash.service';
+import { AUTH_MESSAGES } from './messages/auth.messages';
 
 @Injectable()
 export class AuthService {

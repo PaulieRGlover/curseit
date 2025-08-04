@@ -7,4 +7,4 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './fridge.scss',
   imports: [RouterOutlet],
 })
-export class Fridge {}
+export class CidFridge {}

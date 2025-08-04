@@ -1,0 +1,29 @@
+<cid-nutrients [nutrients]="[]" />
+
+<hr>
+
+<div class="cid-food-variation__main-inputs">
+  <ciui-input-select
+    label="Per"
+    ariaLabel="Per (reference size)"
+    labelSelect="Reference size unit"
+    type="number"
+    row
+    transparent
+    size="small"
+    [options]="referenceSizeOptions"
+    [formControl]="referenceSize"
+  />
+
+  <ciui-input-select
+    label="⚡"
+    ariaLabel="Energy"
+    labelSelect="Energy unit"
+    type="number"
+    row
+    transparent
+    size="small"
+    [options]="energyOptions"
+    [formControl]="energy"
+  />
+</div>

@@ -4,6 +4,6 @@ import { Component, input } from '@angular/core';
   selector: 'cid-food',
   templateUrl: './food.html',
 })
-export class Food {
+export class CidFood {
   foodId = input.required<string>();
 }

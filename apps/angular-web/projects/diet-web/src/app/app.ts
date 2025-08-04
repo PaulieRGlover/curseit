@@ -3,18 +3,18 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { RouterService } from '@/core/router/router.service';
-import { ProfileDropdown } from '@/features';
+import { CidProfileDropdown } from '@/features';
 import { AuthFlowService } from '@/features/auth/auth-flow.service';
 
-import { Guest, Home } from './layouts';
+import { CidGuest, CidHome } from './layouts';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, Guest, Home, ProfileDropdown, RouterOutlet],
+  imports: [CommonModule, CidGuest, CidHome, CidProfileDropdown, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class CidApp {
   private routerService = inject(RouterService);
   private authFlowService = inject(AuthFlowService);
 

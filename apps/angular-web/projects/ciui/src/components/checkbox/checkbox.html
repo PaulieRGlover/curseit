@@ -1,0 +1,20 @@
+<ciui-input-info
+  [id]="id()"
+  [label]="label"
+  [labelInvisible]="labelInvisible"
+  [row]="row"
+  [size]="size"
+/>
+
+<div class="ciui-input__wrapper">
+  <input
+    [id]="id()"
+    type="checkbox"
+    [attr.name]="name"
+    [attr.checked]="value"
+    [attr.aria-label]="ariaLabel"
+    class="ciui-input__input"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+</div>

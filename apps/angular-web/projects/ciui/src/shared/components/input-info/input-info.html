@@ -1,0 +1,19 @@
+<label
+  [for]="id"
+  class="ciui-input__label"
+  [class.ciui-a11y-hidden]="labelInvisible"
+>{{ label }}</label>
+
+@if (formErrorService.hasErrors() && formErrorService.hasOneError() && !row && !labelInvisible) {
+<div [title]="formErrorService.firstError()" class="ciui-input__errors ciui-ellipsis">
+  <span class="ciui-ellipsis__text">{{ formErrorService.firstError() }}</span>
+</div>
+} @else if (formErrorService.hasErrors()) {
+<div class="ciui-input__errors">
+  <ciui-icon
+    [title]="formErrorService.tempFormattedErrors()"
+    name="info"
+    [size]="size"
+  />
+</div>
+}

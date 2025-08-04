@@ -5,4 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './guest.html',
   styleUrl: './guest.scss',
 })
-export class Guest {}
+export class CidGuest {}

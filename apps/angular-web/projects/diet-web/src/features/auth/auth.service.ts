@@ -7,7 +7,7 @@ import { CookieService } from '@/core/browser/cookie.service';
 import { JwtService } from '@/core/jwt/jwt.service';
 import { GENERAL_MESSAGES } from '@/core/messages/general.messages';
 import { environment } from '@/environments/environment';
-import type { IdTokenPayload } from '@/features/auth/dtos/id-token-payload.dto';
+import type { IdTokenPayload } from '@/features/auth/dto/external/id-token-payload.dto';
 
 import { AuthApiResult, AuthResource } from './auth.resource';
 import { ID_TOKEN_COOKIE_NAME } from './constants';
