@@ -2,23 +2,21 @@ import {
   Component,
   ElementRef,
   HostBinding,
-  Input,
-  ViewChild,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   forwardRef,
   inject,
+  input,
+  viewChild,
 } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 import type { HTMLInputTypeAttribute } from 'react';
 
-import type { MaybeUndefined } from '@curseit/types';
-
 import { BaseInput } from '../../shared/components/base-input/base-input';
-import { InputInfo } from '../../shared/components/input-info/input-info';
-import { SIZES, THEMES } from '../../shared/constants';
+import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
+import { Size, Theme } from '../../shared/constants';
 import { FormErrorService } from '../../shared/services/form-error.service';
 import { SelectOption } from '../select/select';
 
@@ -26,7 +24,7 @@ type ValueTuple = [string | number, string];
 
 @Component({
   selector: 'ciui-input-select',
-  imports: [ReactiveFormsModule, InputInfo],
+  imports: [ReactiveFormsModule, CiuiInputInfo],
   templateUrl: './input-select.html',
   encapsulation: ViewEncapsulation.None,
   providers: [
@@ -41,28 +39,22 @@ type ValueTuple = [string | number, string];
 export class CiuiInputSelect extends BaseInput {
   formErrorService = inject(FormErrorService);
 
-  @Input({ required: true }) formControl!: FormControl;
-  @Input({ required: true }) label!: string;
-  @Input({ required: true }) labelSelect!: string;
-  @Input({ required: true }) options!: Array<string | SelectOption>;
+  formControl = input.required<FormControl>();
+  label = input.required<string>();
+  labelSelect = input.required<string>();
+  options = input.required<Array<string | SelectOption>>();
 
-  @Input() type: HTMLInputTypeAttribute = 'text';
-  @Input() name: MaybeUndefined<string>;
-  @Input() value: ValueTuple = ['', ''];
-  @Input() placeholder: MaybeUndefined<string>;
-  @Input() ariaLabel: MaybeUndefined<string>;
-  @Input() ariaLabelSelect: MaybeUndefined<string>;
-
-  @Input({ transform: booleanAttribute }) labelInvisible = false;
-  @Input({ transform: booleanAttribute }) row = false;
-  @Input() theme: THEMES = 'white';
-  @Input() size: SIZES = 'default';
-  @Input({ transform: booleanAttribute }) transparent = false;
-
-  @ViewChild('input')
-  inputRef!: ElementRef<HTMLInputElement>;
-  @ViewChild('select')
-  selectRef!: ElementRef<HTMLSelectElement>;
+  type = input<HTMLInputTypeAttribute>('text');
+  name = input<string>();
+  labelKey = input<string>('label');
+  placeholder = input<string>();
+  ariaLabel = input<string>();
+  ariaLabelSelect = input<string>();
+  labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
+  row = input<boolean, any>(false, { transform: booleanAttribute });
+  theme = input<Theme>('white');
+  size = input<Size>('medium');
+  transparent = input<boolean, any>(false, { transform: booleanAttribute });
 
   inputId = computed(() => `${this.id()}-input`);
   selectId = computed(() => `${this.id()}-select`);
@@ -73,15 +65,22 @@ export class CiuiInputSelect extends BaseInput {
 
   @HostBinding('class')
   get hostClasses() {
-    return [...this.classes, 'ciui-input--input-select'];
+    return [...this.classes(), 'ciui-input--input-select'];
   }
 
   onInput() {
     const newValue: ValueTuple = [
-      this.inputRef.nativeElement.value,
-      this.selectRef.nativeElement.value,
+      this._inputRef().nativeElement.value,
+      this._selectRef().nativeElement.value,
     ];
-    this.value = newValue;
-    this.onChange(newValue);
+    this._onChange(newValue);
   }
+
+  applyWrite(value: ValueTuple) {
+    this._renderer.setProperty(this._inputRef().nativeElement, 'value', value[0]);
+    this._renderer.setProperty(this._selectRef().nativeElement, 'value', value[1]);
+  }
+
+  protected _inputRef = viewChild.required<ElementRef<HTMLInputElement>>('input');
+  protected _selectRef = viewChild.required<ElementRef<HTMLInputElement>>('select');
 }

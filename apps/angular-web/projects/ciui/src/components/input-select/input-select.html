@@ -1,25 +1,24 @@
 <ciui-input-info
   [id]="inputId()"
-  [label]="label"
-  [labelInvisible]="labelInvisible"
-  [row]="row"
-  [size]="size"
+  [label]="label()"
+  [labelInvisible]="labelInvisible()"
+  [row]="row()"
+  [size]="size()"
 />
 
 <label
   [for]="selectId()"
   class="ciui-input__label ciui-a11y-hidden"
->{{ labelSelect }}</label>
+>{{ labelSelect() }}</label>
 
 <div class="ciui-input__wrapper">
   <input
     #input
     [id]="inputId()"
-    [type]="type"
-    [attr.name]="name"
-    [attr.placeholder]="placeholder"
-    [attr.value]="value[0]"
-    [attr.aria-label]="ariaLabel"
+    [type]="type()"
+    [attr.name]="name()"
+    [attr.placeholder]="placeholder()"
+    [attr.aria-label]="ariaLabel()"
     class="ciui-input__input ciui-input__input--input"
     (input)="onInput()"
     (blur)="onBlur()"
@@ -27,14 +26,13 @@
   <select
     #select
     [id]="selectId()"
-    [attr.name]="name"
-    [attr.value]="value[1]"
-    [attr.aria-label]="ariaLabelSelect"
+    [attr.name]="name()"
+    [attr.aria-label]="ariaLabelSelect()"
     class="ciui-input__input ciui-input__input--select"
     (input)="onInput()"
     (blur)="onBlur()"
   >
-    @for (option of options; track option) {
+    @for (option of options(); track option) {
     <option [value]="option">{{ option }}</option>
     }
   </select>

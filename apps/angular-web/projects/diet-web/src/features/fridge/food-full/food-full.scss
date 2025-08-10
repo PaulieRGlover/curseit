@@ -1,8 +1,11 @@
-:host {
-  flex-direction: row;
-  border-radius: 2rem 2rem 4rem 2rem;
-  background-color: var(--background-white-dimmest);
-  padding: 4rem;
-  width: 480px;
-  min-height: 260px;
+.ciui-food-full {
+  .ciui-card__content {
+    flex-direction: row;
+    border-radius: 2rem 2rem 4rem 2rem;
+    gap: 2rem;
+    background-color: var(--background-white-dimmest);
+    padding: 4rem;
+    width: 480px;
+    min-height: 260px;
+  }
 }

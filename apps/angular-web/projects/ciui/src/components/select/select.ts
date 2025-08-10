@@ -1,32 +1,38 @@
 import {
   Component,
+  ElementRef,
   HostBinding,
-  Input,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   forwardRef,
   inject,
+  input,
+  signal,
+  viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
-import type { HTMLInputTypeAttribute } from 'react';
-
-import type { MaybeUndefined } from '@curseit/types';
+import type { Nullable } from '@curseit/types';
 
 import { BaseInput } from '../../shared/components/base-input/base-input';
-import { InputInfo } from '../../shared/components/input-info/input-info';
-import { SIZES, THEMES } from '../../shared/constants';
+import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
+import { Size, Theme } from '../../shared/constants';
 import { FormErrorService } from '../../shared/services/form-error.service';
+import { CiuiContextMenu } from '../context-menu/context-menu';
+import { CiuiContextMenuDirective } from '../context-menu/context-menu.directive';
 
 export type SelectOption = {
-  id: string,
-  [key: string]: any,
+  id: string;
+  [key: string]: any;
 };
 
 @Component({
   selector: 'ciui-select',
-  imports: [ReactiveFormsModule, InputInfo],
+  imports: [ReactiveFormsModule, CiuiInputInfo, CiuiContextMenu, CiuiContextMenuDirective],
   templateUrl: './select.html',
+  styleUrl: './select.scss',
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -40,35 +46,106 @@ export type SelectOption = {
 export class CiuiSelect extends BaseInput {
   formErrorService = inject(FormErrorService);
 
-  @Input({ required: true }) formControl!: FormControl;
-  @Input({ required: true }) label!: string;
-  @Input({ required: true }) options!: Array<string | SelectOption>;
+  formControl = input.required<FormControl>();
+  label = input.required<string>();
+  options = input.required<Array<string> | Array<SelectOption>>();
 
-  @Input() type: HTMLInputTypeAttribute = 'text';
-  @Input() name: MaybeUndefined<string>;
-  @Input() labelKey = 'label';
-  @Input() value: string = '';
-  @Input() placeholder: MaybeUndefined<string>;
-  @Input() ariaLabel: MaybeUndefined<string>;
+  name = input<string>();
+  labelKey = input<string>('label');
+  placeholder = input<string>();
+  ariaLabel = input<string>();
+  labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
+  row = input<boolean, any>(false, { transform: booleanAttribute });
+  theme = input<Theme>('white');
+  size = input<Size>('medium');
+  transparent = input<boolean, any>(false, { transform: booleanAttribute });
 
-  @Input({ transform: booleanAttribute }) labelInvisible = false;
-  @Input({ transform: booleanAttribute }) row = false;
-  @Input() theme: THEMES = 'white';
-  @Input() size: SIZES = 'default';
-  @Input({ transform: booleanAttribute }) transparent = false;
+  search = new FormControl('');
+
+  isValueSelected = signal(false);
+  focusedIndex = signal<Nullable<number>>(null);
+
+  normalizedOptions = computed<Array<SelectOption>>(() =>
+    this.options().map(option => {
+      return typeof option === 'string' ? { id: option, [this.labelKey()]: option } : option;
+    }),
+  );
+  filteredOptions = computed<Array<SelectOption>>(() => {
+    const search = this._searchSignal();
+    return search && !this.isValueSelected()
+      ? this.normalizedOptions().filter(option => {
+          const optionLabel = option[this.labelKey()].toLocaleLowerCase();
+          return optionLabel.includes(search.toLocaleLowerCase());
+        })
+      : this.normalizedOptions();
+  });
 
   constructor() {
     super();
   }
 
-  @HostBinding('class')
-  get hostClasses() {
-    return [...this.classes, 'ciui-input--select'];
+  handleEnterPress() {
+    const focusedIndex = this.focusedIndex();
+    if (focusedIndex === null) {
+      return;
+    }
+
+    const option = this.filteredOptions()[focusedIndex];
+    if (!option) {
+      return;
+    }
+
+    this.handleSelect(option);
   }
 
-  onInput(event: Event) {
-    const newValue = (event.target as HTMLSelectElement).value;
-    this.value = newValue;
-    this.onChange(newValue);
+  handleFocusMove(increment: number) {
+    const focusedIndex = this.focusedIndex();
+    const filteredOptions = this.filteredOptions();
+    const { length } = filteredOptions;
+    if (focusedIndex === null) {
+      this.focusedIndex.set(increment > 0 ? 0 : length - 1);
+    } else {
+      const newIndex = (focusedIndex + increment) % length;
+      this.focusedIndex.set(newIndex === -1 ? length - 1 : newIndex);
+    }
   }
+
+  handleSearchClick() {
+    this._contextMenuRef().toggle(true);
+  }
+
+  handleSelect(option: SelectOption) {
+    const originalOption = this.options().find(originalOption => {
+      return (
+        (typeof originalOption === 'string' ? originalOption : originalOption.id) === option.id
+      );
+    });
+    this._onChange(originalOption);
+    this._contextMenuRef().toggle(false);
+    this._renderer.setProperty(this._selectRef().nativeElement, 'value', option[this.labelKey()]);
+    this.isValueSelected.set(true);
+    this.focusedIndex.set(null);
+  }
+
+  handleOptionHover(option: SelectOption) {
+    this.focusedIndex.set(this.filteredOptions().indexOf(option));
+  }
+
+  applyWrite(option: string | SelectOption) {
+    console.log(`option: `, option);
+    this._renderer.setProperty(
+      this._selectRef().nativeElement,
+      'value',
+      typeof option === 'string' ? option : option[this.labelKey()],
+    );
+  }
+
+  @HostBinding('class')
+  get hostClasses() {
+    return [...this.classes(), 'ciui-select'];
+  }
+
+  protected _selectRef = viewChild.required<ElementRef<HTMLTextAreaElement>>('select');
+  protected _contextMenuRef = viewChild.required(CiuiContextMenu);
+  private _searchSignal = toSignal(this.search.valueChanges, { initialValue: this.search.value });
 }

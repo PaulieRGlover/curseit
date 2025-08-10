@@ -1,19 +1,19 @@
 <ciui-input-info
   [id]="id()"
-  [label]="label"
-  [labelInvisible]="labelInvisible"
-  [row]="row"
-  [size]="size"
+  [label]="label()"
+  [labelInvisible]="labelInvisible()"
+  [row]="row()"
+  [size]="size()"
 />
 
 <div class="ciui-input__wrapper">
   <input
+    #input
     [id]="id()"
-    [type]="type"
-    [attr.name]="name"
-    [attr.placeholder]="placeholder"
-    [attr.value]="value"
-    [attr.aria-label]="ariaLabel"
+    [type]="type()"
+    [attr.name]="name()"
+    [attr.placeholder]="placeholder()"
+    [attr.aria-label]="ariaLabel()"
     class="ciui-input__input"
     (input)="onInput($event)"
     (blur)="onBlur()"

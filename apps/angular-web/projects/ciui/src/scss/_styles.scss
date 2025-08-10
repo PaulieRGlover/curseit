@@ -68,13 +68,22 @@ input[type='number'] {
   appearance: none;
 }
 
-.ciui-a11y-hidden {
-  position: absolute;
-  clip-path: inset(50%);
-  margin: -1px;
-  border: 0;
+ul {
+  margin: 0;
   padding: 0;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
+}
+
+li {
+  list-style-type: none;
+}
+
+.ciui-a11y-hidden {
+  position: absolute !important;
+  clip-path: inset(50%);
+  margin: -1px !important;
+  border: 0 !important;
+  padding: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
 }

@@ -9,7 +9,6 @@
         "executor": "nx:run-commands",
         "options": {
           "commands": [
-            "npm link ./dist/ciui ./dist/resource",
             "npx ng build diet-web --stats-json"
           ],
           "cwd": "apps/angular-web",

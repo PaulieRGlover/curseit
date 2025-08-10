@@ -1,0 +1,43 @@
+.ciui-context-menu {
+  display: flex;
+  position: absolute;
+  transform: translateY(1rem);
+  margin: 0;
+  outline: none;
+  border: none;
+  border-radius: 1rem;
+  background-color: transparent;
+  padding: 0;
+  overflow: hidden;
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 2rem;
+    cursor: pointer;
+  }
+
+  &.ciui-context-menu--closed {
+    display: none;
+  }
+
+  &.ciui-context-menu--size-medium {
+    .ciui-context-menu__item {
+      height: 9rem;
+    }
+  }
+
+  &.ciui-context-menu--size-small {
+    .ciui-context-menu__item {
+      height: 6rem;
+    }
+  }
+
+  &.ciui-context-menu--theme-white {
+    .ciui-context-menu__item.ciui-context-menu__item--focused {
+      background-color: var(--background-white-dimmer);
+    }
+  }
+}

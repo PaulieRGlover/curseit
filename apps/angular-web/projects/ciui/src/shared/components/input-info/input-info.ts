@@ -1,25 +1,37 @@
-import { Component, Input, booleanAttribute, inject } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  ViewEncapsulation,
+  booleanAttribute,
+  inject,
+  input,
+} from '@angular/core';
 
 import { CiuiIcon } from '../../../components';
-import { SIZES } from '../../constants';
+import { Size } from '../../constants';
 import { FormErrorService } from '../../services/form-error.service';
 
 @Component({
   selector: 'ciui-input-info',
   imports: [CiuiIcon],
   templateUrl: './input-info.html',
-  host: {
-    class: 'ciui-input__info',
-    '[class.ciui-a11-hidden]': 'labelInvisible && !formErrorService.hasErrors()',
-  }
+  encapsulation: ViewEncapsulation.None,
 })
-export class InputInfo {
+export class CiuiInputInfo {
   formErrorService = inject(FormErrorService);
 
-  @Input({ required: true }) id!: string;
-  @Input({ required: true }) label!: string;
+  id = input.required<string>();
+  label = input.required<string>();
 
-  @Input({ transform: booleanAttribute }) labelInvisible = false;
-  @Input({ transform: booleanAttribute }) row = false;
-  @Input() size: SIZES = 'default';
+  labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
+  row = input<boolean, any>(false, { transform: booleanAttribute });
+  size = input<Size>('medium');
+
+  @HostBinding('class')
+  get hostClasses() {
+    return [
+      'ciui-input__info',
+      this.labelInvisible() && !this.formErrorService.hasErrors() ? 'ciui-a11y-hidden' : '',
+    ];
+  }
 }

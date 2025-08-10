@@ -1,10 +1,10 @@
 <label
-  [for]="id"
+  [for]="id()"
   class="ciui-input__label"
-  [class.ciui-a11y-hidden]="labelInvisible"
->{{ label }}</label>
+  [class.ciui-a11y-hidden]="labelInvisible()"
+>{{ label() }}</label>
 
-@if (formErrorService.hasErrors() && formErrorService.hasOneError() && !row && !labelInvisible) {
+@if (formErrorService.hasErrors() && formErrorService.hasOneError() && !row() && !labelInvisible) {
 <div [title]="formErrorService.firstError()" class="ciui-input__errors ciui-ellipsis">
   <span class="ciui-ellipsis__text">{{ formErrorService.firstError() }}</span>
 </div>
@@ -13,7 +13,7 @@
   <ciui-icon
     [title]="formErrorService.tempFormattedErrors()"
     name="info"
-    [size]="size"
+    [size]="size()"
   />
 </div>
 }

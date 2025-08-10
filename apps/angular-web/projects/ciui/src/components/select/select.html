@@ -1,24 +1,47 @@
 <ciui-input-info
   [id]="id()"
-  [label]="label"
-  [labelInvisible]="labelInvisible"
-  [row]="row"
-  [size]="size"
+  [label]="label()"
+  [labelInvisible]="labelInvisible()"
+  [row]="row()"
+  [size]="size()"
 />
 
 <div class="ciui-input__wrapper">
-  <select
+  <input
+    #select
+    ciuiContextMenu
+    trigger="focus"
     [id]="id()"
-    [attr.name]="name"
-    [attr.aria-label]="ariaLabel"
+    [attr.name]="name()"
+    [attr.aria-label]="ariaLabel()"
     class="ciui-input__input"
-    (input)="onInput($event)"
-    (blur)="onBlur()"
+    [formControl]="search"
+    (input)="isValueSelected.set(false)"
+    (keydown.enter)="handleEnterPress()"
+    (keydown.arrowUp)="handleFocusMove(-1)"
+    (keydown.arrowDown)="handleFocusMove(1)"
+    (click)="handleSearchClick()"
   >
-    @for (option of options; track (typeof option === 'string' ? option : option.id)) {
-    <option
-      [value]="(typeof option === 'string' ? option : option.id)"
-    >{{ (typeof option === 'string') ? option : option[labelKey] }}</option>
-    }
-  </select>
+
+  <ciui-context-menu
+    [theme]="theme()"
+    [size]="size()"
+    symmetric
+    class="ciui-select__context-menu"
+  >
+    <ul class="ciui-select__options">
+      @for (option of filteredOptions(); track option.id) {
+      <li
+        [attr.title]="option[labelKey()]"
+        class="ciui-select__option ciui-context-menu__item ciui-ellipsis"
+        [class.ciui-context-menu__item--focused]="focusedIndex() === $index"
+        (click)="handleSelect(option)"
+        (mouseenter)="handleOptionHover(option)"
+        (mousemove)="handleOptionHover(option)"
+      >
+        <span class="ciui-ellipsis__text">{{ option[labelKey()] }}</span>
+      </li>
+      }
+    </ul>
+  </ciui-context-menu>
 </div>

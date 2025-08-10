@@ -15,11 +15,11 @@ import { CidVariation } from '../variation/variation';
   },
 })
 export class CidVariations {
-  variation = new FormControl('');
-
   options = [
     { id: 'this', label: 'This' },
     { id: 'that', label: 'That' },
     { id: 'and this', label: 'And this is very very very long, but what can you do?' },
   ];
+
+  variation = new FormControl(this.options[0]);
 }

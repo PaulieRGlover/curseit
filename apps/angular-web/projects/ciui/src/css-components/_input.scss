@@ -11,7 +11,7 @@
   &__info {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     gap: 2rem;
 
     .ciui-input__label {
@@ -80,6 +80,10 @@
   &.ciui-input--size-small {
     font-size: 3rem;
 
+    .ciui-input__info {
+      height: 4rem;
+    }
+
     .ciui-input__input {
       border-radius: 0.5rem;
       height: 6rem;
@@ -90,8 +94,12 @@
     }
   }
 
-  &.ciui-input--size-default {
+  &.ciui-input--size-medium {
     font-size: 4rem;
+
+    .ciui-input__info {
+      height: 6rem;
+    }
 
     .ciui-input__input {
       border-radius: 1rem;
@@ -132,13 +140,6 @@
     }
   }
 
-  &.ciui-input--select {
-    .ciui-input__input {
-      // appearance: base-select;
-      padding: 0 1.2rem;
-    }
-  }
-
   &.ciui-input--input-select {
     .ciui-input__input {
       &.ciui-input__input--input {
@@ -149,15 +150,15 @@
 
       &.ciui-input__input--select {
         flex: 0 0 content;
-        padding: 0 1.2rem 0 0;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+        padding: 0 1.2rem 0 0;
         text-align: right;
       }
     }
   }
 
-  &.ciui-input--checkbox.ciui-input--size-default {
+  &.ciui-input--checkbox.ciui-input--size-medium {
     .ciui-input__input {
       width: 6rem;
       height: 6rem;
@@ -166,28 +167,27 @@
 
   &.ciui-input--row {
     flex-direction: row;
-    
+    align-items: center;
+
     .ciui-input__label {
       text-transform: none;
     }
   }
 
   &.ciui-input--label-invisible {
-    gap: 0;
-
-    .ciui-input__errors {
+    .ciui-input__info {
       position: absolute;
       right: 1rem;
     }
 
     &.ciui-input--size-small {
-      .ciui-input__errors {
+      .ciui-input__info {
         top: 1rem;
       }
     }
 
-    &.ciui-input--size-default {
-      .ciui-input__errors {
+    &.ciui-input--size-medium {
+      .ciui-input__info {
         top: 1.5rem;
       }
     }
