@@ -14,6 +14,9 @@ export const ROUTES = {
   },
   FRIDGE: {
     ROOT: r`fridge`,
-    FOOD: r`:foodId`,
+    FOODS: {
+      ROOT: r`foods`,
+      FOOD: r`:foodId`,
+    },
   },
 } as const;

@@ -1,4 +1,4 @@
-import { UNITS_ARRAY } from '@curseit/units';
+import { UNITS } from '@curseit/units';
 import * as z from 'zod/v4-mini';
 
 export const name = z.string().check(
@@ -8,9 +8,15 @@ export const name = z.string().check(
 
 export const value = z.number().check(
   z.minimum(0, { message: 'Value should be a positive number' }),
+  z.maximum(1000000, { message: "Maybe it's worth considering to upscale the unit?" }),
 );
 
-export const unit = z.enum(UNITS_ARRAY);
+export const unit = z.enum(UNITS);
 
-export const nutrient = z.object({ name, value, unit });
-export type NutrientDto = z.infer<typeof nutrient>;
+export const valueUnit = z.tuple([value, unit]);
+
+export const nutrientInput = z.object({ id: z.optional(z.string()), name, value, unit });
+export type NutrientInput = z.infer<typeof nutrientInput>;
+
+export const nutrientCreate = z.object({ name, valueInGrams: value, valueDisplayUnit: unit });
+export type NutrientCreate = z.infer<typeof nutrientCreate>;

@@ -3,8 +3,8 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'cid-fridge',
+  imports: [RouterOutlet],
   templateUrl: './fridge.html',
   styleUrl: './fridge.scss',
-  imports: [RouterOutlet],
 })
 export class CidFridge {}

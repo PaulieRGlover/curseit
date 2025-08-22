@@ -105,13 +105,13 @@ export class AuthController {
     @GetAccessToken(false) accessToken: Nullable<JwtReadDto>,
     @GetRefreshToken(false) refreshToken: Nullable<JwtReadDto>,
     @Res({ passthrough: true }) response: FastifyReply,
-  ): Promise<string> {
+  ): Promise<{ message: string }> {
     response.clearCookie(ID_TOKEN_COOKIE_NAME);
     response.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
 
     this.authService.signOut({ accessToken, refreshToken });
 
-    return AUTH_MESSAGES.SIGN_OUT_SUCCESSFUL;
+    return { message: AUTH_MESSAGES.SIGN_OUT_SUCCESSFUL };
   }
 
   @UseGuards(RefreshJwtGuard)

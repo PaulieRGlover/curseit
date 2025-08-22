@@ -1,4 +1,4 @@
-<ciui-input
+<ciui-select
   label="Nutrient name"
   name="name"
   placeholder="Name"
@@ -6,7 +6,11 @@
   row
   transparent
   size="small"
+  labelKey="name"
+  [options]="nutrientsSearchStore.foundNutrients() ?? []"
   [formControl]="name"
+  (searchDebounced)="handleSearchDebounced($event)"
+  (change)="handleInputChange()"
 />
 
 <div class="cid-food-nutrient__delimiter"></div>
@@ -23,9 +27,10 @@
   class="cid-food-nutrient__amount"
   [formControl]="value"
   [options]="valueOptions"
+  (change)="handleInputChange()"
 />
 
-@if (!isNew) {
+@if (!isNew()) {
   <ciui-icon
     name="close"
   />

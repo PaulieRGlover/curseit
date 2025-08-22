@@ -30,6 +30,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/foods-orm/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/jwt/tsconfig.lib.json"
     },
     {
@@ -42,10 +45,10 @@
       "path": "../../libs/diet-orm/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/foods-orm/tsconfig.lib.json"
+      "path": "../../libs/time/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/time/tsconfig.lib.json"
+      "path": "../../libs/units/tsconfig.lib.json"
     },
     {
       "path": "../../libs/types/tsconfig.lib.json"

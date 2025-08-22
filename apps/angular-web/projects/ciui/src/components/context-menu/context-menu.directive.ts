@@ -7,9 +7,9 @@ import { ContextMenuService } from './context-menu.service';
 export type Trigger = 'hover' | 'click' | 'focus';
 
 @Directive({
-  selector: '[ciuiContextMenu]',
+  selector: '[ciuiContextMenuTrigger]',
 })
-export class CiuiContextMenuDirective {
+export class CiuiContextMenuTriggerDirective {
   private contextMenuService = inject(ContextMenuService);
 
   element = inject(ElementRef);

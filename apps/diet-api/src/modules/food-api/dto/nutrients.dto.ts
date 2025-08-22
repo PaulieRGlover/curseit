@@ -3,8 +3,8 @@ import z from 'zod';
 export const NutrientInFoodSchema = z.object({
   id: z.string().uuid().optional(),
   name: z.string(),
-  value: z.number().optional(),
-  valueInGrams: z.number().optional(),
+  shortName: z.string().optional(),
+  valueInGrams: z.number(),
 });
 export type NutrientInFood = z.infer<typeof NutrientInFoodSchema>;
 

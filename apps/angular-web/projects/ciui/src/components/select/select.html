@@ -3,24 +3,25 @@
   [label]="label()"
   [labelInvisible]="labelInvisible()"
   [row]="row()"
-  [size]="size()"
 />
 
 <div class="ciui-input__wrapper">
   <input
     #select
-    ciuiContextMenu
+    ciuiContextMenuTrigger
     trigger="focus"
     [id]="id()"
     [attr.name]="name()"
     [attr.aria-label]="ariaLabel()"
     class="ciui-input__input"
-    [formControl]="search"
+    [formControl]="searchControl"
     (input)="isValueSelected.set(false)"
     (keydown.enter)="handleEnterPress()"
     (keydown.arrowUp)="handleFocusMove(-1)"
     (keydown.arrowDown)="handleFocusMove(1)"
     (click)="handleSearchClick()"
+    (input)="handleSearchInput()"
+    (change)="handleSearchChange($event)"
   >
 
   <ciui-context-menu

@@ -43,7 +43,7 @@ export class AuthFlowService {
   }
 
   private async checkPromisedAuthStatus() {
-    if (!this.authService.isAuthenticated && this.isAuthProtected) {
+    if (!this.authService.isAuthenticated() && this.isAuthProtected) {
       await this.authService.signOut();
       this.navigationService.replaceWith(ROUTES.AUTH.SIGN_IN);
     }

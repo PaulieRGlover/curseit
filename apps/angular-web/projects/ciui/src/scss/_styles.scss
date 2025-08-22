@@ -1,89 +1,94 @@
 @use 'variables';
 @use 'fonts';
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer ciui;
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-size: 4px; // 1rem
-}
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
-  color: var(--text-gray-blue);
-  font-weight: 300;
-  font-size: 4rem;
-  line-height: 1.1666;
-  font-family: 'Roboto', verdana;
-}
-
-router-outlet {
-  // keeps children in DOM but prevents router-outlet from participating in flex flow
-  display: contents;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  color: var(--text-gray-blue);
-
-  &:hover {
-    color: var(--text-blue-accented);
+@layer ciui {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
-}
 
-hr {
-  display: flex;
-  margin: 1rem 0;
-  border: none;
-  background-color: var(--border-color-gray);
-  width: 100%;
-  height: 1px;
-}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 4px; // 1rem
+  }
 
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    color: var(--text-gray-blue);
+    font-weight: 300;
+    font-size: 4rem;
+    line-height: 1.1666;
+    font-family: 'Roboto', verdana;
+  }
 
-input[type='number'] {
-  -moz-appearance: textfield;
-}
+  router-outlet {
+    // keeps children in DOM but prevents router-outlet from participating in flex flow
+    display: contents;
+  }
 
-input[type='number'] {
-  appearance: none;
-}
+  button {
+    cursor: pointer;
+  }
 
-ul {
-  margin: 0;
-  padding: 0;
-}
+  a {
+    color: var(--text-gray-blue);
 
-li {
-  list-style-type: none;
-}
+    &:hover {
+      color: var(--text-blue-accented);
+    }
+  }
 
-.ciui-a11y-hidden {
-  position: absolute !important;
-  clip-path: inset(50%);
-  margin: -1px !important;
-  border: 0 !important;
-  padding: 0 !important;
-  width: 1px !important;
-  height: 1px !important;
-  overflow: hidden !important;
+  hr {
+    display: flex;
+    margin: 1rem 0;
+    border: none;
+    background-color: var(--border-color-gray);
+    width: 100%;
+    height: 1px;
+  }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  input[type='number'] {
+    appearance: none;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  .ciui-a11y-hidden {
+    position: absolute !important;
+    clip-path: inset(50%);
+    margin: -1px !important;
+    border: 0 !important;
+    padding: 0 !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+  }
 }

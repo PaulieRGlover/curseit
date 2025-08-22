@@ -1,1 +1,16 @@
-<div>{{ foodId() }}</div>
+<div class="ciui-card__content">
+  <div
+    class="cid-food__name"
+    [class.cid-food__name--absent]="!food().name"
+  >{{ food().name ? food().name : 'Unnamed food' }}</div>
+
+  <div class="cid-food__description ciui-ellipsis" [attr.title]="food().description">
+    <span class="ciui-ellipsis__text">{{ food().description }}</span>
+  </div>
+
+  <div class="cid-food__portions">
+    <!-- @for (portion of food().portions; track portion.id) {
+      
+    } -->
+  </div>
+</div>

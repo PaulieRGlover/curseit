@@ -59,7 +59,8 @@ export class CiuiInput extends BaseInput {
 
   onInput(event: Event) {
     const newValue = (event.target as HTMLInputElement).value;
-    this._onChange(newValue);
+
+    this._onChange(this.type() === 'number' ? parseFloat(newValue) : newValue);
   }
 
   applyWrite(value: any) {

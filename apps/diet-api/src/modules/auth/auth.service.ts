@@ -46,10 +46,11 @@ export class AuthService {
         data: { login: dto.login, passwordHash: hash },
       });
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === PRISMA_ERRORS.UNIQUE_CONSTRAINT_FAILED) {
-          throw new ConflictException(AUTH_MESSAGES.CREDENTIALS_TAKEN);
-        }
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === PRISMA_ERRORS.UNIQUE_CONSTRAINT_FAILED
+      ) {
+        throw new ConflictException(AUTH_MESSAGES.CREDENTIALS_TAKEN);
       }
 
       throw new InternalServerErrorException();

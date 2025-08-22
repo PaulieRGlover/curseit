@@ -4,7 +4,7 @@ import { NutrientInFood } from '../dto/nutrients.dto';
 import { FDC_UNIT_NAME, FdcFoodNutrientAbridged } from '../modules/fdc/external/fdc.types';
 
 import { fdcNutrientValueToNutrientValueInGrams } from './fdc-nutrient-value-to-nutrient-value-in-grams';
-import { NUTRIENT_NAME_MAP } from './nutrient-name-map';
+import { NUTRIENT_SHORT_NAME_MAP } from './nutrient-name-map';
 
 export const fdcNutrientToNutrient = (
   nutrient: FdcFoodNutrientAbridged,
@@ -20,10 +20,11 @@ export const fdcNutrientToNutrient = (
     return null;
   }
 
-  const mappedName = NUTRIENT_NAME_MAP.get(nutrient.nutrientName);
+  const shortName = NUTRIENT_SHORT_NAME_MAP.get(nutrient.nutrientName);
 
   return {
-    name: mappedName ?? nutrient.nutrientName,
+    name: nutrient.nutrientName,
+    shortName,
     valueInGrams: fdcNutrientValueToNutrientValueInGrams(nutrient.value, nutrient.unitName),
   };
 };

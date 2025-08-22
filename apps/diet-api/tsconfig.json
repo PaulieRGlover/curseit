@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/foods-orm"
+    },
+    {
       "path": "../../libs/jwt"
     },
     {
@@ -16,10 +19,10 @@
       "path": "../../libs/diet-orm"
     },
     {
-      "path": "../../libs/foods-orm"
+      "path": "../../libs/time"
     },
     {
-      "path": "../../libs/time"
+      "path": "../../libs/units"
     },
     {
       "path": "../../libs/types"

@@ -25,7 +25,6 @@ export class CiuiInputInfo {
 
   labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
   row = input<boolean, any>(false, { transform: booleanAttribute });
-  size = input<Size>('medium');
 
   @HostBinding('class')
   get hostClasses() {

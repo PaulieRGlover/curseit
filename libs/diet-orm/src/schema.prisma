@@ -21,7 +21,8 @@ model User {
   lastName     String? @map("last_name")
   passwordHash String  @map("password_hash")
 
-  foods Food[]
+  foods     Food[]
+  nutrients UsersNutrient[]
 
   @@map("users")
 }
@@ -36,9 +37,8 @@ model InvalidatedToken {
 
 model Food {
   id          String  @id @default(uuid())
-  name        String
-  counter     String  @default("🥫")
-  description String?
+  name        String  @default("")
+  description String  @default("")
   favorite    Boolean @default(false)
   perishable  Boolean @default(true)
   picture     String?
@@ -48,48 +48,66 @@ model Food {
   variations FoodVariation[]
 
   @@map("foods")
-  @@unique([name, userId])
 }
 
 model Nutrient {
-  id   String @id @default(uuid())
-  name String @unique
+  id          String  @id @default(uuid())
+  name        String  @unique
+  shortName   String? @map("short_name")
+  description String?
+  externalId  String? @map("external_id")
 
   foodVariations NutrientInFoodVariation[]
+  customForUsers UsersNutrient[]
 
   @@map("nutrients")
 }
 
+model UsersNutrient {
+  name String
+
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @map("user_id")
+  nutrient   Nutrient @relation(fields: [nutrientId], references: [id])
+  nutrientId String   @map("nutrient_id")
+
+  @@id([userId, nutrientId])
+  @@map("users_nutrients")
+}
+
 model FoodVariation {
-  id                       String  @id
+  id                       String  @id @default(uuid())
   name                     String
+  counter                  String  @default("🥫")
   referenceSizeInGrams     Float   @default(100) @map("reference_size_in_grams")
-  referenceSizeDisplayUnit String  @default("g") @map("reference_size_display_unit")
+  referenceSizeDisplayUnit Unit    @default(g) @map("reference_size_display_unit")
   portionSizeInGrams       Float   @default(100) @map("portion_size_in_grams")
-  portionSizeDisplayUnit   String  @default("g") @map("portion_size_display_unit")
+  portionSizeDisplayUnit   Unit    @default(g) @map("portion_size_display_unit")
   energyAuto               Boolean @default(true) @map("energy_auto")
+  energyAmount             Float?  @map("energy_amount")
+  energyDisplayUnit        Energy  @default(kcal) @map("energy_display_unit")
   provider                 String?
   providerId               String? @map("provider_id")
 
   food      Food                      @relation(fields: [foodId], references: [id])
-  foodId    String
+  foodId    String                    @map("food_id")
   portions  FoodPortion[]
   nutrients NutrientInFoodVariation[]
 
-  @@map("food_variations")
   @@unique([name, foodId])
+  @@map("food_variations")
 }
 
 model NutrientInFoodVariation {
+  id               String @id @default(uuid())
   valueInGrams     Float  @map("value_in_grams")
-  valueDisplayUnit String @default("g") @map("value_display_unit")
+  valueDisplayUnit Unit   @default(g) @map("value_display_unit")
 
   foodVariation   FoodVariation @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
   foodVariationId String        @map("food_variation_id")
   nutrient        Nutrient      @relation(fields: [nutrientId], references: [id], onDelete: Cascade)
   nutrientId      String        @map("nutrient_id")
 
-  @@id([foodVariationId, nutrientId])
   @@map("nutrients_in_food_variations")
 }
 
@@ -98,10 +116,24 @@ model FoodPortion {
   timeAdded       DateTime @default(now()) @map("time_added")
   timeExpiring    DateTime @map("time_expiring")
   sizeInGrams     Float    @map("size_in_grams")
-  sizeDisplayUnit String   @map("size_display_unit")
+  sizeDisplayUnit Unit     @default(g) @map("size_display_unit")
 
   foodVariation   FoodVariation @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
   foodVariationId String        @map("food_variation_id")
 
   @@map("food_portions")
+}
+
+enum Unit {
+  µg
+  mg
+  g
+  kg
+  oz
+  lb
+}
+
+enum Energy {
+  kJ
+  kcal
 }

@@ -1,4 +1,12 @@
-import { Component, Input, ViewEncapsulation, booleanAttribute, forwardRef } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  forwardRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -6,15 +14,18 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { CiuiIcon, CiuiInput, CiuiInputSelect } from '@curseit/ciui';
-import { MaybeUndefined } from '@curseit/types';
-import { UNITS } from '@curseit/units';
+import { CiuiIcon, CiuiInputSelect, CiuiSelect } from '@curseit/ciui';
+import { Nullable } from '@curseit/types';
+import { UNITS, Unit } from '@curseit/units';
 
-import { NutrientDto } from '../../dto/internal/nutrient.dto';
+import { NutrientInput } from '../../dto/internal/nutrient.dto';
+import { NutrientInternalValidationService } from '../../validation/nutrient-internal-validation.service';
+import { FridgeService } from '../../fridge.service';
+import { NutrientsSearchStore } from '../../store/nutrients-search.store';
 
 @Component({
   selector: 'cid-nutrient',
-  imports: [ReactiveFormsModule, CiuiInput, CiuiInputSelect, CiuiIcon],
+  imports: [ReactiveFormsModule, CiuiSelect, CiuiInputSelect, CiuiIcon],
   templateUrl: './nutrient.html',
   styleUrl: './nutrient.scss',
   providers: [
@@ -30,26 +41,52 @@ import { NutrientDto } from '../../dto/internal/nutrient.dto';
   },
 })
 export class CidNutrient implements ControlValueAccessor {
-  name = new FormControl('');
-  value = new FormControl([0, UNITS.GRAM]);
+  fridgeService = inject(FridgeService);
+  validationService = inject(NutrientInternalValidationService);
+  nutrientsSearchStore = inject(NutrientsSearchStore);
 
+  name = new FormControl('', { asyncValidators: this.validationService.name });
+  value = new FormControl<[number, Unit]>([0, UNITS.GRAM], {
+    asyncValidators: this.validationService.valueUnit,
+  });
+
+  id = signal<Nullable<NutrientInput['id']>>(null);
   valueOptions = [UNITS.GRAM, UNITS.MICROGRAM, UNITS.MILLIGRAM];
 
-  @Input({ transform: booleanAttribute }) isNew = false;
-  @Input() nutrient: MaybeUndefined<NutrientDto>;
+  isNew = input<boolean, any>(false, { transform: booleanAttribute });
 
-  writeValue(value: any) {
-    this.value = value;
+  async handleInputChange() {
+    const newValue = {
+      id: this.id(),
+      name: this.name.value,
+      value: this.value.value?.[0],
+      unit: this.value.value?.[1],
+    };
+    const foodInput = await this.validationService.nutrient(newValue);
+
+    if (foodInput) {
+      this._onChange(foodInput);
+    }
+  }
+
+  handleSearchDebounced(value: string) {
+    this.fridgeService.searchNutrients(value);
+  }
+
+  writeValue(value: NutrientInput) {
+    this.id.set(value.id);
+    this.name.setValue(value.name);
+    this.value.setValue([value.value, value.unit]);
   }
 
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this._onChange = fn;
   }
 
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
-  protected onChange = (value: any) => {};
-  protected onTouched = () => {};
+  protected _onChange = (value: any) => {};
+  protected _onTouched = () => {};
 }

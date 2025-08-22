@@ -1,0 +1,16 @@
+.cid-food {
+  flex: 0 0 260px;
+  max-width: 260px;
+  height: 113px;
+  border-radius: 2rem 2rem 8rem 2rem;
+  cursor: pointer;
+
+  &__name {
+    font-size: 5rem;
+    font-family: 'Roboto Condensed';
+  }
+
+  &__name.cid-food__name--absent {
+    color: var(--text-gray-blue-fainter);
+  }
+}

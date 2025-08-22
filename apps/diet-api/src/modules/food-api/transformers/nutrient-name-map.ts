@@ -1,4 +1,4 @@
-export const NUTRIENT_NAME_MAP = new Map([
+export const NUTRIENT_SHORT_NAME_MAP = new Map([
   ['Total lipid (fat)', 'Total fat'],
   ['Carbohydrate, by difference', 'Carbohydrate'],
   ['Fiber, total dietary', 'Total fiber'],

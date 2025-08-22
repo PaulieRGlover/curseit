@@ -3,7 +3,9 @@ import { NavigationBehaviorOptions, Router } from '@angular/router';
 
 import { ROUTES, RouteId, Routes } from './routes';
 
-type NavigationPiece = Array<string> | ((...params: Array<string>) => Array<string>);
+type Navigation = Array<string>;
+type ParametrizedNavigation = (...params: Array<string>) => Array<string>;
+type NavigationPiece = Navigation | ParametrizedNavigation;
 
 const PARAM_REGEX = /^:/;
 
@@ -15,10 +17,19 @@ export class NavigationService {
     this.constructNavigationTree();
   }
 
-  public getNavigation(routeId: RouteId): NavigationPiece {
-    const navigation = this._navigationTree[routeId.id];
-    if (!navigation) {
-      throw new Error('No such route');
+  public getNavigation(routeId: RouteId): Navigation {
+    const navigation = this.getNavigationPiece(routeId);
+    if (typeof navigation === 'function') {
+      throw new Error('The route is parametrized. Try `getParametrizedNavigation` instead');
+    }
+
+    return navigation;
+  }
+
+  public getParametrizedNavigation(routeId: RouteId): ParametrizedNavigation {
+    const navigation = this.getNavigationPiece(routeId);
+    if (typeof navigation !== 'function') {
+      throw new Error('The route is not parametrized. Try `getNavigation` instead');
     }
 
     return navigation;
@@ -32,8 +43,17 @@ export class NavigationService {
     return this.navigate(routeId, { replaceUrl: true }, ...params);
   }
 
+  private getNavigationPiece(routeId: RouteId): NavigationPiece {
+    const navigation = this._navigationTree[routeId.id];
+    if (!navigation) {
+      throw new Error('No such route');
+    }
+
+    return navigation;
+  }
+
   private navigate(routeId: RouteId, options: NavigationBehaviorOptions, ...params: Array<string>) {
-    const navigation = this.getNavigation(routeId);
+    const navigation = this.getNavigationPiece(routeId);
 
     if (Array.isArray(navigation)) {
       return this.router.navigate(navigation, options);

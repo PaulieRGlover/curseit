@@ -11,11 +11,6 @@ export class FoodsInternalValidationService {
     return zodValidateForFormControl(schema, control);
   }
 
-  public async counter(control: AbstractControl) {
-    const schema = (await import('../dto/internal/food.dto')).counter;
-    return zodValidateForFormControl(schema, control);
-  }
-
   public async description(control: AbstractControl) {
     const schema = (await import('../dto/internal/food.dto')).description;
     return zodValidateForFormControl(schema, control);
@@ -31,8 +26,8 @@ export class FoodsInternalValidationService {
     return zodValidateForFormControl(schema, control);
   }
 
-  public async foodCreate(input: unknown) {
-    const schema = (await import('../dto/internal/food.dto')).foodCreateSchema;
-    return zodValidate(schema, input);
+  public async food(input: unknown) {
+    const schema = (await import('../dto/internal/food.dto')).foodInputSchema;
+    return zodValidate(schema, input, false);
   }
 }

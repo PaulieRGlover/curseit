@@ -1,19 +1,24 @@
-.ciui-icon {
-  display: inline-block;
+@layer ciui {
+  .ciui-icon {
+    display: inline-flex;
 
-  &_wrapper, svg {
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-  }
+    &_wrapper,
+    svg {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
 
-  &.ciui-icon--size-default {
-    width: 6rem;
-    height: 6rem;
-  }
+    &.ciui-icon--size-medium {
+      width: 6rem;
+      height: 6rem;
+    }
 
-  &.ciui-icon--size-small {
-    width: 4rem;
-    height: 4rem;
+    &.ciui-icon--size-small {
+      width: 4.5rem;
+      height: 4.5rem;
+    }
   }
 }

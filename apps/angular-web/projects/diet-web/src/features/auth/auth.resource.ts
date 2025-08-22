@@ -8,36 +8,40 @@ import { Failure } from '@/core/dto/external/failure.dto';
 
 import { Success } from './dto/external/success.dto';
 import { AuthExternalValidationService } from './validation/auth-external-validation.service';
-import { API } from '@/core/constants/api.constants';
 
 export type AuthApiResult = ApiResult<Success, Failure>;
 
 @Injectable({ providedIn: 'root' })
-@Resource(API.AUTH.BASE)
+@Resource('auth')
 export class AuthResource {
   http = inject(HttpClient);
   validation = inject(AuthExternalValidationService);
 
-  @Post(API.AUTH.SIGN_UP)
+  @Post('sign-up')
   @UseValidation()
-  async signUp(body: { login: string; password: string }): AuthApiResult {
+  async signUp(payload: { login: string; password: string }): AuthApiResult {
     return undefined!;
   }
 
-  @Post(API.AUTH.SIGN_IN)
+  @Post('sign-in')
   @UseValidation()
-  async signIn(body: { login: string; password: string }): AuthApiResult {
+  async signIn(payload: { login: string; password: string }): AuthApiResult {
     return undefined!;
   }
 
-  @Get(API.AUTH.REFRESH)
+  @Get('refresh')
+  @UseValidation()
   async refresh(): AuthApiResult {
     return undefined!;
   }
 
-  @Post(API.AUTH.SIGN_OUT)
-  @UseAuthorization({ fromBody: true })
-  async signOut(token: Nullable<string>): ApiResult<{}, Failure> {
+  @Post('sign-out')
+  @UseAuthorization()
+  @UseValidation('signOut')
+  async signOut(
+    payload: undefined,
+    options: { authToken: Nullable<string> },
+  ): ApiResult<{}, Failure> {
     return undefined!;
   }
 }

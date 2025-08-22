@@ -1,5 +1,7 @@
-@for (nutrient of nutrients; track nutrient.name) {
-<cid-nutrient [nutrient]="nutrient" />
+@for (control of nutrients.controls; track control.value.id ? control.value.id : 'new') {
+<cid-nutrient
+  [formControl]="control"
+  [isNew]="!control.value.id"
+  (change)="handleNutrientChange(control.value)"
+/>
 }
-
-<cid-nutrient isNew />

@@ -5,8 +5,8 @@
   transparent
   placeholder="Food name"
   size="small"
-  [formControl]="foodData.controls.name"
-  (change)="handleChange()"
+  [formControl]="foodInput.controls.name"
+  (change)="handleFoodInputChange()"
 />
 
 <ciui-textarea
@@ -18,7 +18,8 @@
   transparent
   placeholder="Description"
   size="small"
-  [formControl]="foodData.controls.description"
+  [formControl]="foodInput.controls.description"
+  (change)="handleFoodInputChange()"
 />
 
 <ciui-checkbox
@@ -29,5 +30,6 @@
   size="small"
   transparent
   row
-  [formControl]="foodData.controls.perishable"
+  [formControl]="foodInput.controls.perishable"
+  (change)="handleFoodInputChange()"
 />

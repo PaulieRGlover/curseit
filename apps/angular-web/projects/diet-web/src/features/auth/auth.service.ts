@@ -30,9 +30,14 @@ export class AuthService {
     if (idToken) {
       this._idToken.set(idToken);
 
-      const [, idTokenDecoded] = await Promise.all([this.refresh(), this.decodeIdToken(idToken)]);
+      const [refreshResult, idTokenDecoded] = await Promise.all([
+        this.refresh(),
+        this.decodeIdToken(idToken),
+      ]);
 
-      this._idTokenDecoded.set(idTokenDecoded);
+      if (refreshResult.success) {
+        this._idTokenDecoded.set(idTokenDecoded);
+      }
     }
   }
 
@@ -78,7 +83,7 @@ export class AuthService {
     this._idToken.set(null);
     this._idTokenDecoded.set(null);
 
-    return this.authResource.signOut(idToken);
+    return this.authResource.signOut(undefined, { authToken: idToken });
   }
 
   private _idToken = signal<Nullable<string>>(null);

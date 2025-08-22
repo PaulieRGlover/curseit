@@ -42,6 +42,7 @@ async function bootstrap() {
         }
       },
       credentials: true,
+      methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     })
   }
 

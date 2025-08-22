@@ -15,7 +15,8 @@ import { Nullable } from '@curseit/types';
 import { Size, Theme } from '../../shared/constants';
 
 import { ContextMenuService } from './context-menu.service';
-import { CiuiContextMenuDirective } from './context-menu.directive';
+import { CiuiContextMenuTriggerDirective } from './context-menu.directive';
+import { cardClasses } from '../card/card.utils';
 
 @Component({
   selector: 'ciui-context-menu',
@@ -30,6 +31,7 @@ export class CiuiContextMenu {
   theme = input<Theme>('white');
   size = input<Size>('medium');
   width = input<number>();
+  noShadow = input<boolean, any>(false, { transform: booleanAttribute });
   symmetric = input<boolean, any>(false, { transform: booleanAttribute });
 
   isOpened = signal(false);
@@ -42,13 +44,14 @@ export class CiuiContextMenu {
   public toggle(state = !this.isOpened) {
     this.isOpened.set(state);
     if (state) {
+      this.setPosition();
       this.element.nativeElement.showPopover();
     } else {
       this.element.nativeElement.hidePopover();
     }
   }
 
-  public bind(triggerElement: ElementRef, directive: CiuiContextMenuDirective) {
+  public bind(triggerElement: ElementRef, directive: CiuiContextMenuTriggerDirective) {
     this._triggerElement.set(triggerElement);
     this._directive.set(directive);
     this.setPosition();
@@ -60,16 +63,20 @@ export class CiuiContextMenu {
   }
 
   ngOnDestroy() {
+    this._resizeObserver.unobserve(this._triggerElement()?.nativeElement);
     this.contextMenuService.unregisterMenu(this);
   }
 
   @HostBinding('class')
   get hostClasses() {
     return [
-      'ciui-card',
-      `ciui-card--theme-${this.theme()}`,
-      `ciui-card--size-${this.size()}`,
-      this.symmetric() ? `ciui-card--symmetric` : '',
+      ...cardClasses({
+        theme: this.theme(),
+        size: this.size(),
+        symmetric: this.symmetric(),
+        noShadow: this.noShadow(),
+        noBorder: true,
+      }),
       'ciui-context-menu',
       !this.isOpened() ? `ciui-context-menu--closed` : '',
       `ciui-context-menu--theme-${this.theme()}`,
@@ -111,15 +118,16 @@ export class CiuiContextMenu {
       return;
     }
 
-    const rect = (trigger as HTMLElement).getBoundingClientRect();
+    const { width, top, height, left } = (trigger as HTMLElement).getBoundingClientRect();
+    const { scrollTop } = document.documentElement;
     this.dimensions.set({
-      width: rect.width,
-      top: rect.top + rect.height,
-      left: rect.left,
+      width,
+      top: top + height + scrollTop,
+      left,
     });
   }
 
   private _triggerElement = signal<Nullable<ElementRef>>(null);
-  private _directive = signal<Nullable<CiuiContextMenuDirective>>(null);
+  private _directive = signal<Nullable<CiuiContextMenuTriggerDirective>>(null);
   private _resizeObserver = new ResizeObserver(() => this.setPosition());
 }

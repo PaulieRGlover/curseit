@@ -1,4 +1,7 @@
-<cid-nutrients [nutrients]="[]" />
+@if (variationStore.loading()) {
+<ciui-loader />
+} @else if (variationStore.variation()) {
+<cid-nutrients />
 
 <hr>
 
@@ -27,3 +30,6 @@
     [formControl]="energy"
   />
 </div>
+} @else {
+Something went wrong
+}

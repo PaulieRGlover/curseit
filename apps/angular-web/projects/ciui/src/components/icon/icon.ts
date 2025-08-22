@@ -3,10 +3,11 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { Size } from '../../shared/constants/sizes';
 
-export type Icon = 'info' | 'close' | 'star';
+export type Icon = 'info' | 'close' | 'add' | 'star';
 const SvgMap: Record<Icon, string | (() => Promise<{ default: string }>)> = {
   info: () => import('./svg/info.svg'),
   close: () => import('./svg/close.svg'),
+  add: () => import('./svg/add.svg'),
   star: '⭐',
 };
 

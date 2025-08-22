@@ -18,7 +18,7 @@ services:
       retries: 5
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin4_container
+    container_name: pgadmin4_container_foods_dev
     restart: always
     ports:
       - 8889:80

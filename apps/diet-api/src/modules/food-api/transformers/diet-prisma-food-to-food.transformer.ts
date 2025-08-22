@@ -1,8 +1,8 @@
 import { type Food as FoodsOrmFood } from '@curseit/foods-orm';
 
-import { Food } from '../dto/foods.dto';
+import { FoodDto } from '../dto/foods.dto';
 
-export const dietPrismaFoodToFood = (food: FoodsOrmFood): Food => {
+export const dietPrismaFoodToFood = (food: FoodsOrmFood): FoodDto => {
   return {
     id: food.id,
     name: food.name,

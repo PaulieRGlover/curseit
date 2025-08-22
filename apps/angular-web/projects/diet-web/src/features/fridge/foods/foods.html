@@ -1,1 +1,9 @@
-<cid-food-full />
+@for (food of foodsStore.foods(); track food.id) {
+<cid-food [food]="food" [routerLink]="getFoodNavigation(food.id)" />
+}
+
+<cid-food-create-new (click)="handleNewFoodClick()" />
+
+<ciui-dialog (close)="goToFoods()">
+  <router-outlet></router-outlet>
+</ciui-dialog>

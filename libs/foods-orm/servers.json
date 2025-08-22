@@ -4,7 +4,7 @@
       "Name": "Foods Database",
       "Group": "Development",
       "Host": "host.docker.internal",
-      "Port": 5434,
+      "Port": 5436,
       "MaintenanceDB": "foods-dev",
       "Username": "postgres",
       "Password": "eadeadeadA1",

@@ -16,4 +16,9 @@ export class AuthExternalValidationService {
     const schema = (await import('@/core/dto/external/failure.dto')).failureSchema;
     return (await import('@/core/validation/zod-validate.util')).zodValidate(schema, input);
   }
+
+  public async signOut(input: any) {
+    const schema = (await import('../dto/external/sign-out.dto')).signOutSchema;
+    return (await import('@/core/validation/zod-validate.util')).zodValidate(schema, input);
+  }
 }

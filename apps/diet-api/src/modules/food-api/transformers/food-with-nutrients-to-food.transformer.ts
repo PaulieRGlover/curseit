@@ -1,8 +1,8 @@
-import { Food, FoodWithNutrients } from '../dto/foods.dto';
+import { FoodDto, FoodWithNutrients } from '../dto/foods.dto';
 
 export const foodWithNutrientsToFood = (
   foodWithNutrients: FoodWithNutrients,
-): Food => {
+): FoodDto => {
   const { nutrients: _nutrients, ...food } = foodWithNutrients;
   return food;
 };

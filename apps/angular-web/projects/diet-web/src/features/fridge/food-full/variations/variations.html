@@ -1,10 +1,16 @@
+@if (variationsStore.variations()) {
 <ciui-select
   label="Variation"
   row
   transparent
   size="small"
-  [options]="options"
+  labelKey="name"
+  [options]="variationsStore.variations()!"
   [formControl]="variation"
+  (change)="handleVariationChange()"
 />
 
 <cid-variation />
+} @else {
+<ciui-loader />
+}

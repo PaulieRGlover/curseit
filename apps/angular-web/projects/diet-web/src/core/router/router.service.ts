@@ -1,4 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot, ActivationEnd, Router } from '@angular/router';
 
 import { filter, map } from 'rxjs';
@@ -14,6 +15,9 @@ export class RouterService {
   public readonly leaf = computed(() => this._leaf());
   public readonly base = computed(() => this._base());
   public readonly tree = computed(() => this._tree());
+
+  public readonly leaf$ = toObservable(this.leaf);
+  public readonly base$ = toObservable(this.base);
 
   constructor() {
     this.handleRouterEvents();

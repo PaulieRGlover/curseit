@@ -10,12 +10,10 @@ export const FoodSchema = z.object({
   providerCategory: z.string().optional().nullable(),
   providerSubcategory: z.string().optional().nullable(),
 });
-export type Food = z.infer<typeof FoodSchema>;
 
 export const FoodsSchema = z.object({
   foods: z.array(FoodSchema),
 });
-export type Foods = z.infer<typeof FoodsSchema>;
 
 export const FoodWithNutrientsSchema = FoodSchema.extend({
   nutrients: z.array(NutrientInFoodSchema),

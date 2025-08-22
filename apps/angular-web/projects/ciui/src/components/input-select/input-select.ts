@@ -69,11 +69,13 @@ export class CiuiInputSelect extends BaseInput {
   }
 
   onInput() {
+    const inputValue = this._inputRef().nativeElement.value;
     const newValue: ValueTuple = [
-      this._inputRef().nativeElement.value,
+      this.type() === 'number' ? parseFloat(inputValue) : inputValue,
       this._selectRef().nativeElement.value,
     ];
     this._onChange(newValue);
+    // TODO: don't forget to emulate change after adding the `select.ts` component
   }
 
   applyWrite(value: ValueTuple) {

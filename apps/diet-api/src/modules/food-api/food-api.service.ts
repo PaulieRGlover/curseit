@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { FoodsPrismaService } from '../prisma/foods-prisma.service';
+import { Nullable } from '@curseit/types';
 
-import { Food, FoodsWithNutrientsDto } from './dto/foods.dto';
+import { FoodsPrismaService } from '../prisma/foods-prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+
+import { FoodDto, FoodsWithNutrientsDto } from './dto/foods.dto';
 import { GetFoodDto, SearchDto } from './dto/search.dto';
 import { CacheService } from './modules/cache/cache.service';
 import { FdcService } from './modules/fdc/fdc.service';
@@ -10,12 +13,12 @@ import { dietPrismaFoodToFood } from './transformers/diet-prisma-food-to-food.tr
 import { fdcFoodToFoodWithNutrients } from './transformers/fdc-food-to-food-with-nutrients.transformer';
 import { foodWithNutrientsToFood } from './transformers/food-with-nutrients-to-food.transformer';
 import { foodWithNutrientsToFoodsPrismaFoodCreate } from './transformers/food-with-nutrients-to-foods-prisma-food-create.transformer';
-import { Nullable } from '@curseit/types';
 
 @Injectable()
 export class FoodApiService {
   constructor(
     private readonly foodsPrismaService: FoodsPrismaService,
+    private readonly prismaService: PrismaService,
     private readonly fdcService: FdcService,
     private readonly cacheService: CacheService,
   ) {}
@@ -45,7 +48,7 @@ export class FoodApiService {
     // this.cacheService.createSearchCache(searchDto, successes);
   }
 
-  async searchFoods(searchDto: SearchDto): Promise<Food[]> {
+  async searchFoods(searchDto: SearchDto): Promise<FoodDto[]> {
     const foodsPrismaFromCache = await this.cacheService.getSearchCache(searchDto);
     if (foodsPrismaFromCache) {
       return foodsPrismaFromCache.map(dietPrismaFoodToFood);
@@ -63,7 +66,7 @@ export class FoodApiService {
     return this.foodsPrismaService.nutrient.findMany({ where: {} });
   }
 
-  async getFood(getFoodDto: GetFoodDto): Promise<Nullable<Food>> {
+  async getFood(getFoodDto: GetFoodDto): Promise<Nullable<FoodDto>> {
     return this.foodsPrismaService.food.findUnique({
       where: { id: getFoodDto.id },
       include: {
@@ -73,6 +76,20 @@ export class FoodApiService {
           },
         },
       },
+    });
+  }
+
+  async syncNutrients() {
+    const nutrients = await this.foodsPrismaService.nutrient.findMany({ where: {} });
+    console.log(`nutrients: `, nutrients);
+
+    await this.prismaService.nutrient.createMany({
+      data: nutrients.map(({ id, ...nutrient }) => {
+        return {
+          ...nutrient,
+          externalId: id,
+        };
+      }),
     });
   }
 }

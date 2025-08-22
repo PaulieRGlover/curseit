@@ -1,11 +1,8 @@
 import * as z from 'zod/v4-mini';
 
-export const name = z.string().check(
+export const name = z.optional(z.string().check(
   z.maxLength(255, { message: "Name shouldn't be longer than 255 symbols" }),
-  z.minLength(1, { message: 'Name is required' }),
-);
-
-export const counter = z.optional(z.string().check(z.emoji()));
+));
 
 export const description = z.optional(z.string());
 
@@ -13,10 +10,13 @@ export const perishable = z.optional(z.boolean());
 
 export const favorite = z.optional(z.boolean());
 
-export const foodCreateSchema = z.object({
+export const foodInputSchema = z.object({
   name,
-  counter,
   description,
+  perishable,
   favorite,
 });
-export type FoodCreateDto = z.infer<typeof foodCreateSchema>;
+export type FoodInput = z.infer<typeof foodInputSchema>;
+
+export type FoodCreate = FoodInput;
+export type FoodUpdate = FoodInput;

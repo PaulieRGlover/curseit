@@ -1,37 +1,40 @@
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom, Observable } from 'rxjs';
+import type { Signal } from '@angular/core';
+
+import { Observable, firstValueFrom } from 'rxjs';
 
 import type { MaybeUndefined } from '@curseit/types';
-import { ApiResult } from './types';
+
 import {
-  AUTHORIZATION_TOKEN_FROM_BODY,
   AUTHORIZATION_TOKEN_KEY,
   PATH,
   USE_AUTHORIZATION,
   VALIDATION_FAILURE,
   VALIDATION_SUCCESS,
 } from './constants';
-import type { Signal } from '@angular/core';
+import { ApiResult } from './types';
 
 type ValidationService = {
-  [k: string]: MaybeUndefined<(input: unknown) => any>,
+  [k: string]: MaybeUndefined<(input: unknown) => any>;
 };
 
 type AuthService = {
-  isAuthenticated: Signal<boolean>
-  _isAuthenticated$: Observable<boolean>,
-  [k: string]: any,
+  isAuthenticated: Signal<boolean>;
+  _isAuthenticated$: Observable<boolean>;
+  [k: string]: any;
 };
 
 type RequestOptions = {
-  headers: Record<string, string>,
-  withCredentials: true,
-}
+  headers: Record<string, string>;
+  withCredentials: true;
+};
 
-type Method = 'get' | 'post' | 'patch' | 'options' | 'delete';
+type Method = 'get' | 'post' | 'put' | 'patch' | 'options' | 'delete';
 
 const ERRORS = {
   NO_HTTP_CLIENT: 'No HttpClient injected. Please, inject HttpClient.',
+  NO_PARAMS: (params: Array<string>) =>
+    `No params passed in arguments. Missing params: ${params.join(', ')}`,
   NO_AUTH_SERVICE: 'No AuthService injected. Please, inject AuthService.',
   NO_TOKEN: (key: any) => `No token by address this[${key}] or this.authService[${key}]`,
   AUTH_SERVICE_FAILURE: 'AuthService failed to authenticate, so the API cannot be accessed.',
@@ -40,10 +43,7 @@ const ERRORS = {
   API_ERROR_VALIDATION_FAILED: (error: any) => `API error validation failed: ${error}`,
 } as const;
 
-const getToken = async (
-  authService: MaybeUndefined<AuthService>,
-  tokenKey: string,
-) => {
+const getToken = async (authService: MaybeUndefined<AuthService>, tokenKey: string) => {
   if (!authService) {
     reportError(ERRORS.NO_AUTH_SERVICE);
 
@@ -83,8 +83,8 @@ const getToken = async (
 };
 
 export const createAction = (method: Method) => {
-  return function(path: string): MethodDecorator {
-    return function(target, propertyKey, descriptor: PropertyDescriptor) {
+  return function (...actionArgs: Array<string>): MethodDecorator {
+    return function (target, propertyKey, descriptor: PropertyDescriptor) {
       const reportError = (error: unknown) => {
         console.error(`At ${target.constructor.name}, in ${propertyKey.toString()}`);
         console.error(error);
@@ -95,10 +95,16 @@ export const createAction = (method: Method) => {
           http?: HttpClient,
           validation?: ValidationService,
           authService?: AuthService,
-          [key: string]: any,
         },
-        body: any = {},
+        payload: any,
+        options?: {
+          query?: Record<string, string | number>,
+          params?: Record<string, string | number>,
+          authToken?: string,
+        },
       ): ApiResult<any, any> {
+        const path: string = actionArgs.join('/');
+        let processedPath = path;
         if (!this.http) {
           reportError(ERRORS.NO_HTTP_CLIENT);
 
@@ -106,56 +112,78 @@ export const createAction = (method: Method) => {
         }
 
         const base = Reflect.getMetadata(PATH, target.constructor) ?? '/';
-        const fullPath = `${base}/${path}`;
+        const paramsFromPath = path.match(/:\w+/g)?.map(paramKey => paramKey.replace(/^:/, ''));
+        if (paramsFromPath?.length && options?.params) {
+          const missingParams = paramsFromPath.filter(paramKey => {
+            return (
+              typeof options.params![paramKey] !== 'string' &&
+              typeof options.params![paramKey] !== 'number'
+            );
+          });
 
-        const options: RequestOptions = {
+          if (missingParams.length) {
+            reportError(ERRORS.NO_PARAMS(missingParams));
+          }
+
+          paramsFromPath.forEach(paramKey => {
+            processedPath = processedPath.replace(
+              new RegExp(`:${paramKey}`),
+              options.params![paramKey].toString(),
+            );
+          });
+        }
+
+        let fullPath = `${base}/${processedPath}`;
+
+        if (options?.query) {
+          fullPath += '?' + Object.keys(options.query)
+            .map(key => `${key}=${options.query![key]}`)
+            .join('&');
+        }
+
+        const requestOptions: RequestOptions = {
           headers: {},
           withCredentials: true,
         };
 
-        const useAuthorization = (
+        const useAuthorization =
           Reflect.getMetadata(USE_AUTHORIZATION, target, propertyKey) ||
-          Reflect.getMetadata(USE_AUTHORIZATION, target.constructor)
-        );
+          Reflect.getMetadata(USE_AUTHORIZATION, target.constructor);
         if (useAuthorization) {
-          const tokenKey = (
+          const tokenKey =
             Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target, propertyKey) ||
-            Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target.constructor)
-          );
-          const tokenFromBody = (
-            Reflect.getMetadata(AUTHORIZATION_TOKEN_FROM_BODY, target, propertyKey) ||
-            Reflect.getMetadata(AUTHORIZATION_TOKEN_FROM_BODY, target.constructor)
-          );
+            Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target.constructor);
 
-          const token = tokenFromBody ? body : await getToken(
-            this.authService,
-            tokenKey,
-          );
+          const token = options?.authToken ?? await getToken(this.authService, tokenKey);
 
-          options.headers['Authorization'] = `Bearer ${token}`;
+          requestOptions.headers['Authorization'] = `Bearer ${token}`;
         }
 
         try {
           let request;
           switch (method) {
             case 'get': {
-              request = this.http.get(fullPath, options);
+              request = this.http.get(fullPath, requestOptions);
               break;
             }
             case 'post': {
-              request = this.http.post(fullPath, body, options);
+              request = this.http.post(fullPath, payload, requestOptions);
               break;
             }
-            case 'delete': {
-              request = this.http.delete(fullPath, options);
-              break;
-            }
-            case 'options': {
-              request = this.http.options(fullPath, options);
+            case 'put': {
+              request = this.http.put(fullPath, payload, requestOptions);
               break;
             }
             case 'patch': {
-              request = this.http.patch(fullPath, body, options);
+              request = this.http.patch(fullPath, payload, requestOptions);
+              break;
+            }
+            case 'delete': {
+              request = this.http.delete(fullPath, requestOptions);
+              break;
+            }
+            case 'options': {
+              request = this.http.options(fullPath, requestOptions);
               break;
             }
           }
@@ -189,13 +217,15 @@ export const createAction = (method: Method) => {
           return { failure: error };
         }
       };
-    }
-  }
-}
+    };
+  };
+};
 
 export const Post = createAction('post');
 
 export const Get = createAction('get');
+
+export const Put = createAction('put');
 
 export const Patch = createAction('patch');
 

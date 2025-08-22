@@ -1,0 +1,18 @@
+.cid-food-create-new {
+  flex: 0 0 260px;
+  border-radius: 2rem 2rem 8rem 2rem;
+  background-color: var(--background-white-dimmer);
+  height: 113px;
+  cursor: pointer;
+
+  &__add-icon {
+    width: 45px;
+    height: 45px;
+    color: var(--text-blue-accented);
+  }
+
+  .ciui-card__content {
+    justify-content: center;
+    align-items: center;
+  }
+}

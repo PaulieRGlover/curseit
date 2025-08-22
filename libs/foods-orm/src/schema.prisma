@@ -30,8 +30,9 @@ model Food {
 }
 
 model Nutrient {
-  id   String @id @default(uuid())
-  name String @unique
+  id        String  @id @default(uuid())
+  name      String  @unique
+  shortName String? @map("short_name")
 
   foods NutrientInFood[]
 
@@ -39,7 +40,7 @@ model Nutrient {
 }
 
 model NutrientInFood {
-  valueInGrams Float? @map("value_in_grams")
+  valueInGrams Float @map("value_in_grams")
 
   food       Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
   foodId     String   @map("food_id")
