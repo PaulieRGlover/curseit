@@ -5,17 +5,17 @@ import { zodValidateForFormControl } from '@/core/validation/zod-validate-for-fo
 @Injectable({ providedIn: 'root' })
 export class AuthInternalValidationService {
   public async login(control: AbstractControl) {
-    const schema = (await import('../dto/internal/login.dto')).loginSchema;
+    const schema = (await import('../types/internal/login.types')).loginSchema;
     return zodValidateForFormControl(schema, control);
   }
 
   public async password(control: AbstractControl) {
-    const schema = (await import('../dto/internal/password.dto')).passwordSchema;
+    const schema = (await import('../types/internal/password.types')).passwordSchema;
     return zodValidateForFormControl(schema, control);
   }
 
   public async passwordCreate(control: AbstractControl) {
-    const schema = (await import('../dto/internal/password-create.dto')).passwordCreateSchema;
+    const schema = (await import('../types/internal/password-create.types')).passwordCreateSchema;
     return zodValidateForFormControl(schema, control);
   }
 }

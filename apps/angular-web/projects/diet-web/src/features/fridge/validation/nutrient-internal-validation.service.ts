@@ -6,17 +6,7 @@ import { AbstractControl } from '@angular/forms';
 @Injectable({ providedIn: 'root' })
 export class NutrientInternalValidationService {
   public async name(control: AbstractControl) {
-    const schema = (await import('../dto/internal/nutrient.dto')).name;
+    const schema = (await import('../types/internal/nutrient.types')).variationNutrientName;
     return zodValidateForFormControl(schema, control);
-  }
-
-  public async valueUnit(control: AbstractControl) {
-    const schema = (await import('../dto/internal/nutrient.dto')).valueUnit;
-    return zodValidateForFormControl(schema, control);
-  }
-
-  public async nutrient(input: unknown) {
-    const schema = (await import('../dto/internal/nutrient.dto')).nutrientInput;
-    return zodValidate(schema, input, false);
   }
 }

@@ -5,10 +5,7 @@
   [row]="row()"
 />
 
-<label
-  [for]="selectId()"
-  class="ciui-input__label ciui-a11y-hidden"
->{{ labelSelect() }}</label>
+<label [for]="selectId()" class="ciui-input__label ciui-a11y-hidden">{{ labelSelect() }}</label>
 
 <div class="ciui-input__wrapper">
   <input
@@ -17,22 +14,31 @@
     [type]="type()"
     [attr.name]="name()"
     [attr.placeholder]="placeholder()"
+    [attr.min]="min()"
+    [attr.max]="max()"
+    [attr.autocomplete]="autocomplete()"
     [attr.aria-label]="ariaLabel()"
-    class="ciui-input__input ciui-input__input--input"
+    class="ciui-input__input ciui-input-select__input"
     (input)="onInput()"
     (blur)="onBlur()"
   />
-  <select
-    #select
-    [id]="selectId()"
-    [attr.name]="name()"
-    [attr.aria-label]="ariaLabelSelect()"
-    class="ciui-input__input ciui-input__input--select"
-    (input)="onInput()"
-    (blur)="onBlur()"
+
+  <ciui-select
+    [ariaLabel]="ariaLabelSelect()"
+    [options]="options()"
+    [formControl]="selectValue"
+    [label]="label()"
+    [size]="size()"
+    labelInvisible
+    class="ciui-input-select__select"
+    (change)="onInput()"
   >
-    @for (option of options(); track option) {
-    <option [value]="option">{{ option }}</option>
-    }
-  </select>
+    <ng-template #icon let-isOpen="isOpen">
+      <ciui-icon
+        [name]="isOpen ? 'menu-up' : 'menu-down'"
+        size="small"
+        class="ciui-select__icon"
+      />
+    </ng-template>
+  </ciui-select>
 </div>

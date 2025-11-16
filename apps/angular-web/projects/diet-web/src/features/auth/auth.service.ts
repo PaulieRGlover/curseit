@@ -7,10 +7,10 @@ import { CookieService } from '@/core/browser/cookie.service';
 import { JwtService } from '@/core/jwt/jwt.service';
 import { GENERAL_MESSAGES } from '@/core/messages/general.messages';
 import { environment } from '@/environments/environment';
-import type { IdTokenPayload } from '@/features/auth/dto/external/id-token-payload.dto';
 
 import { AuthApiResult, AuthResource } from './auth.resource';
 import { ID_TOKEN_COOKIE_NAME } from './constants';
+import type { IdTokenPayload } from './types/external/id-token-payload.types';
 import { AuthExternalValidationService } from './validation/auth-external-validation.service';
 
 @Injectable({ providedIn: 'root' })

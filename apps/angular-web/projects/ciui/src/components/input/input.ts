@@ -1,21 +1,18 @@
 import {
   Component,
   ElementRef,
-  HostBinding,
   ViewEncapsulation,
-  booleanAttribute,
+  computed,
   forwardRef,
-  inject,
   input,
   viewChild,
 } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 import type { HTMLInputTypeAttribute } from 'react';
 
-import { BaseInput } from '../../shared/components/base-input/base-input';
+import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
-import { Size, Theme } from '../../shared/constants';
 import { FormErrorService } from '../../shared/services/form-error.service';
 
 @Component({
@@ -32,40 +29,28 @@ import { FormErrorService } from '../../shared/services/form-error.service';
     FormErrorService,
   ],
 })
-export class CiuiInput extends BaseInput {
-  formErrorService = inject(FormErrorService);
-
-  formControl = input.required<FormControl>();
-  label = input.required<string>();
-
+export class CiuiInput extends CiuiBaseInput {
   type = input<HTMLInputTypeAttribute>('text');
-  name = input<string>();
-  placeholder = input<string>();
-  ariaLabel = input<string>();
-  labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
-  row = input<boolean, any>(false, { transform: booleanAttribute });
-  theme = input<Theme>('white');
-  size = input<Size>('medium');
-  transparent = input<boolean, any>(false, { transform: booleanAttribute });
+  min = input<number>();
+  max = input<number>();
+  autocomplete = input<string>('off');
+
+  activeElements = computed(() => [this._inputRef().nativeElement]);
 
   constructor() {
     super();
   }
 
-  @HostBinding('class')
-  get hostClasses() {
-    return this.classes();
-  }
-
   onInput(event: Event) {
+    this._resetAngryDelete();
     const newValue = (event.target as HTMLInputElement).value;
 
-    this._onChange(this.type() === 'number' ? parseFloat(newValue) : newValue);
+    this._onChange(this.type() === 'number' ? parseFloat(newValue) || 0 : newValue);
   }
 
   applyWrite(value: any) {
-    this._renderer.setProperty(this._checkboxRef().nativeElement, 'value', value);
+    this._renderer.setProperty(this._inputRef().nativeElement, 'value', value);
   }
 
-  protected _checkboxRef = viewChild.required<ElementRef<HTMLInputElement>>('input');
+  protected _inputRef = viewChild.required<ElementRef<HTMLInputElement>>('input');
 }

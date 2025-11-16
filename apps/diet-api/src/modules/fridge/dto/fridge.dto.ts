@@ -4,6 +4,20 @@ import z from 'zod';
 
 import { ENERGY, UNITS } from '@curseit/units';
 
+export const FoodUnitSchema = z.enum([
+  UNITS.MILLIGRAM,
+  UNITS.GRAM,
+  UNITS.KILOGRAM,
+  UNITS.OUNCE,
+  UNITS.POUND,
+]);
+
+export const NutrientUnitSchema = z.enum([
+  UNITS.MICROGRAM,
+  UNITS.MILLIGRAM,
+  UNITS.GRAM,
+]);
+
 export const NutrientSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -12,8 +26,14 @@ export const NutrientSchema = z.object({
 });
 export class NutrientDto extends createZodDto(NutrientSchema) {}
 
+export const NutrientAbridgedSchema = NutrientSchema.omit({ shortName: true, description: true });
+export class NutrientAbridgedDto extends createZodDto(NutrientAbridgedSchema) {}
+
 export const NutrientsSchema = z.array(NutrientSchema);
 export class NutrientsDto extends createZodDto(NutrientsSchema) {}
+
+export const NutrientsAbridgedSchema = z.array(NutrientAbridgedSchema);
+export class NutrientsAbridgedDto extends createZodDto(NutrientsAbridgedSchema) {}
 
 export const PortionSchema = z.object({
   id: z.string(),
@@ -30,27 +50,35 @@ export const VariationSchema = z.object({
   name: z.string(),
   counter: z.string(),
   referenceSizeInGrams: z.number(),
-  referenceSizeDisplayUnit: z.nativeEnum(UNITS),
+  referenceSizeDisplayUnit: FoodUnitSchema,
   portionSizeInGrams: z.number(),
-  portionSizeDisplayUnit: z.nativeEnum(UNITS),
+  portionSizeDisplayUnit: FoodUnitSchema,
   energyAuto: z.boolean(),
-  energyAmount: z.number().nullable(),
+  energyAmountInKcal: z.number().nullable(),
   energyDisplayUnit: z.nativeEnum(ENERGY),
 });
 export class VariationDto extends createZodDto(VariationSchema) {}
+
+export const VariationCreateSchema = VariationSchema.pick({ name: true });
+export class VariationCreateDto extends createZodDto(VariationCreateSchema) {}
+
+export const VariationUpdateSchema = VariationSchema.omit({ id: true }).partial();
+export class VariationUpdateDto extends createZodDto(VariationUpdateSchema) {}
 
 export const VariationNutrientSchema = z.object({
   id: z.string(),
   name: z.string(),
   valueInGrams: z.number(),
-  valueDisplayUnit: z.nativeEnum(UNITS),
+  valueDisplayUnit: NutrientUnitSchema,
+  nutrientId: z.string(),
 });
 export class VariationNutrientDto extends createZodDto(VariationNutrientSchema) {}
 
-export const VariationNutrientInput = VariationNutrientSchema.omit({ id: true }).extend({
-  nutrientId: z.string(),
-});
-export class VariationNutrientInputDto extends createZodDto(VariationNutrientInput) {}
+export const VariationNutrientCreate = VariationNutrientSchema.omit({ id: true });
+export class VariationNutrientCreateDto extends createZodDto(VariationNutrientCreate) {}
+
+export const VariationNutrientUpdate = VariationNutrientSchema;
+export class VariationNutrientUpdateDto extends createZodDto(VariationNutrientUpdate) {}
 
 export const VariationWithNutrientsSchema = VariationSchema.extend({
   nutrients: z.array(VariationNutrientSchema),

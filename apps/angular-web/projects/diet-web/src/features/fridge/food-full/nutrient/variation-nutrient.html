@@ -1,0 +1,46 @@
+<ciui-select
+  #nutrientName
+  label="Nutrient name"
+  name="name"
+  placeholder="Nutrient name"
+  labelInvisible
+  row
+  theme="white-semi-transparent"
+  labelKey="name"
+  [options]="nutrientsSearchStore.foundNutrients() ?? []"
+  [optionsLoading]="nutrientsSearchStore.loading()"
+  [formControl]="nutrient"
+  (searchedDebounced)="handleSearch($event)"
+  (change)="handleInputChange()"
+  (focus)="handleSearch()"
+  (angryDelete)="handleAngryDelete()"
+/>
+
+<div class="cid-variation-nutrient__delimiter"></div>
+
+<ciui-input-select
+  label="Nutrient amount"
+  labelSelect="Nutrient unit"
+  labelInvisible
+  name="amount"
+  type="number"
+  [min]="0"
+  [max]="1000"
+  row
+  theme="white-semi-transparent"
+  class="cid-variation-nutrient__amount"
+  [formControl]="amount"
+  [options]="units"
+  (change)="handleInputChange()"
+/>
+
+@if (!variationNutrient().isEmpty) {
+  <button
+    ciui-button
+    class="cid-variation-nutrient__remove"
+    icon="close"
+    size="small"
+    [loading]="nutrientsStore.loading()"
+    (click)="fridgeService.deleteVariationNutrient(variationNutrient()!.id!)"
+  ></button>
+}

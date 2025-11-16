@@ -2,12 +2,13 @@ import { Injectable, signal } from '@angular/core';
 
 import { Nullable } from '@curseit/types';
 
-import { Nutrient } from '../dto/external/food.dto';
-import { Failure } from '@/core/dto/external/failure.dto';
+import { NutrientsAbridged } from '../types/external/food.types';
+import { Failure } from '@/core/types/external/failure.types';
 
 @Injectable({ providedIn: 'root' })
 export class NutrientsSearchStore {
-  foundNutrients = signal<Nullable<Array<Nutrient>>>(null);
+  foundNutrients = signal<Nullable<NutrientsAbridged>>(null);
   loading = signal(false);
   failure = signal<Nullable<Failure>>(null);
+  searchCache = signal<Nullable<string>>(null);
 }

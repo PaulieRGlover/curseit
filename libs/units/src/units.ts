@@ -7,7 +7,7 @@ export const UNITS = {
   POUND: 'lb',
 } as const;
 
-export type Unit = typeof UNITS[keyof typeof UNITS];
+export type Unit = (typeof UNITS)[keyof typeof UNITS];
 
 export const UNITS_ARRAY = Object.values(UNITS);
 
@@ -16,6 +16,6 @@ export const ENERGY = {
   KILOCALORIE: 'kcal',
 } as const;
 
-export type Energy = typeof ENERGY[keyof typeof ENERGY];
+export type Energy = (typeof ENERGY)[keyof typeof ENERGY];
 
 export const ENERGY_ARRAY = Object.values(ENERGY);

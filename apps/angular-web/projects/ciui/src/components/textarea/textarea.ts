@@ -3,25 +3,24 @@ import {
   ElementRef,
   HostBinding,
   ViewEncapsulation,
-  booleanAttribute,
+  computed,
   forwardRef,
-  inject,
   input,
   viewChild,
 } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 import type { HTMLInputTypeAttribute } from 'react';
 
-import { BaseInput } from '../../shared/components/base-input/base-input';
 import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
-import { Size, Theme } from '../../shared/constants';
 import { FormErrorService } from '../../shared/services/form-error.service';
+import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 
 @Component({
   selector: 'ciui-textarea',
   imports: [ReactiveFormsModule, CiuiInputInfo],
   templateUrl: './textarea.html',
+  styleUrl: './textarea.scss',
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -32,32 +31,22 @@ import { FormErrorService } from '../../shared/services/form-error.service';
     FormErrorService,
   ],
 })
-export class CiuiTextarea extends BaseInput {
-  formErrorService = inject(FormErrorService);
-
-  formControl = input.required<FormControl>();
-  label = input.required<string>();
-
+export class CiuiTextarea extends CiuiBaseInput {
   type = input<HTMLInputTypeAttribute>('text');
-  name = input<string>();
-  placeholder = input<string>();
-  ariaLabel = input<string>();
-  labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
-  row = input<boolean, any>(false, { transform: booleanAttribute });
-  theme = input<Theme>('white');
-  size = input<Size>('medium');
-  transparent = input<boolean, any>(false, { transform: booleanAttribute });
+
+  activeElements = computed(() => [this._textareaRef().nativeElement]);
 
   constructor() {
     super();
   }
 
   @HostBinding('class')
-  get hostClasses() {
-    return [...this.classes(), 'ciui-input--textarea'];
+  override get hostClasses() {
+    return [...super.hostClasses, 'ciui-textarea'];
   }
 
   onInput(event: Event) {
+    this._resetAngryDelete();
     const newValue = (event.target as HTMLInputElement).value;
     this._onChange(newValue);
   }

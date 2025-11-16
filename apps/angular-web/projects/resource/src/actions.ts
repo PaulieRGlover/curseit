@@ -135,10 +135,11 @@ export const createAction = (method: Method) => {
 
         let fullPath = `${base}/${processedPath}`;
 
-        if (options?.query) {
-          fullPath += '?' + Object.keys(options.query)
-            .map(key => `${key}=${options.query![key]}`)
-            .join('&');
+        const query = Object.keys(options?.query ?? {})
+          .filter(key => options!.query![key] !== undefined)
+          .map(key => [key, options!.query![key]]);
+        if (query.length) {
+          fullPath += '?' + query.map(([key, value]) => `${key}=${value}`).join('&');
         }
 
         const requestOptions: RequestOptions = {

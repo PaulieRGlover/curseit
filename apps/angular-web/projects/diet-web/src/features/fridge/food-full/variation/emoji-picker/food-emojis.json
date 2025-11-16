@@ -1,0 +1,530 @@
+{
+  "🥫": {
+    "name": "canned food",
+    "slug": "canned_food"
+  },
+  "🍇": {
+    "name": "grapes",
+    "slug": "grapes"
+  },
+  "🍈": {
+    "name": "melon",
+    "slug": "melon"
+  },
+  "🍉": {
+    "name": "watermelon",
+    "slug": "watermelon"
+  },
+  "🍊": {
+    "name": "tangerine",
+    "slug": "tangerine"
+  },
+  "🍋": {
+    "name": "lemon",
+    "slug": "lemon"
+  },
+  "🍋‍🟩": {
+    "name": "lime",
+    "slug": "lime"
+  },
+  "🍌": {
+    "name": "banana",
+    "slug": "banana"
+  },
+  "🍍": {
+    "name": "pineapple",
+    "slug": "pineapple"
+  },
+  "🥭": {
+    "name": "mango",
+    "slug": "mango"
+  },
+  "🍎": {
+    "name": "red apple",
+    "slug": "red_apple"
+  },
+  "🍏": {
+    "name": "green apple",
+    "slug": "green_apple"
+  },
+  "🍐": {
+    "name": "pear",
+    "slug": "pear"
+  },
+  "🍑": {
+    "name": "peach",
+    "slug": "peach"
+  },
+  "🍒": {
+    "name": "cherries",
+    "slug": "cherries"
+  },
+  "🍓": {
+    "name": "strawberry",
+    "slug": "strawberry"
+  },
+  "🫐": {
+    "name": "blueberries",
+    "slug": "blueberries"
+  },
+  "🥝": {
+    "name": "kiwi fruit",
+    "slug": "kiwi_fruit"
+  },
+  "🥥": {
+    "name": "coconut",
+    "slug": "coconut"
+  },
+  "🥑": {
+    "name": "avocado",
+    "slug": "avocado"
+  },
+  "🍅": {
+    "name": "tomato",
+    "slug": "tomato"
+  },
+  "🫒": {
+    "name": "olive",
+    "slug": "olive"
+  },
+
+  "🍆": {
+    "name": "eggplant",
+    "slug": "eggplant"
+  },
+  "🥔": {
+    "name": "potato",
+    "slug": "potato"
+  },
+  "🥕": {
+    "name": "carrot",
+    "slug": "carrot"
+  },
+  "🌽": {
+    "name": "ear of corn",
+    "slug": "ear_of_corn"
+  },
+  "🌶️": {
+    "name": "hot pepper",
+    "slug": "hot_pepper"
+  },
+  "🫑": {
+    "name": "bell pepper",
+    "slug": "bell_pepper"
+  },
+  "🥒": {
+    "name": "cucumber",
+    "slug": "cucumber"
+  },
+  "🥬": {
+    "name": "leafy green",
+    "slug": "leafy_green"
+  },
+  "🥦": {
+    "name": "broccoli",
+    "slug": "broccoli"
+  },
+  "🧄": {
+    "name": "garlic",
+    "slug": "garlic"
+  },
+  "🧅": {
+    "name": "onion",
+    "slug": "onion"
+  },
+  "🫘": {
+    "name": "beans",
+    "slug": "beans"
+  },
+  "🥜": {
+    "name": "peanuts",
+    "slug": "peanuts"
+  },
+  "🌰": {
+    "name": "chestnut",
+    "slug": "chestnut"
+  },
+  "🫚": {
+    "name": "ginger root",
+    "slug": "ginger_root"
+  },
+  "🫛": {
+    "name": "pea pod",
+    "slug": "pea_pod"
+  },
+  "🍄‍🟫": {
+    "name": "brown mushroom",
+    "slug": "brown_mushroom"
+  },
+  "🫜": {
+    "name": "root vegetable",
+    "slug": "root_vegetable"
+  },
+
+  "🍖": {
+    "name": "meat on bone",
+    "slug": "meat_on_bone"
+  },
+  "🍗": {
+    "name": "poultry leg",
+    "slug": "poultry_leg"
+  },
+  "🥩": {
+    "name": "cut of meat",
+    "slug": "cut_of_meat"
+  },
+  "🥓": {
+    "name": "bacon",
+    "slug": "bacon"
+  },
+
+  "🧀": {
+    "name": "cheese wedge",
+    "slug": "cheese_wedge"
+  },
+  "🥚": {
+    "name": "egg",
+    "slug": "egg"
+  },
+  "🥛": {
+    "name": "glass of milk",
+    "slug": "glass_of_milk"
+  },
+  "🍼": {
+    "name": "baby bottle",
+    "slug": "baby_bottle"
+  },
+  "🧈": {
+    "name": "butter",
+    "slug": "butter"
+  },
+
+  "🍞": {
+    "name": "bread",
+    "slug": "bread"
+  },
+  "🥐": {
+    "name": "croissant",
+    "slug": "croissant"
+  },
+  "🥖": {
+    "name": "baguette bread",
+    "slug": "baguette_bread"
+  },
+  "🫓": {
+    "name": "flatbread",
+    "slug": "flatbread"
+  },
+  "🥨": {
+    "name": "pretzel",
+    "slug": "pretzel"
+  },
+  "🥯": {
+    "name": "bagel",
+    "slug": "bagel"
+  },
+  "🥞": {
+    "name": "pancakes",
+    "slug": "pancakes"
+  },
+  "🧇": {
+    "name": "waffle",
+    "slug": "waffle"
+  },
+  "🍔": {
+    "name": "hamburger",
+    "slug": "hamburger"
+  },
+  "🍟": {
+    "name": "french fries",
+    "slug": "french_fries"
+  },
+  "🍕": {
+    "name": "pizza",
+    "slug": "pizza"
+  },
+  "🌭": {
+    "name": "hot dog",
+    "slug": "hot_dog"
+  },
+  "🥪": {
+    "name": "sandwich",
+    "slug": "sandwich"
+  },
+  "🌮": {
+    "name": "taco",
+    "slug": "taco"
+  },
+  "🌯": {
+    "name": "burrito",
+    "slug": "burrito"
+  },
+  "🫔": {
+    "name": "tamale",
+    "slug": "tamale"
+  },
+  "🥙": {
+    "name": "stuffed flatbread",
+    "slug": "stuffed_flatbread"
+  },
+  "🧆": {
+    "name": "falafel",
+    "slug": "falafel"
+  },
+  "🍳": {
+    "name": "cooking",
+    "slug": "cooking"
+  },
+  "🥘": {
+    "name": "shallow pan of food",
+    "slug": "shallow_pan_of_food"
+  },
+  "🍲": {
+    "name": "pot of food",
+    "slug": "pot_of_food"
+  },
+  "🫕": {
+    "name": "fondue",
+    "slug": "fondue"
+  },
+  "🥣": {
+    "name": "bowl with spoon",
+    "slug": "bowl_with_spoon"
+  },
+  "🥗": {
+    "name": "green salad",
+    "slug": "green_salad"
+  },
+  "🍿": {
+    "name": "popcorn",
+    "slug": "popcorn"
+  },
+  "🍱": {
+    "name": "bento box",
+    "slug": "bento_box"
+  },
+  "🍘": {
+    "name": "rice cracker",
+    "slug": "rice_cracker"
+  },
+  "🍙": {
+    "name": "rice ball",
+    "slug": "rice_ball"
+  },
+  "🍚": {
+    "name": "cooked rice",
+    "slug": "cooked_rice"
+  },
+  "🍛": {
+    "name": "curry rice",
+    "slug": "curry_rice"
+  },
+  "🍜": {
+    "name": "steaming bowl",
+    "slug": "steaming_bowl"
+  },
+  "🍝": {
+    "name": "spaghetti",
+    "slug": "spaghetti"
+  },
+  "🍠": {
+    "name": "roasted sweet potato",
+    "slug": "roasted_sweet_potato"
+  },
+  "🍢": {
+    "name": "oden",
+    "slug": "oden"
+  },
+  "🍣": {
+    "name": "sushi",
+    "slug": "sushi"
+  },
+  "🍤": {
+    "name": "fried shrimp",
+    "slug": "fried_shrimp"
+  },
+  "🍥": {
+    "name": "fish cake with swirl",
+    "slug": "fish_cake_with_swirl"
+  },
+  "🥮": {
+    "name": "moon cake",
+    "slug": "moon_cake"
+  },
+  "🍡": {
+    "name": "dango",
+    "slug": "dango"
+  },
+  "🥟": {
+    "name": "dumpling",
+    "slug": "dumpling"
+  },
+  "🥠": {
+    "name": "fortune cookie",
+    "slug": "fortune_cookie"
+  },
+  "🥡": {
+    "name": "takeout box",
+    "slug": "takeout_box"
+  },
+  "🍦": {
+    "name": "soft ice cream",
+    "slug": "soft_ice_cream"
+  },
+  "🍧": {
+    "name": "shaved ice",
+    "slug": "shaved_ice"
+  },
+  "🍨": {
+    "name": "ice cream",
+    "slug": "ice_cream"
+  },
+  "🍩": {
+    "name": "doughnut",
+    "slug": "doughnut"
+  },
+  "🍪": {
+    "name": "cookie",
+    "slug": "cookie"
+  },
+  "🎂": {
+    "name": "birthday cake",
+    "slug": "birthday_cake"
+  },
+  "🍰": {
+    "name": "shortcake",
+    "slug": "shortcake"
+  },
+  "🧁": {
+    "name": "cupcake",
+    "slug": "cupcake"
+  },
+  "🥧": {
+    "name": "pie",
+    "slug": "pie"
+  },
+  "🍫": {
+    "name": "chocolate bar",
+    "slug": "chocolate_bar"
+  },
+  "🍬": {
+    "name": "candy",
+    "slug": "candy"
+  },
+  "🍭": {
+    "name": "lollipop",
+    "slug": "lollipop"
+  },
+  "🍮": {
+    "name": "custard",
+    "slug": "custard"
+  },
+  "🍯": {
+    "name": "honey pot",
+    "slug": "honey_pot"
+  },
+  "🧂": {
+    "name": "salt",
+    "slug": "salt"
+  },
+  "☕": {
+    "name": "hot beverage",
+    "slug": "hot_beverage"
+  },
+  "🫖": {
+    "name": "teapot",
+    "slug": "teapot"
+  },
+  "🍵": {
+    "name": "teacup without handle",
+    "slug": "teacup_without_handle"
+  },
+  "🍶": {
+    "name": "sake",
+    "slug": "sake"
+  },
+  "🍾": {
+    "name": "bottle with popping cork",
+    "slug": "bottle_with_popping_cork"
+  },
+  "🍷": {
+    "name": "wine glass",
+    "slug": "wine_glass"
+  },
+  "🍸": {
+    "name": "cocktail glass",
+    "slug": "cocktail_glass"
+  },
+  "🍹": {
+    "name": "tropical drink",
+    "slug": "tropical_drink"
+  },
+  "🍺": {
+    "name": "beer mug",
+    "slug": "beer_mug"
+  },
+  "🍻": {
+    "name": "clinking beer mugs",
+    "slug": "clinking_beer_mugs"
+  },
+  "🥂": {
+    "name": "clinking glasses",
+    "slug": "clinking_glasses"
+  },
+  "🥃": {
+    "name": "tumbler glass",
+    "slug": "tumbler_glass"
+  },
+  "🫗": {
+    "name": "pouring liquid",
+    "slug": "pouring_liquid"
+  },
+  "🥤": {
+    "name": "cup with straw",
+    "slug": "cup_with_straw"
+  },
+  "🧋": {
+    "name": "bubble tea",
+    "slug": "bubble_tea"
+  },
+  "🧃": {
+    "name": "beverage box",
+    "slug": "beverage_box"
+  },
+  "🧉": {
+    "name": "mate",
+    "slug": "mate"
+  },
+  "🧊": {
+    "name": "ice",
+    "slug": "ice"
+  },
+  "🥢": {
+    "name": "chopsticks",
+    "slug": "chopsticks"
+  },
+  "🍽️": {
+    "name": "fork and knife with plate",
+    "slug": "fork_and_knife_with_plate"
+  },
+  "🍴": {
+    "name": "fork and knife",
+    "slug": "fork_and_knife"
+  },
+  "🥄": {
+    "name": "spoon",
+    "slug": "spoon"
+  },
+  "🔪": {
+    "name": "kitchen knife",
+    "slug": "kitchen_knife"
+  },
+  "🫙": {
+    "name": "jar",
+    "slug": "jar"
+  },
+  "🏺": {
+    "name": "amphora",
+    "slug": "amphora"
+  }
+}

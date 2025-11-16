@@ -2,11 +2,10 @@ import {
   Component,
   ElementRef,
   HostBinding,
-  HostListener,
-  Input,
   ViewEncapsulation,
   booleanAttribute,
   inject,
+  input,
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
@@ -23,8 +22,8 @@ import { CiuiButton } from '../button/button';
 export class CiuiForm {
   formErrorService = inject(FormErrorService);
 
-  @Input({ alias: 'formGroup', required: true }) control!: AbstractControl;
-  @Input({ transform: booleanAttribute }) loading = false;
+  control = input.required<AbstractControl>({ alias: 'formGroup' });
+  loading = input<boolean, any>(false, { transform: booleanAttribute });
 
   @HostBinding('class') hostClasses = 'ciui-form';
 
@@ -32,7 +31,7 @@ export class CiuiForm {
     this.form.nativeElement.addEventListener(
       'submit',
       event => {
-        if (this.loading || !this.control.valid) {
+        if (this.loading() || !this.control().valid) {
           event.preventDefault();
           event.stopImmediatePropagation();
         }
@@ -42,6 +41,6 @@ export class CiuiForm {
   }
 
   ngOnInit() {
-    this.formErrorService.initialize(this.control);
+    this.formErrorService.initialize(this.control());
   }
 }

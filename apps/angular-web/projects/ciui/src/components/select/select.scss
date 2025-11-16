@@ -1,9 +1,75 @@
-.ciui-select {
-  &__options {
-    width: 100%;
-  }
+@layer ciui {
+  .ciui-select {
+    &__options {
+      width: 100%;
+    }
 
-  &__option {
-    width: 100%;
+    &__option {
+      width: 100%;
+
+      &--nothing-found {
+        cursor: default;
+        color: var(--text-gray-blue-faint);
+      }
+
+      .ciui-context-menu.ciui-context-menu--theme-white
+        &.ciui-context-menu__item.ciui-context-menu__item--active:hover {
+        background-color: var(--background-white-dimmer);
+      }
+    }
+
+    .ciui-input.ciui-input--size-medium &__edit-input.ciui-input__input {
+      height: 8rem;
+    }
+
+    &__item-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    &__add {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    &__adding {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 2rem;
+      padding: 0 2rem;
+    }
+
+    &__auxiliary {
+      display: flex;
+      position: absolute;
+      right: 1rem;
+      justify-content: center;
+      align-items: center;
+      width: 4.5rem;
+      height: 4.5rem;
+    }
+
+    &__chevron {
+      cursor: pointer;
+
+      .ciui-select.ciui-input--disabled & svg {
+        color: var(--text-gray-blue-faint);
+      }
+    }
+
+    .ciui-input__wrapper {
+      position: relative;
+    }
+
+    .ciui-input__input {
+      padding-right: 6.5rem;
+    }
   }
 }

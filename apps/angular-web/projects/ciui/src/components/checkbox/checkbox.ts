@@ -3,25 +3,22 @@ import {
   ElementRef,
   HostBinding,
   ViewEncapsulation,
-  booleanAttribute,
+  computed,
   forwardRef,
-  inject,
   input,
   viewChild,
 } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
-import type { MaybeUndefined } from '@curseit/types';
-
-import { BaseInput } from '../../shared/components/base-input/base-input';
 import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
-import { Size, Theme } from '../../shared/constants';
 import { FormErrorService } from '../../shared/services/form-error.service';
+import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 
 @Component({
   selector: 'ciui-checkbox',
   imports: [ReactiveFormsModule, CiuiInputInfo],
   templateUrl: './checkbox.html',
+  styleUrl: './checkbox.scss',
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -32,29 +29,18 @@ import { FormErrorService } from '../../shared/services/form-error.service';
     FormErrorService,
   ],
 })
-export class CiuiCheckbox extends BaseInput {
-  formErrorService = inject(FormErrorService);
-
-  formControl = input.required<FormControl>();
-  label = input.required<string>();
-
-  name = input<MaybeUndefined<string>>();
-  ariaLabel = input<MaybeUndefined<string>>();
-  labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
-  row = input<boolean, any>(false, { transform: booleanAttribute });
-  theme = input<Theme>('white');
-  size = input<Size>('medium');
-  transparent = input<boolean, any>(false, { transform: booleanAttribute });
+export class CiuiCheckbox extends CiuiBaseInput {
   constructor() {
     super();
   }
 
   @HostBinding('class')
-  get hostClasses() {
-    return [...this.classes(), 'ciui-input--checkbox'];
+  override get hostClasses() {
+    return [...super.hostClasses, 'ciui-checkbox'];
   }
 
   onInput(event: Event) {
+    this._resetAngryDelete();
     const newValue = (event.target as HTMLInputElement).checked;
     this._onChange(newValue);
   }
@@ -64,4 +50,5 @@ export class CiuiCheckbox extends BaseInput {
   }
 
   protected _checkboxRef = viewChild.required<ElementRef<HTMLInputElement>>('checkbox');
+  activeElements = computed(() => [this._checkboxRef().nativeElement]);
 }

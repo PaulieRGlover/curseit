@@ -1,35 +1,111 @@
 @if (variationStore.loading()) {
-<ciui-loader />
+  <ciui-loader />
 } @else if (variationStore.variation()) {
-<cid-nutrients />
+  <cid-variation-nutrients />
 
-<hr>
+  <hr />
 
-<div class="cid-food-variation__main-inputs">
-  <ciui-input-select
-    label="Per"
-    ariaLabel="Per (reference size)"
-    labelSelect="Reference size unit"
-    type="number"
-    row
-    transparent
-    size="small"
-    [options]="referenceSizeOptions"
-    [formControl]="referenceSize"
-  />
+  <div class="cid-food-variation__main-inputs">
+    <ciui-input-select
+      label="Per"
+      ariaLabel="Per (reference size)"
+      labelSelect="Reference size unit"
+      type="number"
+      row
+      theme="white-semi-transparent"
+      class="cid-food-variation__reference-size-input"
+      [min]="0"
+      [max]="1000"
+      [options]="referenceSizeOptions"
+      [formControl]="referenceSize"
+      (change)="handleChange()"
+    />
 
-  <ciui-input-select
-    label="⚡"
-    ariaLabel="Energy"
-    labelSelect="Energy unit"
-    type="number"
-    row
-    transparent
-    size="small"
-    [options]="energyOptions"
-    [formControl]="energy"
-  />
-</div>
+    <div class="cid-food-variation__energy">
+      <ciui-input-select
+        label="⚡"
+        ariaLabel="Energy"
+        labelSelect="Energy unit"
+        type="number"
+        row
+        theme="white-semi-transparent"
+        class="cid-food-variation__energy-input"
+        noSelectDisable
+        [options]="energyOptions"
+        [formControl]="energy"
+        (change)="handleChange()"
+      />
+
+      <ciui-checkbox
+        label="Atw."
+        ariaLabel="Atwater general factors automatic calculation"
+        name="energy-auto"
+        transparent
+        row
+        theme="white-semi-transparent"
+        class="cid-food-variation__energy-auto-input"
+        [formControl]="energyAuto"
+        (change)="handleChange(false)"
+      />
+
+      <ciui-icon
+        ciui-context-menu-trigger
+        name="question"
+        class="cid-food-variation__energy-tooltip-trigger"
+        size="medium"
+      />
+
+      <ciui-context-menu [width]="320">
+        <div class="ciui-context-menu__content">
+          The energy will be calculated automatically using Atwater general factor system: 4 kcal per gram of carbohydrates, 4kcal per gram of proteins, 9 kcal per gram of fats, and 7 kcal per gram of alcohol. Uncheck the checkbox if you want to enter energy manually.
+        </div>
+      </ciui-context-menu>
+    </div>
+
+    <div class="cid-food-variation__portion">
+      <div class="cid-food-variation__portion-label">
+        <cid-portion
+          ciui-context-menu-trigger
+          trigger="click"
+          class="cid-food-variation__counter"
+          [indicator]="counter.value"
+        />
+
+        <ciui-context-menu
+          #contextMenu
+          menuTitle="Select counter emoji"
+          closable
+          [width]="387"
+        >
+          <div class="ciui-context-menu__content">
+            @if (_contextMenuRef().isOpen()) {
+              <cid-emoji-picker (pick)="handleEmojiPick($event)" />
+            }
+          </div>
+        </ciui-context-menu>
+
+        ≈
+      </div>
+
+      <ciui-input-select
+        label="Per"
+        labelInvisible
+        ariaLabel="Per (reference size)"
+        labelSelect="Reference size unit"
+        type="number"
+        row
+        theme="white-semi-transparent"
+        class="cid-food-variation__portion-size"
+        [min]="0"
+        [max]="1000"
+        [options]="portionSizeOptions"
+        [formControl]="portionSize"
+        (change)="handleChange()"
+      />
+    </div>
+  </div>
+} @else if (variationStore.failure()) {
+  Something went wrong
 } @else {
-Something went wrong
+  No variation selected
 }

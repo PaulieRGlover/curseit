@@ -14,10 +14,10 @@ const mockGenerate = (mockGenerator: Generator) => {
 
 const getExampleMockData = (mockGenerator: Generator) => {
   return class ExampleMockData extends MockData {
-    private static generator = MockData.createUniqueGenerator(() => mockGenerate(mockGenerator));
+    private static generator = MockData._createUniqueGenerator(() => mockGenerate(mockGenerator));
 
     public static get item() {
-      return MockData.getNext(ExampleMockData.generator);
+      return MockData._getNext(ExampleMockData.generator);
     }
   };
 };

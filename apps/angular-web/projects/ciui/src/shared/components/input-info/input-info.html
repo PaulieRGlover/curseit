@@ -1,19 +1,42 @@
+@let labelInvisible_ = labelInvisible();
+@let hasErrors_ = formErrorService.hasErrors();
+@let hasOneError_ = formErrorService.hasOneError();
+@let firstError_ = formErrorService.firstError();
+@let errors_ = formErrorService.errors();
+
 <label
   [for]="id()"
   class="ciui-input__label"
-  [class.ciui-a11y-hidden]="labelInvisible()"
+  [class.ciui-a11y-hidden]="labelInvisible_"
 >{{ label() }}</label>
 
-@if (formErrorService.hasErrors() && formErrorService.hasOneError() && !row() && !labelInvisible) {
-<div [title]="formErrorService.firstError()" class="ciui-input__errors ciui-ellipsis">
-  <span class="ciui-ellipsis__text">{{ formErrorService.firstError() }}</span>
+@if (
+  hasErrors_ &&
+  hasOneError_ &&
+  !row() &&
+  !labelInvisible_
+) {
+<div [title]="firstError_" class="ciui-input__errors ciui-ellipsis">
+  <span class="ciui-ellipsis__text">{{ firstError_ }}</span>
 </div>
-} @else if (formErrorService.hasErrors()) {
+} @else if (hasErrors_) {
 <div class="ciui-input__errors">
   <ciui-icon
-    [title]="formErrorService.tempFormattedErrors()"
+    ciui-context-menu-trigger
     name="info"
     size="small"
   />
+
+  <ciui-context-menu
+    [theme]="theme()"
+    size="small"
+    [width]="300"
+  >
+    <ul>
+      @for (error of errors_; track error) {
+      <li class="ciui-context-menu__item">{{ error }}</li>
+      }
+    </ul>
+  </ciui-context-menu>
 </div>
 }

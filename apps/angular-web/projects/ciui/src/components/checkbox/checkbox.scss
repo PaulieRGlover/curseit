@@ -1,0 +1,21 @@
+@layer ciui {
+  .ciui-checkbox {
+    .ciui-input__wrapper {
+      flex: 0 0;
+    }
+
+    &.ciui-input--size-small {
+      .ciui-input__input {
+        width: 4.5rem;
+        height: 4.5rem;
+      }
+    }
+
+    &.ciui-input--size-medium {
+      .ciui-input__input {
+        width: 6rem;
+        height: 6rem;
+      }
+    }
+  }
+}

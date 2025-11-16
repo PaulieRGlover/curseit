@@ -2,9 +2,8 @@
   label="Food name"
   name="name"
   labelInvisible
-  transparent
+  theme="white-semi-transparent"
   placeholder="Food name"
-  size="small"
   [formControl]="foodInput.controls.name"
   (change)="handleFoodInputChange()"
 />
@@ -17,7 +16,7 @@
   labelInvisible
   transparent
   placeholder="Description"
-  size="small"
+  theme="white-semi-transparent"
   [formControl]="foodInput.controls.description"
   (change)="handleFoodInputChange()"
 />
@@ -26,10 +25,9 @@
   class="cid-food-basic-information__perishable"
   label="Perishable"
   name="perishable"
-  type="checkbox"
-  size="small"
   transparent
   row
+  theme="white-semi-transparent"
   [formControl]="foodInput.controls.perishable"
   (change)="handleFoodInputChange()"
 />

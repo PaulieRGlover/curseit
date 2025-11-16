@@ -4,8 +4,8 @@
 
   .ciui-card__content {
     flex-direction: row;
-    width: 480px;
     min-height: 260px;
+    min-width: 520px;
   }
 
   &__loader {

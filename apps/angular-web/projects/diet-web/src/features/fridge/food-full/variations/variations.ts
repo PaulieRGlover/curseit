@@ -1,10 +1,18 @@
-import { Component, ViewEncapsulation, computed, inject } from '@angular/core';
+import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import { CiuiLoader, CiuiSelect } from '@curseit/ciui';
+import {
+  CiuiLoader,
+  CiuiSelect,
+  SelectAddOptionPayload,
+  SelectEditOptionPayload,
+  SelectRemoveOptionPayload,
+  SelectService,
+} from '@curseit/ciui';
 
 import { FridgeService } from '../../fridge.service';
 import { VariationsStore } from '../../store/variations.store';
+import { VariationAbridged } from '../../types/external/food.types';
 import { CidVariation } from '../variation/variation';
 
 @Component({
@@ -20,6 +28,7 @@ import { CidVariation } from '../variation/variation';
 export class CidVariations {
   fridgeService = inject(FridgeService);
   variationsStore = inject(VariationsStore);
+  selectService = inject(SelectService);
 
   variation = new FormControl(this.variationsStore.variations()?.[0]);
 
@@ -33,6 +42,30 @@ export class CidVariations {
       return;
     }
 
-    this.fridgeService.loadVariation(variationId);
+    this.fridgeService.getVariation(variationId);
+  }
+
+  async handleVariationAdd(payload: SelectAddOptionPayload<VariationAbridged>) {
+    const { add, finished$ } = payload;
+
+    const newVariation = await this.fridgeService.createVariation({ name: add });
+
+    finished$.next(newVariation);
+  }
+
+  async handleVariationRemove(payload: SelectRemoveOptionPayload<VariationAbridged>) {
+    const { option, finished$ } = payload;
+
+    await this.fridgeService.deleteVariation(option.id);
+
+    finished$.next();
+  }
+
+  async handleVariationEdit(payload: SelectEditOptionPayload<VariationAbridged>) {
+    const { option, edit, finished$ } = payload;
+
+    const updatedVariation = await this.fridgeService.updateVariation({ name: edit }, option.id);
+
+    finished$.next(updatedVariation);
   }
 }

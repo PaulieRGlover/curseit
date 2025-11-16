@@ -2,6 +2,9 @@
 set -e
 
 echo "🔧 Updating package list..."
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+  > /etc/apt/sources.list.d/pgdg.list'
+wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 sudo apt-get update -y
 sudo apt-get install -y jq
 
@@ -60,7 +63,7 @@ install_postgres_client() {
     echo "✅ PostgreSQL client tools already installed: $(pg_dump --version)"
   else
     echo "📦 Installing PostgreSQL client tools (pg_dump, pg_restore)..."
-    sudo apt-get install -y postgresql-client
+    sudo apt install postgresql-client-16 -y
   fi
 }
 

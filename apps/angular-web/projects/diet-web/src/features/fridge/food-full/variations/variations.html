@@ -1,16 +1,23 @@
-@if (variationsStore.variations()) {
-<ciui-select
-  label="Variation"
-  row
-  transparent
-  size="small"
-  labelKey="name"
-  [options]="variationsStore.variations()!"
-  [formControl]="variation"
-  (change)="handleVariationChange()"
-/>
+@let variations_ = variationsStore.variations();
 
-<cid-variation />
+@if (variations_) {
+  <ciui-select
+    label="Variation"
+    row
+    theme="white-semi-transparent"
+    labelKey="name"
+    editable
+    selectOnAdd
+    placeholder="Select food variation"
+    [options]="variations_"
+    [formControl]="variation"
+    (change)="handleVariationChange()"
+    (add)="handleVariationAdd($event)"
+    (remove)="handleVariationRemove($event)"
+    (edit)="handleVariationEdit($event)"
+  />
+
+  <cid-variation />
 } @else {
-<ciui-loader />
+  <ciui-loader />
 }

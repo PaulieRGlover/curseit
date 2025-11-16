@@ -1,6 +1,9 @@
 @layer ciui {
   .ciui-context-menu {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
     position: absolute;
     transform: translateY(1rem);
     margin: 0;
@@ -10,13 +13,39 @@
     padding: 0;
     overflow: hidden;
 
+    &__title {
+      padding: 3rem 2rem 1rem 2rem;
+    }
+
+    &__title + hr {
+      margin: 0 2rem;
+      width: calc(100% - 4rem);
+    }
+
+    &__close {
+      position: absolute;
+      top: 3rem;
+      right: 2rem;
+    }
+
     &__item {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
-      padding: 0 2rem;
       cursor: pointer;
+
+      &:not(.ciui-context-menu__item--no-padding) {
+        padding: 0 2rem;
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 2rem;
     }
 
     &.ciui-context-menu--closed {
@@ -27,17 +56,30 @@
       .ciui-context-menu__item {
         height: 9rem;
       }
+
+      .ciui-context-menu__item--big {
+        height: 10.5rem;
+      }
     }
 
     &.ciui-context-menu--size-small {
       .ciui-context-menu__item {
         height: 6rem;
       }
+
+      .ciui-context-menu__item--big {
+        height: 9rem;
+      }
     }
 
     &.ciui-context-menu--theme-white {
-      .ciui-context-menu__item.ciui-context-menu__item--focused {
+      .ciui-context-menu__item.ciui-context-menu__item--active {
         background-color: var(--background-white-dimmer);
+      }
+
+      .ciui-context-menu__item.ciui-context-menu__item--focused,
+      .ciui-context-menu__item:hover {
+        background-color: var(--background-white-dimmest);
       }
     }
   }

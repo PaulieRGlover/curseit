@@ -1,3 +1,8 @@
-<dialog #dialog (click)="handleDialogClick($event)">
+<dialog
+  #dialog
+  (click)="handleDialogClick($event)"
+  (close)="handleDialogClose()"
+  (mousedown)="handleDialogMousedown($event)"
+>
   <ng-content />
 </dialog>

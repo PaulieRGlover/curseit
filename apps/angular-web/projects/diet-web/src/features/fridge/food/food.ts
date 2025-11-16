@@ -2,7 +2,7 @@ import { Component, HostBinding, ViewEncapsulation, input } from '@angular/core'
 
 import { cardClasses } from '@curseit/ciui';
 
-import { Food } from '../dto/external/food.dto';
+import { Food } from '../types/external/food.types';
 
 @Component({
   selector: 'cid-food',

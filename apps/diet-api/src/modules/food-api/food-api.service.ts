@@ -63,7 +63,21 @@ export class FoodApiService {
   }
 
   async getNutrients() {
-    return this.foodsPrismaService.nutrient.findMany({ where: {} });
+    return this.foodsPrismaService.nutrient.findMany({
+      where: {},
+      orderBy: {
+        foods: {
+          _count: 'desc',
+        },
+      },
+      include: {
+        _count: {
+          select: {
+            foods: true,
+          },
+        },
+      },
+    });
   }
 
   async getFood(getFoodDto: GetFoodDto): Promise<Nullable<FoodDto>> {
@@ -80,14 +94,21 @@ export class FoodApiService {
   }
 
   async syncNutrients() {
-    const nutrients = await this.foodsPrismaService.nutrient.findMany({ where: {} });
-    console.log(`nutrients: `, nutrients);
+    const nutrients = await this.foodsPrismaService.nutrient.findMany({
+      where: {},
+      include: {
+        _count: {
+          select: { foods: true },
+        },
+      },
+    });
 
     await this.prismaService.nutrient.createMany({
-      data: nutrients.map(({ id, ...nutrient }) => {
+      data: nutrients.map(({ id, _count, ...nutrient }) => {
         return {
           ...nutrient,
           externalId: id,
+          externalWeight: _count.foods,
         };
       }),
     });

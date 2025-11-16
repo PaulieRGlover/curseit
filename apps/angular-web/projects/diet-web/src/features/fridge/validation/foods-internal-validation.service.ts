@@ -7,27 +7,27 @@ import { zodValidate } from '@/core/validation/zod-validate.util';
 @Injectable({ providedIn: 'root' })
 export class FoodsInternalValidationService {
   public async name(control: AbstractControl) {
-    const schema = (await import('../dto/internal/food.dto')).name;
+    const schema = (await import('../types/internal/food.types')).name;
     return zodValidateForFormControl(schema, control);
   }
 
   public async description(control: AbstractControl) {
-    const schema = (await import('../dto/internal/food.dto')).description;
+    const schema = (await import('../types/internal/food.types')).description;
     return zodValidateForFormControl(schema, control);
   }
 
   public async perishable(control: AbstractControl) {
-    const schema = (await import('../dto/internal/food.dto')).perishable;
+    const schema = (await import('../types/internal/food.types')).perishable;
     return zodValidateForFormControl(schema, control);
   }
 
   public async favorite(control: AbstractControl) {
-    const schema = (await import('../dto/internal/food.dto')).favorite;
+    const schema = (await import('../types/internal/food.types')).favorite;
     return zodValidateForFormControl(schema, control);
   }
 
   public async food(input: unknown) {
-    const schema = (await import('../dto/internal/food.dto')).foodInputSchema;
+    const schema = (await import('../types/internal/food.types')).foodInputSchema;
     return zodValidate(schema, input, false);
   }
 }

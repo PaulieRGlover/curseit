@@ -5,24 +5,22 @@ import {
   StatusChangeEvent,
   TouchedChangeEvent,
 } from '@angular/forms';
+import { Nullable } from '@curseit/types';
 
 import { Subscription } from 'rxjs';
 
 @Injectable()
 export class FormErrorService {
-  readonly errors = computed(() => this._errors());
+  readonly errors = computed(() => {
+    return [...new Set([...this._errors()])];
+  });
   readonly isTouched = computed(() => this._isTouched());
   readonly hasErrors = computed(() => this._errors().length > 0 && this._isTouched());
   readonly hasOneError = computed(() => this._errors().length === 1);
   readonly firstError = computed(() => this._errors()[0]);
-  readonly tempFormattedErrors = computed(() => {
-    return this._errors()
-      .map(error => `- ${error}`)
-      .join('\n')
-  });
 
   initialize(control: AbstractControl) {
-    this._sub = control.events.subscribe(event => {
+    this._controlEventsSubscription = control.events.subscribe(event => {
       switch (true) {
         case event instanceof StatusChangeEvent: {
           this._errors.set(this.computeErrors(control));
@@ -30,7 +28,7 @@ export class FormErrorService {
         }
         case event instanceof TouchedChangeEvent: {
           this._errors.set(this.computeErrors(control));
-          this._isTouched.set(true);
+          this._isTouched.set(event.touched);
           break;
         }
         case event instanceof PristineChangeEvent: {
@@ -45,12 +43,12 @@ export class FormErrorService {
   }
 
   ngOnDestroy() {
-    this._sub?.unsubscribe();
+    this._controlEventsSubscription?.unsubscribe();
   }
 
   private _errors = signal<string[]>([]);
   private _isTouched = signal(false);
-  private _sub?: Subscription;
+  private _controlEventsSubscription: Nullable<Subscription> = null;
 
   private computeErrors(control: AbstractControl) {
     return control.errors

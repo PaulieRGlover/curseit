@@ -1,10 +1,29 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 
 import { GetUser } from '@/decorators';
 import { UserDto } from '@/dto';
 import { AccessJwtGuard } from '@/guards';
 
-import { FoodDto, FoodInputDto, VariationDto, VariationNutrientInputDto } from './dto/fridge.dto';
+import {
+  FoodDto,
+  FoodInputDto,
+  VariationCreateDto,
+  VariationDto,
+  VariationNutrientCreateDto,
+  VariationNutrientDto,
+  VariationNutrientUpdateDto,
+  VariationUpdateDto,
+} from './dto/fridge.dto';
 import { FridgeService } from './fridge.service';
 
 @UseGuards(AccessJwtGuard)
@@ -36,6 +55,15 @@ export class FridgeController {
     return this.fridgeService.updateUserFood(userId, foodId, dto);
   }
 
+  @Post('foods/:foodId/variations')
+  createVariation(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('foodId') foodId: FoodDto['id'],
+    @Body() dto: VariationCreateDto,
+  ) {
+    return this.fridgeService.createUserFoodVariation(userId, foodId, dto);
+  }
+
   @Get('variations/:variationId')
   getVariation(
     @GetUser('id') userId: UserDto['id'],
@@ -44,19 +72,57 @@ export class FridgeController {
     return this.fridgeService.getUserFoodVariation(userId, variationId);
   }
 
+  @Patch('variations/:variationId')
+  updateVariation(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('variationId') variationId: VariationDto['id'],
+    @Body() dto: VariationUpdateDto,
+  ) {
+    return this.fridgeService.updateUserFoodVariation(userId, variationId, dto);
+  }
+
+  @Delete('variations/:variationId')
+  deleteVariation(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('variationId') variationId: VariationDto['id'],
+  ) {
+    return this.fridgeService.deleteUserFoodVariation(userId, variationId);
+  }
+
   @Post('variations/:variationId/nutrients')
   createNutrient(
     @GetUser('id') userId: UserDto['id'],
     @Param('variationId') variationId: VariationDto['id'],
-    @Body() dto: VariationNutrientInputDto,
+    @Body() dto: VariationNutrientCreateDto,
   ) {
     return this.fridgeService.createUserFoodVariationNutrient(userId, variationId, dto);
   }
 
-  @Get('nutrients')
-  getNutrients(
+  @Patch('variations/:variationId/nutrients/:nutrientId')
+  updateNutrient(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('variationId') variationId: VariationDto['id'],
+    @Param('nutrientId') nutrientId: VariationNutrientDto['id'],
+    @Body() dto: VariationNutrientUpdateDto,
+  ) {
+    return this.fridgeService.updateUserFoodVariationNutrient(userId, variationId, nutrientId, dto);
+  }
+
+  @Delete('variations/:variationId/nutrients/:nutrientId')
+  deleteNutrient(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('variationId') variationId: VariationDto['id'],
+    @Param('nutrientId') nutrientId: VariationNutrientDto['id'],
+  ) {
+    return this.fridgeService.deleteUserFoodVariationNutrient(userId, variationId, nutrientId);
+  }
+
+  @Get('variations/:variationId/nutrients-not-repeated')
+  getNutrientsNotRepeated(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('variationId') variationId: VariationDto['id'],
     @Query('search') search?: string,
   ) {
-    return this.fridgeService.getNutrients(search);
+    return this.fridgeService.getNutrientsNotRepeated(userId, variationId, search);
   }
 }

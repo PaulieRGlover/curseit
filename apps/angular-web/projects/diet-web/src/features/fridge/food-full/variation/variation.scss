@@ -5,21 +5,68 @@
 
   &__main-inputs {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 2rem;
+    width: 100%;
+  }
 
-    // <TODO comment="remove when every major browser can style select or after resizing/redesign">
-    .ciui-input {
-      .ciui-input__input {
-        padding: 0.5rem;
-      }
-    }
+  .ciui-input-select__input {
+    width: 70px;
+  }
 
-    .ciui-input.ciui-input--input-select {
-      .ciui-input__input.ciui-input__input--select {
-        flex: 0 0 10rem;
-        padding: 0 0.5rem 0 0;
-      }
-    }
-    // </TODO>
+  .ciui-input-select__select {
+    width: 70px;
+  }
+
+  .cid-food-variation__reference-size-input {
+    display: grid;
+    grid-template-columns: 60px 2fr 1fr 0.5fr;
+    gap: 0;
+  }
+
+  .cid-food-variation__energy {
+    display: grid;
+    grid-template-columns: 60px 2fr 1fr 0.5fr;
+    gap: 0;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .cid-food-variation__energy-input {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    grid-area: 1 / 1 / 2 / 3;
+    gap: 0;
+  }
+
+  .cid-food-variation__portion {
+    display: grid;
+    grid-template-columns: 60px 2fr 1fr 0.5fr;
+    gap: 0;
+    width: 100%;
+  }
+
+  &__portion-label {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  &__energy-auto-input,
+  &__portion-size-irregular-input {
+    padding-left: 2rem;
+  }
+
+  &__energy-tooltip-trigger {
+    margin-left: 1rem;
+  }
+
+  &__counter {
+    flex-shrink: 0;
   }
 }

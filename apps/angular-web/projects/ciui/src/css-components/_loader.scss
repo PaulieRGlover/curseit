@@ -11,19 +11,30 @@
       border-left-color: transparent;
     }
 
-    &.ciui-loader--size-medium {
-      border-width: 2px;
-      width: 4.5rem;
-      height: 4.5rem;
+    &.ciui-loader--theme-dark {
+      border-color: var(--border-color-gray-contrast);
+      border-left-color: transparent;
     }
 
-    &.ciui-loader--size-big {
+    &.ciui-loader--size-medium {
       border-width: 2px;
       width: 6rem;
       height: 6rem;
     }
 
+    &.ciui-loader--size-big {
+      border-width: 2px;
+      width: 9rem;
+      height: 9rem;
+    }
+
     &.ciui-loader--size-small {
+      border-width: 1.5px;
+      width: 4.5rem;
+      height: 4.5rem;
+    }
+
+    &.ciui-loader--size-extra-small {
       border-width: 1.5px;
       width: 3rem;
       height: 3rem;

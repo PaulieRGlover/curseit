@@ -1,0 +1,11 @@
+@for (nutrient of variationNutrients(); track nutrient.internalId) {
+<cid-variation-nutrient
+  [variationNutrient]="nutrient"
+  (update)="handleVariationNutrientUpdate(
+    $event,
+    nutrient.internalId,
+    nutrient.id,
+    nutrient.isEmpty
+  )"
+/>
+}

@@ -7,64 +7,73 @@ import {
   booleanAttribute,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 
 import { Nullable } from '@curseit/types';
 
-import { Size, Theme } from '../../shared/constants';
-
-import { ContextMenuService } from './context-menu.service';
-import { CiuiContextMenuTriggerDirective } from './context-menu.directive';
+import { CONTEXT_MENU_ERRORS, Size, Theme } from '../../shared/constants';
 import { cardClasses } from '../card/card.utils';
+import { DialogService } from '../dialog/dialog.service';
+import { CiuiIcon } from '../icon/icon';
+
+import { CiuiContextMenuService, ContextMenuWrapper } from './context-menu.service';
 
 @Component({
   selector: 'ciui-context-menu',
   templateUrl: './context-menu.html',
   encapsulation: ViewEncapsulation.None,
+  imports: [CiuiIcon],
 })
 export class CiuiContextMenu {
   element = inject(ElementRef);
-  contextMenuService = inject(ContextMenuService);
+  contextMenuService = inject(CiuiContextMenuService);
+  dialogService = inject(DialogService);
 
   menuId = input<string>();
+
+  menuTitle = input<string>();
+  closable = input<boolean, any>(false, { transform: booleanAttribute });
   theme = input<Theme>('white');
   size = input<Size>('medium');
-  width = input<number>();
+  width = input<string, number | 'fit-content'>(undefined, {
+    transform: (value: number | 'fit-content') => {
+      return value === 'fit-content' ? value : `${value}px`;
+    },
+  });
   noShadow = input<boolean, any>(false, { transform: booleanAttribute });
   symmetric = input<boolean, any>(false, { transform: booleanAttribute });
 
-  isOpened = signal(false);
+  toggled = output<boolean>();
+
+  isOpen = signal(false);
   dimensions = signal({
     width: 0,
     top: 0,
     left: 0,
   });
 
-  public toggle(state = !this.isOpened) {
-    this.isOpened.set(state);
+  toggle(state = !this.isOpen()) {
+    this.isOpen.set(state);
     if (state) {
       this.setPosition();
       this.element.nativeElement.showPopover();
     } else {
       this.element.nativeElement.hidePopover();
     }
+
+    this.toggled.emit(state);
   }
 
-  public bind(triggerElement: ElementRef, directive: CiuiContextMenuTriggerDirective) {
-    this._triggerElement.set(triggerElement);
-    this._directive.set(directive);
+  ngAfterViewInit() {
+    const menuWrapper = this.contextMenuService.pairMenu(this, this.menuId());
+    this._menuWrapper.set(menuWrapper);
     this.setPosition();
-    this._resizeObserver.observe(triggerElement.nativeElement);
-  }
-
-  ngOnInit() {
-    this.contextMenuService.registerMenu(this, this.element, this.menuId());
   }
 
   ngOnDestroy() {
-    this._resizeObserver.unobserve(this._triggerElement()?.nativeElement);
-    this.contextMenuService.unregisterMenu(this);
+    this.contextMenuService.destroyMenu(this, this.menuId());
   }
 
   @HostBinding('class')
@@ -78,7 +87,7 @@ export class CiuiContextMenu {
         noBorder: true,
       }),
       'ciui-context-menu',
-      !this.isOpened() ? `ciui-context-menu--closed` : '',
+      !this.isOpen() ? `ciui-context-menu--closed` : '',
       `ciui-context-menu--theme-${this.theme()}`,
       `ciui-context-menu--size-${this.size()}`,
     ];
@@ -92,9 +101,9 @@ export class CiuiContextMenu {
       left: `${dimensions.left}px`,
     };
 
-    if (typeof this.width() === 'number') {
+    if (this.width()) {
       style.minWidth = `${dimensions.width}px`;
-      style.width = `${this.width()}px`;
+      style.width = this.width();
     } else {
       style.width = `${dimensions.width}px`;
     }
@@ -105,20 +114,28 @@ export class CiuiContextMenu {
   @HostBinding('attr.popover')
   popoverAttribute = 'manual';
 
+  @HostBinding('attr.data-menu-id')
+  get menuIdAttribute() {
+    return this.menuId();
+  }
+
   @HostListener('mousedown')
   @HostListener('pointerdown')
   preventBlurOnce() {
     // prevent blur from closing the context menu when clicking inside it
-    this._directive()?.preventBlurOnce();
+    this._trigger.preventBlurOnce();
   }
 
-  private setPosition() {
-    const trigger = this._triggerElement()?.nativeElement;
-    if (!trigger) {
-      return;
+  @HostListener('window:keydown.escape', ['$event'])
+  handleWindowEscapePress(event: Event) {
+    if (this.isOpen() && this._trigger.trigger() !== 'manual') {
+      this.toggle(false);
+      event.preventDefault();
     }
+  }
 
-    const { width, top, height, left } = (trigger as HTMLElement).getBoundingClientRect();
+  setPosition(rect: DOMRect = this._triggerElement.getBoundingClientRect()) {
+    const { width, top, height, left } = rect;
     const { scrollTop } = document.documentElement;
     this.dimensions.set({
       width,
@@ -127,7 +144,18 @@ export class CiuiContextMenu {
     });
   }
 
-  private _triggerElement = signal<Nullable<ElementRef>>(null);
-  private _directive = signal<Nullable<CiuiContextMenuTriggerDirective>>(null);
-  private _resizeObserver = new ResizeObserver(() => this.setPosition());
+  private _menuWrapper = signal<Nullable<ContextMenuWrapper>>(null);
+
+  private get _trigger() {
+    const trigger = this._menuWrapper()?.trigger();
+    if (!trigger) {
+      throw new Error(CONTEXT_MENU_ERRORS.NO_TRIGGER);
+    }
+
+    return trigger;
+  }
+
+  private get _triggerElement(): HTMLElement {
+    return this._trigger.element.nativeElement;
+  }
 }

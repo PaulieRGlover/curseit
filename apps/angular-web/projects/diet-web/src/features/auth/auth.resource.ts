@@ -4,9 +4,9 @@ import { Injectable, inject } from '@angular/core';
 import { ApiResult, Get, Post, Resource, UseAuthorization, UseValidation } from '@curseit/resource';
 import { Nullable } from '@curseit/types';
 
-import { Failure } from '@/core/dto/external/failure.dto';
+import { Failure } from '@/core/types/external/failure.types';
 
-import { Success } from './dto/external/success.dto';
+import { Success } from './types/external/success.types';
 import { AuthExternalValidationService } from './validation/auth-external-validation.service';
 
 export type AuthApiResult = ApiResult<Success, Failure>;

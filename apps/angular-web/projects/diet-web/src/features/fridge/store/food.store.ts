@@ -2,15 +2,13 @@ import { Injectable, inject, signal } from '@angular/core';
 
 import { Nullable } from '@curseit/types';
 
-import { Failure } from '@/core/dto/external/failure.dto';
+import { Failure } from '@/core/types/external/failure.types';
 
-import { Food } from '../dto/external/food.dto';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { Food } from '../types/external/food.types';
 
 @Injectable({ providedIn: 'root' })
 export class FoodStore {
   food = signal<Nullable<Food>>(null);
-  food$ = toObservable(this.food);
   loading = signal(false);
   failure = signal<Nullable<Failure>>(null);
 

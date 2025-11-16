@@ -1,14 +1,18 @@
 @layer ciui {
   .ciui-icon {
-    display: inline-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 
     &_wrapper,
     svg {
-      display: inline-flex;
+      display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
       height: 100%;
+      color: var(--text-gray-blue);
     }
 
     &.ciui-icon--size-medium {
@@ -19,6 +23,16 @@
     &.ciui-icon--size-small {
       width: 4.5rem;
       height: 4.5rem;
+    }
+
+    &.ciui-icon--size-extra-small {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    &--disabled {
+      filter: opacity(0.3);
+      cursor: not-allowed;
     }
   }
 }

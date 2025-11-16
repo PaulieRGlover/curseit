@@ -5,7 +5,7 @@ import { DIALOG_ERRORS } from '../../shared/constants';
 import { DialogService } from './dialog.service';
 
 @Directive({
-  selector: '[ciuiDialogTrigger]',
+  selector: '[ciui-dialog-trigger]',
 })
 export class CiuiDialogTrigger {
   private dialogService = inject(DialogService);
@@ -15,7 +15,7 @@ export class CiuiDialogTrigger {
   element = inject(ElementRef);
 
   get dialog() {
-    return this.dialogService.getDialog(this.dialogId());
+    return this.dialogService.getDialogWrapper(this.dialogId())?.dialog;
   }
 
   ngAfterViewInit() {

@@ -2,45 +2,53 @@ import { ElementRef, Injectable } from '@angular/core';
 
 import { Nullable } from '@curseit/types';
 
+import { CiuiContextMenu } from '../context-menu/context-menu';
+
 import { CiuiDialog } from './dialog';
 
-export type ContextMenuWrapper = {
-  id: string | ElementRef['nativeElement'];
+type Locator = CiuiDialog | HTMLElement | string;
+
+export type DialogWrapper = {
+  id: string | HTMLElement;
   dialog: CiuiDialog;
 };
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-  dialog: Array<ContextMenuWrapper> = [];
+  dialogWindows: Array<DialogWrapper> = [];
 
-  registerDialog(dialog: CiuiDialog, element: ElementRef, dialogId?: string) {
-    this.dialog.push({ id: dialogId ?? element.nativeElement, dialog: dialog });
+  registerDialog(dialog: CiuiDialog, element: ElementRef) {
+    this.dialogWindows.push({ id: element.nativeElement, dialog });
   }
 
   unregisterDialog(dialog: CiuiDialog) {
-    this.dialog = this.dialog.filter(wrapper => wrapper.dialog !== dialog);
+    this.dialogWindows = this.dialogWindows.filter(wrapper => wrapper.dialog !== dialog);
   }
 
-  getDialog(dialogId: string): Nullable<CiuiDialog> {
-    return this.dialog.find(({ id }) => id === dialogId)?.dialog ?? null;
+  getDialogWrapper(locator: Locator): Nullable<DialogWrapper> {
+    const dialogWrapper = this.dialogWindows.find(({ id, dialog }) => {
+      return locator instanceof CiuiDialog
+        ? locator === dialog
+        : locator === id;
+    });
+
+    return dialogWrapper ?? null;
   }
 
   toggleDialog(
-    locator: CiuiDialog | string,
+    locator: Locator,
     value?: boolean,
+    emit = false,
   ): void {
-    const dialog = locator instanceof CiuiDialog ? locator : this.getDialog(locator);
-    if (!dialog) {
+    const dialogWrapper = this.getDialogWrapper(locator);
+    if (!dialogWrapper) {
       return;
     }
 
-    value = value ?? !dialog.isOpened();
-    if (!value) {
-      this.dialog
-        .filter(wrapper => wrapper.dialog !== dialog)
-        .forEach(({ dialog: menu }) => menu.toggle(false));
-    }
+    const { dialog } = dialogWrapper;
 
-    dialog.toggle(value);
+    value = value ?? !dialog.isOpened();
+
+    dialog.toggle(value, emit);
   }
 }

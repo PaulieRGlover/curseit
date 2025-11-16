@@ -7,13 +7,15 @@ import {
   input,
 } from '@angular/core';
 
-import { CiuiIcon } from '../../../components';
-import { Size } from '../../constants';
+import { CiuiContextMenu } from '../../../components/context-menu/context-menu';
+import { CiuiContextMenuTrigger } from '../../../components/context-menu/context-menu-trigger.directive';
+import { CiuiIcon } from '../../../components/icon/icon';
+import { Theme } from '../../constants';
 import { FormErrorService } from '../../services/form-error.service';
 
 @Component({
   selector: 'ciui-input-info',
-  imports: [CiuiIcon],
+  imports: [CiuiIcon, CiuiContextMenu, CiuiContextMenuTrigger],
   templateUrl: './input-info.html',
   encapsulation: ViewEncapsulation.None,
 })
@@ -25,6 +27,7 @@ export class CiuiInputInfo {
 
   labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
   row = input<boolean, any>(false, { transform: booleanAttribute });
+  theme = input<Theme>('white');
 
   @HostBinding('class')
   get hostClasses() {

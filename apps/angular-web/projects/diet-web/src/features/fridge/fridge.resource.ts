@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 
 import {
   ApiResult,
+  Delete,
   Get,
   Patch,
   Post,
@@ -11,18 +12,21 @@ import {
 } from '@curseit/resource';
 
 import { DietResource } from '@/core/diet.resource';
-import { Failure } from '@/core/dto/external/failure.dto';
+import { Failure } from '@/core/types/external/failure.types';
 
 import {
   Food,
   FoodWithVariations,
   FoodsWithPortions,
-  Nutrient,
+  NutrientsAbridged,
+  Variation,
+  VariationCreate,
   VariationNutrient,
+  VariationUpdate,
   VariationWithNutrients,
-} from './dto/external/food.dto';
-import { FoodCreate, FoodUpdate } from './dto/internal/food.dto';
-import { NutrientCreate } from './dto/internal/nutrient.dto';
+} from './types/external/food.types';
+import { FoodCreate, FoodUpdate } from './types/internal/food.types';
+import { VariationNutrientCreate, VariationNutrientUpdate } from './types/internal/nutrient.types';
 import { FoodsExternalValidationService } from './validation/foods-external-validation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -61,6 +65,15 @@ export class FridgeResource extends DietResource {
     return undefined!;
   }
 
+  @Post('foods', ':foodId', 'variations')
+  @UseValidation('variation')
+  async createVariation(
+    payload: VariationCreate,
+    options: { params: { foodId: string } },
+  ): Promise<ApiResult<Variation, Failure>> {
+    return undefined!;
+  }
+
   @Get('variations', ':variationId')
   @UseValidation('variationWithNutrients')
   async getVariation(
@@ -70,21 +83,57 @@ export class FridgeResource extends DietResource {
     return undefined!;
   }
 
+  @Patch('variations', ':variationId')
+  @UseValidation('variation')
+  async updateVariation(
+    payload: VariationUpdate,
+    options: { params: { variationId: string } },
+  ): Promise<ApiResult<Variation, Failure>> {
+    return undefined!;
+  }
+
+  @Delete('variations', ':variationId')
+  @UseValidation('variation')
+  async deleteVariation(
+    payload: undefined,
+    options: { params: { variationId: string } },
+  ): Promise<ApiResult<Variation, Failure>> {
+    return undefined!;
+  }
+
   @Post('variations', ':variationId', 'nutrients')
   @UseValidation('variationNutrient')
   async createNutrient(
-    payload: NutrientCreate,
+    payload: VariationNutrientCreate,
     options: { params: { variationId: string } },
   ): Promise<ApiResult<VariationNutrient, Failure>> {
     return undefined!;
   }
 
-  @Get('nutrients')
-  @UseValidation('nutrients')
-  async searchNutrients(
+  @Patch('variations', ':variationId', 'nutrients', ':variationNutrientId')
+  @UseValidation('variationNutrient')
+  async updateNutrient(
+    payload: VariationNutrientUpdate,
+    options: { params: { variationId: string; variationNutrientId: string } },
+  ): Promise<ApiResult<VariationNutrient, Failure>> {
+    return undefined!;
+  }
+
+  @Delete('variations', ':variationId', 'nutrients', ':variationNutrientId')
+  @UseValidation('variationNutrient')
+  async deleteNutrient(
     payload: undefined,
-    options: { query: { search: string } },
-  ): Promise<ApiResult<Array<Nutrient>, Failure>> {
+    options: { params: { variationId: string; variationNutrientId: string } },
+  ): Promise<ApiResult<VariationNutrient, Failure>> {
+    return undefined!;
+  }
+
+  @Get('variations', ':variationId', 'nutrients-not-repeated')
+  @UseValidation('nutrientsAbridged')
+  async searchNutrientsNotRepeated(
+    payload: undefined,
+    options: { params: { variationId: string }; query: { search?: string } },
+  ): Promise<ApiResult<NutrientsAbridged, Failure>> {
     return undefined!;
   }
 }

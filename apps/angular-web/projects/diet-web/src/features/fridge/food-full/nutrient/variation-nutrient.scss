@@ -1,0 +1,22 @@
+.cid-variation-nutrient {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  padding-right: 6rem;
+
+  &__delimiter {
+    display: flex;
+    flex: 0 0 2rem;
+    transform: translateY(0.5px);
+    border-top: var(--border-delimiter);
+    height: 1px;
+  }
+
+  &__remove {
+    position: absolute;
+    right: 0;
+    flex-shrink: 0;
+  }
+}

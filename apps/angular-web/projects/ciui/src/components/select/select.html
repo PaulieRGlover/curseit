@@ -1,3 +1,5 @@
+@let contextMenuId = `select-${id()}-context-menu`;
+
 <ciui-input-info
   [id]="id()"
   [label]="label()"
@@ -5,44 +7,210 @@
   [row]="row()"
 />
 
-<div class="ciui-input__wrapper">
+<div
+  class="ciui-input__wrapper"
+  [attr.title]="selectedOption()?.[labelKey()]"
+>
   <input
-    #select
-    ciuiContextMenuTrigger
-    trigger="focus"
+    #search
+    ciui-context-menu-trigger
+    [menuId]="contextMenuId"
+    [trigger]="editable() ? 'manual' : 'focus'"
+    autocomplete="off"
     [id]="id()"
     [attr.name]="name()"
+    [attr.placeholder]="placeholder()"
     [attr.aria-label]="ariaLabel()"
     class="ciui-input__input"
     [formControl]="searchControl"
-    (input)="isValueSelected.set(false)"
-    (keydown.enter)="handleEnterPress()"
-    (keydown.arrowUp)="handleFocusMove(-1)"
-    (keydown.arrowDown)="handleFocusMove(1)"
-    (click)="handleSearchClick()"
     (input)="handleSearchInput()"
-    (change)="handleSearchChange($event)"
+    (change)="$event.stopPropagation()"
   >
 
   <ciui-context-menu
-    [theme]="theme()"
+    #contextMenu
+    [menuId]="contextMenuId"
+    [theme]="menuTheme()"
     [size]="size()"
-    symmetric
+    [symmetric]="!editable()"
     class="ciui-select__context-menu"
+    (click)="$event.stopPropagation()"
   >
-    <ul class="ciui-select__options">
-      @for (option of filteredOptions(); track option.id) {
-      <li
-        [attr.title]="option[labelKey()]"
-        class="ciui-select__option ciui-context-menu__item ciui-ellipsis"
-        [class.ciui-context-menu__item--focused]="focusedIndex() === $index"
-        (click)="handleSelect(option)"
-        (mouseenter)="handleOptionHover(option)"
-        (mousemove)="handleOptionHover(option)"
-      >
-        <span class="ciui-ellipsis__text">{{ option[labelKey()] }}</span>
-      </li>
-      }
-    </ul>
+    @if (options().length) {
+      <ul class="ciui-select__options">
+        @for (option of options(); track option.id) {
+          @let label = option[labelKey()];
+          @let utility = option.utility;
+          @let isFocused = (focusData()[0] ?? 0) === $index && option.utility !== 'nothing-found';
+          @let isActive = (
+            (selectedOption() ? $index === 0 : false) &&
+            option.utility !== 'nothing-found'
+          );
+
+          <li
+            [attr.title]="label"
+            class="ciui-select__option ciui-context-menu__item ciui-ellipsis"
+            [class.ciui-context-menu__item--focused]="isFocused"
+            [class.ciui-context-menu__item--active]="isActive"
+            [class.ciui-context-menu__item--big]="option.utility === 'add'"
+            [class.ciui-context-menu__item--no-padding]="option.utility === 'add'"
+            [class.ciui-select__option--nothing-found]="option.utility === 'nothing-found'"
+            (click)="handleOptionClick(option)"
+            (mouseenter)="handleOptionHover(option)"
+            (mousemove)="handleOptionHover(option)"
+          >
+            @if (optionTemplate(); as template) {
+              <ng-container
+                *ngTemplateOutlet="template; context: {
+                  label,
+                  isFocused,
+                  isActive,
+                  utility,
+                }"
+              />
+            } @else {
+              @if (!option.utility || option.utility === 'nothing-found') {
+                @let isOptionEditable = (
+                  editable() &&
+                  !option.utility &&
+                  focusedOption()?.id === option.id
+                );
+                @let isOptionEditing = editing()?.id === option.id;
+
+                @if (!isOptionEditing) {
+                  <span class="ciui-ellipsis__text">{{ option[labelKey()] }}</span>
+                } @else {
+                  <input
+                    #editInput
+                    [id]="`${id()}-edit-input`"
+                    [attr.name]="`${name()}-edit-input`"
+                    [attr.placeholder]="editInputPlaceholder()"
+                    [attr.aria-label]="editInputAriaLabel()"
+                    class="ciui-input__input ciui-select__edit-input"
+                    autocomplete="off"
+                    [formControl]="editOptionName"
+                    (change)="$event.stopPropagation()"
+                  />
+                }
+
+                @if (isOptionEditable) {
+                  <div class="ciui-select__item-actions" (click)="$event.stopPropagation()">
+                    @if (isOptionEditing) {
+                      <button
+                        ciui-button
+                        type="button"
+                        icon="cancel"
+                        size="small"
+                        aria-label="Cancel editing"
+                        [loading]="editingLoading()"
+                        (click)="resetEditing()"
+                      ></button>
+
+                      <button
+                        ciui-button
+                        type="button"
+                        icon="save"
+                        size="small"
+                        [attr.aria-label]="editItemAriaLabel()"
+                        [disabled]="!editOptionName.value.length"
+                        [loading]="editingLoading()"
+                        (click)="handleEdit(option)"
+                      ></button>
+                    } @else {
+                      <button
+                        ciui-button
+                        type="button"
+                        icon="edit"
+                        size="small"
+                        aria-label="Start editing"
+                        [loading]="editingLoading() || removingLoading()"
+                        (click)="startEditing(option)"
+                      ></button>
+
+                      <button
+                        ciui-button
+                        type="button"
+                        icon="delete"
+                        size="small"
+                        aria-label="Remove item"
+                        [loading]="editingLoading() || removingLoading()"
+                        (click)="handleRemove(option)"
+                      ></button>
+                    }
+                  </div>
+                }
+              } @else if (option.utility === 'add') {
+                @if (!adding()) {
+                  <button
+                    title="add"
+                    class="ciui-select__add"
+                    (click)="startAdding()"
+                    (focus)="focusAdd($index)"
+                  >
+                    <ciui-icon name="add" />
+                  </button>
+                } @else {
+                  <div class="ciui-select__adding" (click)="$event.stopPropagation()">
+                    <input
+                      #addInput
+                      [id]="`${id()}-add-input`"
+                      [attr.name]="`${name()}-add-input`"
+                      [attr.placeholder]="addInputPlaceholder()"
+                      [attr.aria-label]="addInputAriaLabel()"
+                      class="ciui-input__input"
+                      autocomplete="off"
+                      [formControl]="newOptionName"
+                      (change)="$event.stopPropagation()"
+                    />
+
+                    <button
+                      ciui-button
+                      type="button"
+                      icon="cancel"
+                      size="small"
+                      aria-label="Cancel adding"
+                      [loading]="addingLoading()"
+                      (click)="resetAdding()"
+                    ></button>
+
+                    <button
+                      ciui-button
+                      type="button"
+                      icon="save"
+                      size="small"
+                      [attr.aria-label]="addItemAriaLabel()"
+                      [disabled]="!newOptionName.value.length"
+                      [loading]="addingLoading()"
+                      (click)="handleAdd()"
+                    ></button>
+                  </div>
+                }
+              }
+            }
+          </li>
+        }
+      </ul>
+    } @else if (!isLoading()) {
+      <i class="ciui-context-menu__item ciui-select__nothing-found">Nothing found...</i>
+    }
   </ciui-context-menu>
+
+  <div class="ciui-select__auxiliary">
+    @let isOpen = _contextMenuRef().isOpen();
+    @if (iconTemplate(); as template) {
+      <ng-container *ngTemplateOutlet="template; context: { isOpen }" />
+    } @else if (optionsLoading()) {
+      <ciui-loader
+        size="extra-small"
+        [theme]="invertedTheme()"
+      />
+    } @else {
+      <ciui-icon
+        [name]="isOpen ? 'chevron-up' : 'chevron-down'"
+        size="small"
+        class="ciui-select__chevron"
+        (click)="handleChevronClick()"
+      />
+    }
+  </div>
 </div>

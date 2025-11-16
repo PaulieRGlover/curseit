@@ -6,7 +6,6 @@ import {
   booleanAttribute,
   computed,
   forwardRef,
-  inject,
   input,
   viewChild,
 } from '@angular/core';
@@ -14,18 +13,21 @@ import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/fo
 
 import type { HTMLInputTypeAttribute } from 'react';
 
-import { BaseInput } from '../../shared/components/base-input/base-input';
-import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
-import { Size, Theme } from '../../shared/constants';
-import { FormErrorService } from '../../shared/services/form-error.service';
-import { SelectOption } from '../select/select';
+import { Nullable } from '@curseit/types';
 
-type ValueTuple = [string | number, string];
+import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
+import { FormErrorService } from '../../shared/services/form-error.service';
+import { CiuiIcon } from '../icon/icon';
+import { CiuiSelect, SelectOption } from '../select/select';
+import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
+
+type ValueTuple<T> = [string | number, Nullable<T>];
 
 @Component({
   selector: 'ciui-input-select',
-  imports: [ReactiveFormsModule, CiuiInputInfo],
+  imports: [ReactiveFormsModule, CiuiInputInfo, CiuiSelect, CiuiIcon],
   templateUrl: './input-select.html',
+  styleUrl: './input-select.scss',
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -36,26 +38,21 @@ type ValueTuple = [string | number, string];
     FormErrorService,
   ],
 })
-export class CiuiInputSelect extends BaseInput {
-  formErrorService = inject(FormErrorService);
-
-  formControl = input.required<FormControl>();
-  label = input.required<string>();
+export class CiuiInputSelect<T extends string | SelectOption> extends CiuiBaseInput {
   labelSelect = input.required<string>();
-  options = input.required<Array<string | SelectOption>>();
+  options = input.required<Array<T>>();
 
   type = input<HTMLInputTypeAttribute>('text');
-  name = input<string>();
+  min = input<number>();
+  max = input<number>();
+  autocomplete = input<string>('off');
   labelKey = input<string>('label');
-  placeholder = input<string>();
-  ariaLabel = input<string>();
   ariaLabelSelect = input<string>();
-  labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
-  row = input<boolean, any>(false, { transform: booleanAttribute });
-  theme = input<Theme>('white');
-  size = input<Size>('medium');
-  transparent = input<boolean, any>(false, { transform: booleanAttribute });
+  noSelectDisable = input<boolean, any>(false, { transform: booleanAttribute });
 
+  selectValue = new FormControl<Nullable<T>>(null);
+
+  activeElements = computed(() => [this._inputRef().nativeElement]);
   inputId = computed(() => `${this.id()}-input`);
   selectId = computed(() => `${this.id()}-select`);
 
@@ -64,25 +61,38 @@ export class CiuiInputSelect extends BaseInput {
   }
 
   @HostBinding('class')
-  get hostClasses() {
-    return [...this.classes(), 'ciui-input--input-select'];
+  override get hostClasses() {
+    return [...super.hostClasses, 'ciui-input-select'];
   }
 
   onInput() {
+    this._resetAngryDelete();
     const inputValue = this._inputRef().nativeElement.value;
-    const newValue: ValueTuple = [
-      this.type() === 'number' ? parseFloat(inputValue) : inputValue,
-      this._selectRef().nativeElement.value,
+    const newValue: ValueTuple<T> = [
+      this.type() === 'number' ? parseFloat(inputValue) || 0 : inputValue,
+      this.selectValue.value,
     ];
     this._onChange(newValue);
-    // TODO: don't forget to emulate change after adding the `select.ts` component
   }
 
-  applyWrite(value: ValueTuple) {
+  applyWrite(value: ValueTuple<T>) {
     this._renderer.setProperty(this._inputRef().nativeElement, 'value', value[0]);
-    this._renderer.setProperty(this._selectRef().nativeElement, 'value', value[1]);
+    this.selectValue.setValue(value[1]);
+  }
+
+  override setDisabledState(isDisabled: boolean) {
+    super.setDisabledState(isDisabled);
+
+    if (this.noSelectDisable()) {
+      return;
+    }
+
+    if (isDisabled) {
+      this.selectValue.disable({ emitEvent: true });
+    } else {
+      this.selectValue.enable({ emitEvent: true });
+    }
   }
 
   protected _inputRef = viewChild.required<ElementRef<HTMLInputElement>>('input');
-  protected _selectRef = viewChild.required<ElementRef<HTMLInputElement>>('select');
 }

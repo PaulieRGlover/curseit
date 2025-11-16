@@ -1,4 +1,12 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+
+import { Prisma } from '@curseit/diet-orm';
+import { PRISMA_ERRORS, PRISMA_MESSAGES } from '@curseit/prisma-errors';
 
 import { UserDto } from '@/dto';
 
@@ -13,16 +21,23 @@ import {
   FoodWithVariationsSchema,
   FoodsWithPortionsDto,
   FoodsWithPortionsSchema,
-  NutrientsDto,
-  NutrientsSchema,
+  NutrientsAbridgedDto,
+  NutrientsAbridgedSchema,
+  VariationCreateDto,
   VariationDto,
+  VariationNutrientCreateDto,
   VariationNutrientDto,
-  VariationNutrientInputDto,
   VariationNutrientSchema,
+  VariationNutrientUpdateDto,
+  VariationSchema,
+  VariationUpdateDto,
   VariationWithNutrientsDto,
   VariationWithNutrientsSchema,
 } from './dto/fridge.dto';
-import { foodToFoodWithPortions } from './transformers/food-to-food-with-portions';
+import { FRIDGE_MESSAGES } from './messages/fridge.messages';
+import { foodToFoodWithPortions } from './transformers/food-to-food-with-portions.transformer';
+import { nutrientToNutrientAbridged } from './transformers/nutrient-to-nutrient-abridged.transformer';
+import { variationNutrientToDto } from './transformers/variation-nutrient-to-dto.transformer';
 
 @Injectable()
 export class FridgeService {
@@ -126,6 +141,26 @@ export class FridgeService {
     return this.validationService.validate<typeof FoodSchema>(FoodSchema, food);
   }
 
+  async createUserFoodVariation(
+    userId: UserDto['id'],
+    foodId: FoodDto['id'],
+    dto: VariationCreateDto,
+  ): Promise<VariationDto> {
+    let variation;
+    try {
+      variation = await this.prismaService.foodVariation.create({
+        data: {
+          food: { connect: { user: { id: userId }, id: foodId } },
+          ...dto,
+        },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof VariationSchema>(VariationSchema, variation);
+  }
+
   async getUserFoodVariation(
     userId: UserDto['id'],
     variationId: VariationDto['id'],
@@ -138,7 +173,12 @@ export class FridgeService {
           id: variationId,
         },
         include: {
-          nutrients: true,
+          nutrients: {
+            orderBy: { addedDate: 'asc' },
+            include: {
+              nutrient: true,
+            },
+          },
         },
       });
     } catch {
@@ -151,15 +191,69 @@ export class FridgeService {
 
     return this.validationService.validate<typeof VariationWithNutrientsSchema>(
       VariationWithNutrientsSchema,
-      variation,
+      { ...variation, nutrients: variation.nutrients.map(variationNutrientToDto) },
     );
+  }
+
+  async updateUserFoodVariation(
+    userId: UserDto['id'],
+    variationId: VariationDto['id'],
+    dto: VariationUpdateDto,
+  ): Promise<VariationDto> {
+    let variation;
+    try {
+      variation = await this.prismaService.foodVariation.update({
+        where: {
+          food: { userId },
+          id: variationId,
+        },
+        data: dto,
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    if (!variation) {
+      throw new NotFoundException();
+    }
+
+    return this.validationService.validate<typeof VariationSchema>(VariationSchema, variation);
+  }
+
+  async deleteUserFoodVariation(
+    userId: UserDto['id'],
+    variationId: VariationDto['id'],
+  ): Promise<VariationDto> {
+    let variation;
+    try {
+      variation = await this.prismaService.foodVariation.delete({
+        where: {
+          food: { userId },
+          id: variationId,
+        },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    if (!variation) {
+      throw new NotFoundException();
+    }
+
+    return this.validationService.validate<typeof VariationSchema>(VariationSchema, variation);
   }
 
   async createUserFoodVariationNutrient(
     userId: UserDto['id'],
     variationId: VariationDto['id'],
-    dto: VariationNutrientInputDto,
+    dto: VariationNutrientCreateDto,
   ): Promise<VariationNutrientDto> {
+    const variation = await this.getUserFoodVariation(userId, variationId);
+    const existingNutrientIds = variation.nutrients.map(({ nutrientId }) => nutrientId);
+    if (existingNutrientIds.includes(dto.nutrientId)) {
+      throw new ConflictException(FRIDGE_MESSAGES.NUTRIENT_ALREADY_EXISTS);
+    }
+
     let nutrient;
     try {
       nutrient = await this.prismaService.nutrientInFoodVariation.create({
@@ -169,10 +263,7 @@ export class FridgeService {
           valueDisplayUnit: dto.valueDisplayUnit,
           nutrient: { connect: { id: dto.nutrientId } },
         },
-        include: {
-          foodVariation: true,
-          nutrient: true,
-        },
+        include: { nutrient: true },
       });
     } catch {
       throw new InternalServerErrorException();
@@ -180,25 +271,106 @@ export class FridgeService {
 
     return this.validationService.validate<typeof VariationNutrientSchema>(
       VariationNutrientSchema,
-      nutrient,
+      variationNutrientToDto(nutrient),
     );
   }
 
-  async getNutrients(search?: string): Promise<NutrientsDto> {
-    let nutrients;
+  async updateUserFoodVariationNutrient(
+    userId: UserDto['id'],
+    variationId: VariationDto['id'],
+    nutrientId: VariationNutrientDto['id'],
+    dto: VariationNutrientUpdateDto,
+  ): Promise<VariationNutrientDto> {
+    let nutrient;
     try {
-      nutrients = await this.prismaService.nutrient.findMany({
-        where: search ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { shortName: { contains: search, mode: 'insensitive' } },
-          ],
-        } : {},
+      nutrient = await this.prismaService.nutrientInFoodVariation.update({
+        where: {
+          id: nutrientId,
+          foodVariation: { id: variationId, food: { userId } },
+        },
+        data: {
+          valueInGrams: dto.valueInGrams,
+          valueDisplayUnit: dto.valueDisplayUnit,
+          nutrient: { connect: { id: dto.nutrientId } },
+        },
+        include: { nutrient: true },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === PRISMA_ERRORS.OPERATION_FAILED &&
+        error.message.match(PRISMA_MESSAGES.RECORD_TO_UPDATE_NOT_FOUND)
+      ) {
+        throw new NotFoundException();
+      }
+
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof VariationNutrientSchema>(
+      VariationNutrientSchema,
+      variationNutrientToDto(nutrient),
+    );
+  }
+
+  async deleteUserFoodVariationNutrient(
+    userId: UserDto['id'],
+    variationId: VariationDto['id'],
+    nutrientId: VariationNutrientDto['id'],
+  ): Promise<VariationNutrientDto> {
+    let nutrient;
+    try {
+      nutrient = await this.prismaService.nutrientInFoodVariation.delete({
+        where: {
+          id: nutrientId,
+          foodVariation: { id: variationId, food: { userId } },
+        },
+        include: { nutrient: true },
       });
     } catch {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof NutrientsSchema>(NutrientsSchema, nutrients);
+    return this.validationService.validate<typeof VariationNutrientSchema>(
+      VariationNutrientSchema,
+      variationNutrientToDto(nutrient),
+    );
+  }
+
+  async getNutrientsNotRepeated(
+    userId: UserDto['id'],
+    variationId: VariationDto['id'],
+    search?: string,
+  ): Promise<NutrientsAbridgedDto> {
+    const variation = await this.getUserFoodVariation(userId, variationId);
+    const existingNutrientIds = variation.nutrients.map(({ nutrientId }) => nutrientId);
+
+    let nutrients;
+    try {
+      nutrients = await this.prismaService.nutrient.findMany({
+        where: search
+          ? {
+              OR: [
+                { name: { contains: search, mode: 'insensitive' } },
+                { shortName: { contains: search, mode: 'insensitive' } },
+              ],
+              id: { notIn: existingNutrientIds },
+            }
+          : { id: { notIn: existingNutrientIds } },
+        orderBy: {
+          externalWeight: 'desc',
+        },
+        take: 10,
+      });
+
+      nutrients = nutrients.map(nutrientToNutrientAbridged);
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof NutrientsAbridgedSchema>(
+      NutrientsAbridgedSchema,
+      nutrients,
+    );
   }
 }

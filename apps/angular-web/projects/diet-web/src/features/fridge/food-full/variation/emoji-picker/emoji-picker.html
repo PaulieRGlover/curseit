@@ -1,0 +1,42 @@
+<div class="cid-emoji-picker__list">
+  @for (emoji of emojis(); track emoji.slug) {
+  <button
+    class="cid-emoji-picker__emoji"
+    [class.cid-emoji-picker__emoji--found]="isEmojiFound(emoji)"
+    [class.cid-emoji-picker__emoji--dimmed]="searchControl.value && !isEmojiFound(emoji)"
+    [attr.title]="emoji.name"
+    (click)="handleEmojiClick(emoji)"
+  >{{ emoji.symbol }}</button>
+  }
+</div>
+
+<div class="cid-emoji-picker__search cid-emoji-picker-search">
+  <ciui-input
+    #search
+    label="Emoji search"
+    labelInvisible
+    placeholder="Search or paste your own!"
+    name="emoji_search"
+    theme="white"
+    class="cid-emoji-picker-search__input"
+    [formControl]="searchControl"
+    (input)="handleSearchInput()"
+    (keydown.enter)="handleSearchEnterPress()"
+  />
+
+  <div class="cid-emoji-picker-search__actions">
+    <ciui-icon
+      name="cancel"
+      class="cid-emoji-picker-search__action"
+      [disabled]="!searchControl.value"
+      (click)="resetSearch()"
+    />
+
+    <ciui-icon
+      name="check-mark"
+      class="cid-emoji-picker-search__action"
+      [disabled]="!searchControl.valid"
+      (click)="handleCheckMarkClick()"
+    />
+  </div>
+</div>

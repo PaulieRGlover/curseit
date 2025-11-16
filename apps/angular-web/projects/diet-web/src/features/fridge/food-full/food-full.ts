@@ -7,8 +7,7 @@ import { MaybeUndefined } from '@curseit/types';
 import { ERROR_STATUS_CODES } from '@/core/constants/api.constants';
 import { RouterService } from '@/core/router/router.service';
 
-import { Food } from '../dto/external/food.dto';
-import { FoodsInternalValidationService } from '../validation/foods-internal-validation.service';
+import { Food } from '../types/external/food.types';
 
 import { CidBasicInformation } from './basic-information/basic-information';
 import { CidVariations } from './variations/variations';
@@ -37,6 +36,10 @@ export class CidFoodFull {
     if (foodId) {
       this.fridgeService.loadFood(foodId);
     }
+  }
+
+  ngOnDestroy() {
+    this.fridgeService.resetFood();
   }
 
   @HostBinding('class')

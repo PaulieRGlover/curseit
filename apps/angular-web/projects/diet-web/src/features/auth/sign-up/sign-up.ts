@@ -15,7 +15,6 @@ import { AuthService } from '../auth.service';
   selector: 'cid-sign-up',
   imports: [ReactiveFormsModule, RouterLink, CiuiForm, CiuiInput],
   templateUrl: './sign-up.html',
-  styleUrls: ['../auth.scss'],
 })
 export class CidSignUp {
   private navigationService = inject(NavigationService);

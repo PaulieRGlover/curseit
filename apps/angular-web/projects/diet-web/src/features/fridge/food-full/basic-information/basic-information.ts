@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ViewEncapsulation, effect, inject, untracked } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { CiuiCheckbox, CiuiInput, CiuiTextarea } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
-import { Food } from '../../dto/external/food.dto';
+import { Food } from '../../types/external/food.types';
 import { FridgeService } from '../../fridge.service';
 import { FoodStore } from '../../store/food.store';
 import { FoodsInternalValidationService } from '../../validation/foods-internal-validation.service';
@@ -32,12 +32,18 @@ export class CidBasicInformation {
     perishable: new FormControl(true),
   });
 
-  ngAfterViewInit() {
-    this._foodSubscription = this.foodStore.food$.subscribe(this.handleFoodUpdate.bind(this));
+  constructor() {
+    effect(() => {
+      const food = this.foodStore.food();
+
+      untracked(() => {
+        this.handleFoodUpdate(food);
+      });
+    });
   }
 
-  ngOnDestroy() {
-    this._foodSubscription?.unsubscribe();
+  ngAfterViewInit() {
+    this.handleFoodUpdate(this.foodStore.food());
   }
 
   handleFoodUpdate(food: Nullable<Food>) {
@@ -59,9 +65,5 @@ export class CidBasicInformation {
     }
 
     this.fridgeService.updateFood(foodUpdate);
-
-    // TODO: implement error snacks
   }
-
-  private _foodSubscription: Nullable<Subscription> = null;
 }

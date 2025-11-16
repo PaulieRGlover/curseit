@@ -1,5 +1,19 @@
-<ng-content />
+@let icon_ = icon();
+@let loading_ = loading();
+@if (icon_ && !loading_) {
+  <ciui-icon
+    [name]="icon_"
+    [size]="size()"
+    [disabled]="disabled()"
+  />
+} @else if (!icon_) {
+  <ng-content />
+}
 
-@if (loading()) {
-<ciui-loader class="ciui-button__loader" [size]="size()" />
+@if (loading_) {
+  <ciui-loader
+    class="ciui-button__loader"
+    [theme]="icon_ ? invertedTheme() : theme()"
+    [size]="icon_ ? downscaledSize() : size()"
+  />
 }

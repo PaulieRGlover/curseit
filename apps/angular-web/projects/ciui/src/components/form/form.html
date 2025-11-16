@@ -6,8 +6,8 @@
   <button
     ciui-button
     type="submit"
-    [disabled]="!control.valid || loading"
-    [loading]="loading"
+    [disabled]="!control().valid || loading()"
+    [loading]="loading()"
     [error]="formErrorService.hasErrors()"
   >
     @if (formErrorService.hasErrors()) {

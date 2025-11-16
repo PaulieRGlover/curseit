@@ -3,7 +3,6 @@
 
 @layer ciui;
 
-
 @layer ciui {
   *,
   *::before,
@@ -39,6 +38,9 @@
 
   button {
     cursor: pointer;
+    outline: none;
+    border: none;
+    background-color: transparent;
   }
 
   a {
@@ -47,6 +49,16 @@
     &:hover {
       color: var(--text-blue-accented);
     }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    font-weight: 300;
   }
 
   hr {
@@ -79,6 +91,11 @@
 
   li {
     list-style-type: none;
+  }
+
+  dialog,
+  [popover] {
+    color: var(--text-gray-blue);
   }
 
   .ciui-a11y-hidden {

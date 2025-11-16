@@ -1,9 +1,9 @@
-import { Component, HostBinding, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import { Component, HostBinding, ViewEncapsulation, effect, inject, untracked, viewChild } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { CiuiDialog } from '@curseit/ciui';
+import { CiuiDialog, DialogService } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
 import { NavigationService } from '@/core/router/navigation.service';
@@ -12,9 +12,9 @@ import { ROUTES } from '@/core/router/routes';
 
 import { CidFoodCreateNew } from '../food-create-new/food-create-new';
 import { CidFood } from '../food/food';
+import { FridgeService } from '../fridge.service';
 import { FoodStore } from '../store/food.store';
 import { FoodsStore } from '../store/foods.store';
-import { FridgeService } from '../fridge.service';
 
 @Component({
   selector: 'cid-foods',
@@ -29,14 +29,23 @@ export class CidFoods {
   foodStore = inject(FoodStore);
   routerService = inject(RouterService);
   navigationService = inject(NavigationService);
-  dialog = viewChild.required(CiuiDialog);
+  dialogService = inject(DialogService);
+  dialogRef = viewChild.required(CiuiDialog);
 
   constructor() {
     this.fridgeService.loadFoods();
+
+    effect(() => {
+      const leaf = this.routerService.leaf();
+
+      untracked(() => {
+        this.handleDialog(leaf);
+      });
+    });
   }
 
   ngAfterViewInit() {
-    this._leafSubscription = this.routerService.leaf$.subscribe(this.handleDialog.bind(this));
+    this.handleDialog(this.routerService.leaf());
   }
 
   ngOnDestroy() {
@@ -51,6 +60,12 @@ export class CidFoods {
     this.navigationService.goTo(ROUTES.FRIDGE.FOODS.ROOT);
   }
 
+  handleDialogToggled(state: boolean) {
+    if (!state) {
+      this.goToFoods();
+    }
+  }
+
   async handleNewFoodClick() {
     await this.fridgeService.createFood();
     const foodId = this.foodStore.food()?.id;
@@ -62,10 +77,10 @@ export class CidFoods {
   }
 
   handleDialog(leaf: Nullable<LeafRouteSnapshot>) {
-    if (leaf?.params?.['foodId'] && !this.dialog().isOpened()) {
-      this.dialog().toggle(true);
-    } else {
-      this.dialog().toggle(false);
+    if (leaf?.params?.['foodId'] && !this.dialogRef().isOpened()) {
+      this.dialogService.toggleDialog(this.dialogRef(), true);
+    } else if (!leaf?.params?.['foodId'] && this.dialogRef().isOpened()) {
+      this.dialogService.toggleDialog(this.dialogRef(), false);
     }
   }
 
