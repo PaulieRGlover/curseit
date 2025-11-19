@@ -1,0 +1,9 @@
+.cid-food-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 4rem;
+  width: 100%;
+}

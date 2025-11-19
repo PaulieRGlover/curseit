@@ -1,0 +1,9 @@
+@for (food of foodsStore.foods(); track food.id) {
+  <a cid-food-list-item [food]="food" [routerLink]="getFoodNavigation(food.id)"></a>
+}
+
+<cid-food-create-new (click)="handleNewFoodClick()" />
+
+<ciui-dialog (toggled)="handleDialogToggled($event)">
+  <router-outlet></router-outlet>
+</ciui-dialog>

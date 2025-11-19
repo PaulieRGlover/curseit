@@ -16,7 +16,10 @@ export const ROUTES = {
     ROOT: r`fridge`,
     FOODS: {
       ROOT: r`foods`,
-      FOOD: r`:foodId`,
+      FOOD: {
+        ROOT: r`:foodId`,
+        PORTIONS: r`portions`,
+      },
     },
   },
 } as const;

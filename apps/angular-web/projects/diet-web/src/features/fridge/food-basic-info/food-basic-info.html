@@ -1,0 +1,33 @@
+<ciui-input
+  label="Food name"
+  name="name"
+  labelInvisible
+  theme="white-semi-transparent"
+  placeholder="Food name"
+  [formControl]="foodInput.controls.name"
+  (change)="handleFoodInputChange()"
+/>
+
+<ciui-textarea
+  class="cid-food-basic-info__description"
+  label="Description"
+  name="description"
+  textarea
+  labelInvisible
+  transparent
+  placeholder="Description"
+  theme="white-semi-transparent"
+  [formControl]="foodInput.controls.description"
+  (change)="handleFoodInputChange()"
+/>
+
+<ciui-checkbox
+  class="cid-food-basic-info__perishable"
+  label="Perishable"
+  name="perishable"
+  transparent
+  row
+  theme="white-semi-transparent"
+  [formControl]="foodInput.controls.perishable"
+  (change)="handleFoodInputChange()"
+/>

@@ -1,0 +1,15 @@
+.cid-food-basic-info {
+  display: flex;
+  flex: 1 0;
+  flex-direction: column;
+  gap: 2rem;
+  width: 220px;
+
+  &__description {
+    flex: 1 1;
+  }
+
+  &__perishable {
+    justify-content: flex-end;
+  }
+}
