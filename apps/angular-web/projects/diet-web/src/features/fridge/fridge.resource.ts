@@ -24,6 +24,7 @@ import {
   VariationNutrient,
   VariationUpdate,
   VariationWithNutrients,
+  Variations,
 } from './types/external/food.types';
 import { FoodCreate, FoodUpdate } from './types/internal/food.types';
 import { VariationNutrientCreate, VariationNutrientUpdate } from './types/internal/nutrient.types';
@@ -62,6 +63,15 @@ export class FridgeResource extends DietResource {
     payload: FoodUpdate,
     options: { params: { foodId: string } },
   ): Promise<ApiResult<Food, Failure>> {
+    return undefined!;
+  }
+
+  @Get('foods', ':foodId', 'variations')
+  @UseValidation('variations')
+  async getVariations(
+    payload: undefined,
+    options: { params: { foodId: string } },
+  ): Promise<ApiResult<Variations, Failure>> {
     return undefined!;
   }
 

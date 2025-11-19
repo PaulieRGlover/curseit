@@ -55,6 +55,14 @@ export class FridgeController {
     return this.fridgeService.updateUserFood(userId, foodId, dto);
   }
 
+  @Get('foods/:foodId/variations')
+  getVariations(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('foodId') foodId: FoodDto['id'],
+  ) {
+    return this.fridgeService.getUserFoodVariations(userId, foodId);
+  }
+
   @Post('foods/:foodId/variations')
   createVariation(
     @GetUser('id') userId: UserDto['id'],

@@ -33,6 +33,8 @@ import {
   VariationUpdateDto,
   VariationWithNutrientsDto,
   VariationWithNutrientsSchema,
+  VariationsDto,
+  VariationsSchema,
 } from './dto/fridge.dto';
 import { FRIDGE_MESSAGES } from './messages/fridge.messages';
 import { foodToFoodWithPortions } from './transformers/food-to-food-with-portions.transformer';
@@ -139,6 +141,22 @@ export class FridgeService {
     }
 
     return this.validationService.validate<typeof FoodSchema>(FoodSchema, food);
+  }
+
+  async getUserFoodVariations(
+    userId: UserDto['id'],
+    foodId: FoodDto['id'],
+  ): Promise<VariationsDto> {
+    let variations;
+    try {
+      variations = await this.prismaService.foodVariation.findMany({
+        where: { food: { id: foodId, userId } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof VariationsSchema>(VariationsSchema, variations);
   }
 
   async createUserFoodVariation(

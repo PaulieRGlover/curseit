@@ -62,6 +62,9 @@ export const variation = z.object({
 });
 export type Variation = z.infer<typeof variation>;
 
+export const variations = z.array(variation);
+export type Variations = z.infer<typeof variations>;
+
 export const variationCreate = z.pick(variation, { name: true });
 export type VariationCreate = z.infer<typeof variationCreate>;
 

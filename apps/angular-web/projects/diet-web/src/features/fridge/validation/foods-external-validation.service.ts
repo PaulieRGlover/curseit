@@ -19,6 +19,11 @@ export class FoodsExternalValidationService {
     return zodValidate(schema, input);
   }
 
+  public async variations(input: unknown) {
+    const schema = (await import('../types/external/food.types')).variations;
+    return zodValidate(schema, input);
+  }
+
   public async variation(input: unknown) {
     const schema = (await import('../types/external/food.types')).variation;
     return zodValidate(schema, input);

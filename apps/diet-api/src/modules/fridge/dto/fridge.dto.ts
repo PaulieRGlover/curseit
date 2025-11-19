@@ -59,6 +59,9 @@ export const VariationSchema = z.object({
 });
 export class VariationDto extends createZodDto(VariationSchema) {}
 
+export const VariationsSchema = z.array(VariationSchema);
+export class VariationsDto extends createZodDto(VariationsSchema) {}
+
 export const VariationCreateSchema = VariationSchema.pick({ name: true });
 export class VariationCreateDto extends createZodDto(VariationCreateSchema) {}
 

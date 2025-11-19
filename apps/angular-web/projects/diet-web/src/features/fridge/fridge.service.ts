@@ -57,6 +57,7 @@ export class FridgeService {
 
   async loadFood(foodId: Food['id']) {
     this.foodStore.loading.set(true);
+    this.variationsStore.loading.set(true);
 
     const result = await this.fridgeResource.getFood(undefined, { params: { foodId } });
     if (result.success) {
@@ -68,6 +69,20 @@ export class FridgeService {
     }
 
     this.foodStore.loading.set(false);
+    this.variationsStore.loading.set(false);
+  }
+
+  async loadVariations(foodId: Food['id']) {
+    this.variationsStore.loading.set(true);
+
+    const result = await this.fridgeResource.getVariations(undefined, { params: { foodId } });
+    if (result.success) {
+      this.variationsStore.variations.set(result.success);
+    } else {
+      this.variationsStore.failure.set(result.failure);
+    }
+
+    this.variationsStore.loading.set(false);
   }
 
   async resetFood() {
