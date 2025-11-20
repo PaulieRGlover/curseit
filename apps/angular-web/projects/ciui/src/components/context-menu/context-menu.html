@@ -1,15 +1,15 @@
 <ng-content select="ciui-context-menu-title">
   @if (menuTitle()) {
-  <h3 class="ciui-context-menu__title">{{ menuTitle() }}</h3>
+    <h3 class="ciui-context-menu__title">{{ menuTitle() }}</h3>
 
-  <hr />
+    <hr />
   }
 </ng-content>
 
 @if (closable()) {
-<div class="ciui-context-menu__close" (click)="toggle(false)">
-  <ciui-icon name="close" />
-</div>
+  <div class="ciui-context-menu__close" (click)="toggle(false)">
+    <ciui-icon name="close" />
+  </div>
 }
 
 <ng-content />
