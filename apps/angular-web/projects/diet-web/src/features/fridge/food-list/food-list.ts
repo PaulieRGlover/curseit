@@ -36,16 +36,16 @@ export class CidFoodList {
     this.fridgeService.loadFoods();
 
     effect(() => {
-      const leaf = this.routerService.leaf();
+      const leafId_ = this.routerService.leafId();
 
       untracked(() => {
-        this.handleDialog(leaf);
+        this.handleDialog(leafId_);
       });
     });
   }
 
   ngAfterViewInit() {
-    this.handleDialog(this.routerService.leaf());
+    this.handleDialog(this.routerService.leafId());
   }
 
   ngOnDestroy() {
@@ -76,10 +76,17 @@ export class CidFoodList {
     this.navigationService.goTo(ROUTES.FRIDGE.FOODS.FOOD.ROOT, foodId);
   }
 
-  handleDialog(leaf: Nullable<LeafRouteSnapshot>) {
-    if (leaf?.params?.['foodId'] && !this.dialogRef().isOpened()) {
+  handleDialog(leafId: Nullable<symbol>) {
+    if (
+      leafId &&
+      Object.values(ROUTES.FRIDGE.FOODS.FOOD).map(({ id }) => id).includes(leafId) &&
+      !this.dialogRef().isOpened()
+    ) {
       this.dialogService.toggleDialog(this.dialogRef(), true);
-    } else if (!leaf?.params?.['foodId'] && this.dialogRef().isOpened()) {
+    } else if (
+      leafId === ROUTES.FRIDGE.FOODS.ROOT.id &&
+      this.dialogRef().isOpened()
+    ) {
       this.dialogService.toggleDialog(this.dialogRef(), false);
     }
   }
