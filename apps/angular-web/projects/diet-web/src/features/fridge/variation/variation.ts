@@ -22,7 +22,7 @@ import { Nullable } from '@curseit/types';
 import { ENERGY, ENERGY_ARRAY, UNITS, convertToKj } from '@curseit/units';
 
 import { FridgeService } from '../fridge.service';
-import { CidPortion } from '../portion/portion';
+import { CidPortionBadge } from '../portion-badge/portion-badge';
 import { VariationNutrientsStore } from '../store/variation-nutrients.store';
 import { VariationStore } from '../store/variation.store';
 import { CidVariationNutrients } from '../variation-nutrients/variation-nutrients';
@@ -44,7 +44,7 @@ import { VariationValidationService } from './validation/variation-validation.se
     CiuiContextMenu,
     CiuiContextMenuTrigger,
     CidVariationNutrients,
-    CidPortion,
+    CidPortionBadge,
     CidEmojiPicker,
   ],
   templateUrl: './variation.html',

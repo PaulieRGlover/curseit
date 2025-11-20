@@ -7,12 +7,12 @@ export type Freshness = 'fresh' | 'still-good' | 'almost-spoiled' | 'spoiled' | 
 const DEFAULT_COUNTER = '🥫';
 
 @Component({
-  selector: 'cid-portion',
-  templateUrl: './portion.html',
-  styleUrl: './portion.scss',
+  selector: 'cid-portion-badge',
+  templateUrl: './portion-badge.html',
+  styleUrl: './portion-badge.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class CidPortion {
+export class CidPortionBadge {
   freshness = input<Freshness>('fresh');
   remaining = input<number, number>(100, {
     transform: (value: number) => Math.max(0, Math.min(100, value)),
@@ -29,9 +29,9 @@ export class CidPortion {
   @HostBinding('class')
   get hostClasses() {
     return [
-      'cid-portion',
-      `cid-portion--freshness-${this.freshness()}`,
-      `cid-portion--size-${this.size()}`,
+      'cid-portion-badge',
+      `cid-portion-badge--freshness-${this.freshness()}`,
+      `cid-portion-badge--size-${this.size()}`,
     ];
   }
 }
