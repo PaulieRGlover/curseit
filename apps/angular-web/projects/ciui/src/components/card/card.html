@@ -1,3 +1,9 @@
+@if (tabsTemplate(); as template) {
+  <div class="ciui-card__tabs">
+    <ng-container *ngTemplateOutlet="template" />
+  </div>
+}
+
 <div class="ciui-card__content">
   <ng-content />
 </div>

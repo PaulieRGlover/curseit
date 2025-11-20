@@ -1,6 +1,8 @@
 @layer ciui {
   .ciui-card {
     display: flex;
+    flex-direction: column;
+    gap: 2rem;
     box-shadow: var(--ambient-shadow-small);
     border: var(--border-gray);
 
@@ -10,6 +12,29 @@
       justify-content: flex-start;
       align-items: stretch;
       width: 100%;
+    }
+
+    &__tabs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    &__tab {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 1rem;
+      background-color: var(--background-white-semitransparent);
+      padding: 0 4rem;
+      min-width: 150px;
+      height: 9rem;
+
+      &.ciui-card__tab--active {
+        background-color: var(--background-white);
+      }
     }
 
     &.ciui-card--no-shadow {

@@ -1,9 +1,18 @@
-import { booleanAttribute, Component, HostBinding, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import {
+  Component,
+  HostBinding,
+  TemplateRef,
+  booleanAttribute,
+  contentChild,
+  input,
+} from '@angular/core';
 
 import { Size, Theme } from '../../shared/constants';
 
 @Component({
   selector: 'ciui-card, [ciui-card]',
+  imports: [NgTemplateOutlet],
   templateUrl: './card.html',
 })
 export class CiuiCard {
@@ -11,6 +20,8 @@ export class CiuiCard {
   size = input<Size>('medium');
   noShadow = input<boolean, any>(false, { transform: booleanAttribute });
   symmetric = input<boolean, any>(false, { transform: booleanAttribute });
+
+  readonly tabsTemplate = contentChild('tabs', { read: TemplateRef });
 
   @HostBinding('class')
   get hostClasses() {
