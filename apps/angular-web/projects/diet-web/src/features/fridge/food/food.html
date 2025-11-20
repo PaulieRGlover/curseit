@@ -1,0 +1,16 @@
+<div class="ciui-card__tabs">
+  <a
+    class="ciui-card__tab"
+    [class.ciui-card__tab--active]="isInfoActive()"
+    [routerLink]="getInfoNavigation()"
+  >Info & Variations</a>
+  <a
+    class="ciui-card__tab"
+    [class.ciui-card__tab--active]="isPortionsActive()"
+    [routerLink]="getPortionsNavigation()"
+  >Portions</a>
+</div>
+
+<div class="ciui-card__content">
+  <router-outlet />
+</div>

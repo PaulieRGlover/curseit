@@ -1,13 +1,11 @@
-<div class="ciui-card__content">
-  @if (foodStore.loading()) {
-    <ciui-loader class="cid-food-info__loader" theme="white" size="big" />
-  } @else if (foodStore.notFound()) {
-    Food not found
-  } @else if (foodStore.failure()) {
-    Something went wrong
-  } @else {
-    <cid-food-basic-info />
+@if (foodStore.loading()) {
+  <ciui-loader class="cid-food-info__loader" theme="white" size="big" />
+} @else if (foodStore.notFound()) {
+  Food not found
+} @else if (foodStore.failure()) {
+  Something went wrong
+} @else {
+  <cid-food-basic-info />
 
-    <cid-variations />
-  }
-</div>
+  <cid-variations />
+}

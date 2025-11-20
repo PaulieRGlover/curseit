@@ -1,0 +1,14 @@
+.cid-food {
+  border-radius: 2rem 2rem 2rem 4rem;
+  background: var(--background-gradient-main);
+  padding: 2rem;
+
+  .ciui-card__content {
+    flex-direction: row;
+    background-color: var(--background-white-semitransparent);
+    padding: 2rem;
+    min-width: 600px;
+    min-height: 260px;
+    border-radius: 1rem 1rem 1rem 3rem;
+  }
+}

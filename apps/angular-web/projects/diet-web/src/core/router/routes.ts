@@ -18,6 +18,7 @@ export const ROUTES = {
       ROOT: r`foods`,
       FOOD: {
         ROOT: r`:foodId`,
+        INFO: r``,
         PORTIONS: r`portions`,
       },
     },

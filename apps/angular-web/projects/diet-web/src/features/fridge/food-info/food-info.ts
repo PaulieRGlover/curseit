@@ -1,11 +1,11 @@
 import { Component, HostBinding, ViewEncapsulation, computed, inject } from '@angular/core';
 
-import { cardClasses, CiuiLoader } from '@curseit/ciui';
+import { CiuiLoader } from '@curseit/ciui';
 
 import { CidFoodBasicInfo } from '../food-basic-info/food-basic-info';
 import { FoodStore } from '../store/food.store';
 import { CidVariations } from '../variations/variations';
-import { MaybeUndefined } from '@curseit/types';
+import { Nullable } from '@curseit/types';
 import { RouterService } from '@/core/router/router.service';
 import { FridgeService } from '../fridge.service';
 
@@ -21,7 +21,7 @@ export class CidFoodInfo {
   fridgeService = inject(FridgeService);
   foodStore = inject(FoodStore);
 
-  foodId = computed<MaybeUndefined<string>>(() => this.routerService.leaf()?.params?.['foodId']);
+  foodId = computed<Nullable<string>>(() => this.routerService.leaf()?.params?.['foodId'] ?? null);
 
   ngOnInit() {
     const foodId = this.foodId();
@@ -35,5 +35,5 @@ export class CidFoodInfo {
   }
 
   @HostBinding('class')
-  hostClasses = ['cid-food-info', ...cardClasses()];
+  hostClass = 'cid-food-info';
 }

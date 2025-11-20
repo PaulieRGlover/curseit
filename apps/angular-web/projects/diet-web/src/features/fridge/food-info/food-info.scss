@@ -1,16 +1,7 @@
 .cid-food-info {
-  border-radius: 2rem 2rem 4rem 2rem;
-  background: var(--background-gradient-main);
-  padding: 2rem;
-
-  .ciui-card__content {
-    flex-direction: row;
-    background-color: var(--background-white-semitransparent);
-    padding: 2rem;
-    min-width: 520px;
-    min-height: 260px;
-    border-radius: 1rem 1rem 3rem 1rem;
-  }
+  display: flex;
+  gap: 2rem;
+  width: 100%;
 
   &__loader {
     margin-left: auto;
