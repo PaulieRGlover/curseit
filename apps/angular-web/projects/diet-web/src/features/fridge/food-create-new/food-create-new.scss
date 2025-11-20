@@ -6,13 +6,14 @@
   cursor: pointer;
 
   &__add-icon {
-    width: 45px;
-    height: 45px;
+    width: 12rem;
+    height: 12rem;
     color: var(--text-blue-accented);
   }
 
   .ciui-card__content {
     justify-content: center;
     align-items: center;
+    height: 100%;
   }
 }
