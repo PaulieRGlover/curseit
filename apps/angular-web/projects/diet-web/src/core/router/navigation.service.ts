@@ -69,6 +69,7 @@ export class NavigationService {
    * Symbol(dashboard): (2) ['/', 'dashboard']
    * Symbol(foods): (3) ['/', 'fridge', 'foods']
    * Symbol(:foodId): (param) => ['/', 'fridge', 'foods', param]
+   * Symbol(:nutrientId): (param1, param2) => ['/', 'fridge', 'foods', param1, 'nutrients', param2]
    * ```
    * where key is a unique symbol by which the route can be matched, and value is a
    * navigation sequence or a function that yields a navigation sequence with params.
@@ -86,23 +87,24 @@ export class NavigationService {
             return [
               ...root(...params.slice(0, params.length - 1)),
               params.at(-1) as string,
-            ].filter(piece => piece);
+            ];
           };
         } else {
-          return (...params: Array<string>) =>
-            [...root(...params), appendix].filter(piece => piece);
+          /**
+           * We are checking the appendix here and below to remove trailing empty string navigation.
+           * This is in case it is produced by a leaf with `path: ''` which can't have children and 
+           * can't be "navigated" to by angular router means (the navigation can't match a route). 
+           * Instead, the navigation to its parent is the only possible navigation in this case.
+           */
+          return appendix
+            ? (...params: Array<string>) => [...root(...params), appendix]
+            : root;
         }
       } else {
         if (PARAM_REGEX.test(appendix)) {
-          return (param: string) => [...root, param].filter(piece => piece);
+          return (param: string) => [...root, param];
         } else {
-          /**
-           * `.filter(piece => piece)` is required to remove trailing empty string navigation.
-           * This is in case it is a leaf with `path: ''` which can't have children and can't be
-           * "navigated" to by angular router means (the navigation can't match a route). Instead,
-           * the navigation to its parent is the only possible navigation in this case.
-           */
-          return [...root, appendix].filter(piece => piece);
+          return appendix ? [...root, appendix] : root;
         }
       }
     };
