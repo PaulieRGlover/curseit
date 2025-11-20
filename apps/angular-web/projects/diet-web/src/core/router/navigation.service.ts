@@ -62,32 +62,57 @@ export class NavigationService {
     }
   }
 
+  /**
+   * Creates a navigation tree like:
+   * ```
+   * Symbol(auth): (2) ['/', 'auth']
+   * Symbol(dashboard): (2) ['/', 'dashboard']
+   * Symbol(foods): (3) ['/', 'fridge', 'foods']
+   * Symbol(:foodId): (param) => ['/', 'fridge', 'foods', param]
+   * ```
+   * where key is a unique symbol by which the route can be matched, and value is a
+   * navigation sequence or a function that yields a navigation sequence with params.
+   * The navigation sequence is used to navigate to routes via angular router in a more
+   * declarative manner.
+   */
   private constructNavigationTree() {
-    const constructNavigation = (root: NavigationPiece, appendix: string): NavigationPiece => {
+    const constructNavigationPiece = (
+      root: NavigationPiece,
+      appendix: string,
+    ): NavigationPiece => {
       if (typeof root === 'function') {
         if (PARAM_REGEX.test(appendix)) {
-          return (...params: Array<string>) => [
-            ...root(...params.slice(0, params.length - 1)),
-            params.at(-1) as string,
-          ];
+          return (...params: Array<string>) => {
+            return [
+              ...root(...params.slice(0, params.length - 1)),
+              params.at(-1) as string,
+            ].filter(piece => piece);
+          };
         } else {
-          return (...params: Array<string>) => [...root(...params), appendix];
+          return (...params: Array<string>) =>
+            [...root(...params), appendix].filter(piece => piece);
         }
       } else {
         if (PARAM_REGEX.test(appendix)) {
-          return (param: string) => [...root, param];
+          return (param: string) => [...root, param].filter(piece => piece);
         } else {
-          return [...root, appendix];
+          /**
+           * `.filter(piece => piece)` is required to remove trailing empty string navigation.
+           * This is in case it is a leaf with `path: ''` which can't have children and can't be
+           * "navigated" to by angular router means (the navigation can't match a route). Instead,
+           * the navigation to its parent is the only possible navigation in this case.
+           */
+          return [...root, appendix].filter(piece => piece);
         }
       }
     };
 
     const processLeaf = (leaf: RouteId, root: NavigationPiece) => {
-      this._navigationTree[leaf.id] = constructNavigation(root, leaf.declare());
+      this._navigationTree[leaf.id] = constructNavigationPiece(root, leaf.declare());
     };
 
     const processParent = (parent: Routes, root: NavigationPiece) => {
-      const newRoot = constructNavigation(root, parent.ROOT.declare());
+      const newRoot = constructNavigationPiece(root, parent.ROOT.declare());
       this._navigationTree[parent.ROOT.id] = newRoot;
       return newRoot;
     };
