@@ -11,9 +11,15 @@ export type LeafRouteSnapshot = ActivatedRouteSnapshot & { firstChild: null };
 export class RouterService {
   private router = inject(Router);
 
-  public readonly leaf = computed(() => this._leaf());
-  public readonly base = computed(() => this._base());
-  public readonly tree = computed(() => this._tree());
+  leaf = computed(() => this._leaf());
+  base = computed(() => this._base());
+  tree = computed(() => this._tree());
+
+  leafId = computed<Nullable<symbol>>(() => this._leaf()?.data?.['id'] ?? null);
+
+  findInTreeById(id: symbol) {
+    return this.tree()?.find(route => route.data?.['id'] === id) ?? null;
+  }
 
   constructor() {
     this.handleRouterEvents();
