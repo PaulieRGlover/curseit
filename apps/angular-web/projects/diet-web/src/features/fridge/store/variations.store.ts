@@ -2,8 +2,9 @@ import { Injectable, signal } from '@angular/core';
 
 import { Nullable } from '@curseit/types';
 
-import { Variation, VariationAbridged, VariationsAbridged } from '../types/external/food.types';
 import { Failure } from '@/core/types/external/failure.types';
+
+import { Variation, VariationAbridged, VariationsAbridged } from '../types/external/food.types';
 
 @Injectable({ providedIn: 'root' })
 export class VariationsStore {
@@ -19,17 +20,13 @@ export class VariationsStore {
     this.variations.update(variations => {
       return (
         variations?.map(variation => {
-          return variation.id === id
-            ? { id, name: update.name ?? variation.name }
-            : variation;
+          return variation.id === id ? { id, name: update.name ?? variation.name } : variation;
         }) ?? null
       );
     });
   }
-  
-    delete(id: Variation['id']) {
-      this.variations.set(
-        this.variations()?.filter(variation => variation.id !== id) ?? null,
-      );
-    }
+
+  delete(id: Variation['id']) {
+    this.variations.set(this.variations()?.filter(variation => variation.id !== id) ?? null);
+  }
 }
