@@ -23,6 +23,8 @@ import {
   FoodsWithPortionsSchema,
   NutrientsAbridgedDto,
   NutrientsAbridgedSchema,
+  PortionsDto,
+  PortionsSchema,
   VariationCreateDto,
   VariationDto,
   VariationNutrientCreateDto,
@@ -39,6 +41,7 @@ import {
 import { FRIDGE_MESSAGES } from './messages/fridge.messages';
 import { foodToFoodWithPortions } from './transformers/food-to-food-with-portions.transformer';
 import { nutrientToNutrientAbridged } from './transformers/nutrient-to-nutrient-abridged.transformer';
+import { portionToPortionDto } from './transformers/portion-to-portion-dto.transformer';
 import { variationNutrientToDto } from './transformers/variation-nutrient-to-dto.transformer';
 
 @Injectable()
@@ -177,6 +180,23 @@ export class FridgeService {
     }
 
     return this.validationService.validate<typeof VariationSchema>(VariationSchema, variation);
+  }
+
+  async getUserFoodPortions(userId: UserDto['id'], foodId: FoodDto['id']): Promise<PortionsDto> {
+    let portions;
+    try {
+      portions = await this.prismaService.foodPortion.findMany({
+        where: { foodVariation: { food: { id: foodId, userId } } },
+        include: { foodVariation: { select: { id: true, counter: true } } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof PortionsSchema>(
+      PortionsSchema,
+      portions.map(portionToPortionDto),
+    );
   }
 
   async getUserFoodVariation(

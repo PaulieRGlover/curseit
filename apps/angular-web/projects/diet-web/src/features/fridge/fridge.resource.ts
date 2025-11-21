@@ -19,6 +19,7 @@ import {
   FoodWithVariations,
   FoodsWithPortions,
   NutrientsAbridged,
+  Portions,
   Variation,
   VariationCreate,
   VariationNutrient,
@@ -81,6 +82,15 @@ export class FridgeResource extends DietResource {
     payload: VariationCreate,
     options: { params: { foodId: string } },
   ): Promise<ApiResult<Variation, Failure>> {
+    return undefined!;
+  }
+
+  @Get('foods', ':foodId', 'portions')
+  @UseValidation('portions')
+  async getPortions(
+    payload: undefined,
+    options: { params: { foodId: string } },
+  ): Promise<ApiResult<Portions, Failure>> {
     return undefined!;
   }
 

@@ -77,6 +77,20 @@ export type VariationAbridged = z.infer<typeof variationAbridged>;
 export const variationsAbridged = z.array(variationAbridged);
 export type VariationsAbridged = z.infer<typeof variationsAbridged>;
 
+export const portion = z.object({
+  id: z.string(),
+  counter: z.emoji(),
+  timeAdded: z.iso.datetime(),
+  timeExpiring: z.iso.datetime(),
+  sizeInGrams: z.number(),
+  sizeDisplayUnit: foodUnit,
+  variationId: z.string(),
+});
+export type Portion = z.infer<typeof portion>;
+
+export const portions = z.array(portion);
+export type Portions = z.infer<typeof portions>;
+
 export const variationWithNutrients = z.extend(variation, {
   nutrients: variationNutrients,
 });

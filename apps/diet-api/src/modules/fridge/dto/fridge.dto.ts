@@ -35,16 +35,6 @@ export class NutrientsDto extends createZodDto(NutrientsSchema) {}
 export const NutrientsAbridgedSchema = z.array(NutrientAbridgedSchema);
 export class NutrientsAbridgedDto extends createZodDto(NutrientsAbridgedSchema) {}
 
-export const PortionSchema = z.object({
-  id: z.string(),
-  variationId: z.string(),
-  counter: z.string(),
-  timeAdded: z.date(),
-  timeExpiring: z.date(),
-  sizeInGrams: z.number(),
-  sizeDisplayUnit: z.string(),
-});
-
 export const VariationSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -67,6 +57,20 @@ export class VariationCreateDto extends createZodDto(VariationCreateSchema) {}
 
 export const VariationUpdateSchema = VariationSchema.omit({ id: true }).partial();
 export class VariationUpdateDto extends createZodDto(VariationUpdateSchema) {}
+
+export const PortionSchema = z.object({
+  id: z.string(),
+  variationId: z.string(),
+  counter: z.string(),
+  timeAdded: z.date(),
+  timeExpiring: z.date(),
+  sizeInGrams: z.number(),
+  sizeDisplayUnit: z.string(),
+});
+export class PortionDto extends createZodDto(PortionSchema) {}
+
+export const PortionsSchema = z.array(PortionSchema);
+export class PortionsDto extends createZodDto(PortionsSchema) {}
 
 export const VariationNutrientSchema = z.object({
   id: z.string(),

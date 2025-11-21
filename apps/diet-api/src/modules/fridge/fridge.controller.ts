@@ -72,6 +72,11 @@ export class FridgeController {
     return this.fridgeService.createUserFoodVariation(userId, foodId, dto);
   }
 
+  @Get('foods/:foodId/portions')
+  getPortions(@GetUser('id') userId: UserDto['id'], @Param('foodId') foodId: FoodDto['id']) {
+    return this.fridgeService.getUserFoodPortions(userId, foodId);
+  }
+
   @Get('variations/:variationId')
   getVariation(
     @GetUser('id') userId: UserDto['id'],

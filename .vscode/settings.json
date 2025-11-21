@@ -50,5 +50,6 @@
     "typeguards",
     "UUIDV",
     "viewBox"
-  ]
+  ],
+  "prisma.pinToPrisma6": true
 }

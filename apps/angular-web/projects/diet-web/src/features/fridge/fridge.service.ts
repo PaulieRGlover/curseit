@@ -4,6 +4,7 @@ import { FridgeResource } from './fridge.resource';
 import { FoodStore } from './store/food.store';
 import { FoodsStore } from './store/foods.store';
 import { NutrientsSearchStore } from './store/nutrients-search.store';
+import { PortionsStore } from './store/portions.store';
 import { VariationNutrientsStore } from './store/variation-nutrients.store';
 import { VariationStore } from './store/variation.store';
 import { VariationsStore } from './store/variations.store';
@@ -24,6 +25,7 @@ export class FridgeService {
   private foodsStore = inject(FoodsStore);
   private foodStore = inject(FoodStore);
   private variationsStore = inject(VariationsStore);
+  private portionsStore = inject(PortionsStore);
   private variationStore = inject(VariationStore);
   private variationNutrientsStore = inject(VariationNutrientsStore);
   private nutrientsSearchStore = inject(NutrientsSearchStore);
@@ -83,6 +85,19 @@ export class FridgeService {
     }
 
     this.variationsStore.loading.set(false);
+  }
+
+  async loadPortions(foodId: Food['id']) {
+    this.portionsStore.loading.set(true);
+
+    const result = await this.fridgeResource.getPortions(undefined, { params: { foodId } });
+    if (result.success) {
+      this.portionsStore.portions.set(result.success);
+    } else {
+      this.portionsStore.failure.set(result.failure);
+    }
+
+    this.portionsStore.loading.set(false);
   }
 
   async resetFood() {
