@@ -103,6 +103,7 @@ export class FridgeService {
   async resetFood() {
     this.foodStore.food.set(null);
     this.variationsStore.variations.set(null);
+    this.portionsStore.portions.set(null);
     this.variationNutrientsStore.variationNutrients.set(null);
   }
 
