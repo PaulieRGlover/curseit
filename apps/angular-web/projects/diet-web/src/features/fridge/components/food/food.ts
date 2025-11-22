@@ -2,11 +2,13 @@ import { Component, HostBinding, ViewEncapsulation, computed, inject } from '@an
 import { RouterLinkWithHref, RouterOutlet } from '@angular/router';
 
 import { cardClasses } from '@curseit/ciui';
+import { Nullable } from '@curseit/types';
 
 import { NavigationService } from '@/core/router/navigation.service';
 import { RouterService } from '@/core/router/router.service';
-import { RouteId, ROUTES } from '@/core/router/routes';
-import { Nullable } from '@curseit/types';
+import { ROUTES, RouteId } from '@/core/router/routes';
+
+import { FridgeService } from '../../fridge.service';
 
 const { FOOD: FOOD_ROUTE } = ROUTES.FRIDGE.FOODS;
 
@@ -20,6 +22,7 @@ const { FOOD: FOOD_ROUTE } = ROUTES.FRIDGE.FOODS;
 export class CidFood {
   routerService = inject(RouterService);
   navigationService = inject(NavigationService);
+  fridgeService = inject(FridgeService);
 
   foodId = computed<Nullable<string>>(() => {
     return this.routerService.findInTreeById(FOOD_ROUTE.ROOT.id)?.params?.['foodId'] ?? null;
@@ -32,6 +35,10 @@ export class CidFood {
   getInfoNavigation = computed(() => this._getFoodNavigation(FOOD_ROUTE.INFO));
 
   getPortionsNavigation = computed(() => this._getFoodNavigation(FOOD_ROUTE.PORTIONS));
+
+  ngOnDestroy() {
+    this.fridgeService.resetFood();
+  }
 
   @HostBinding('class')
   hostClasses = ['cid-food', ...cardClasses()];

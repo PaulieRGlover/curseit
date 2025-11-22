@@ -25,13 +25,9 @@ export class CidFoodInfo {
 
   ngOnInit() {
     const foodId = this.foodId();
-    if (foodId) {
+    if (foodId && !this.foodStore.food()) {
       this.fridgeService.loadFood(foodId);
     }
-  }
-
-  ngOnDestroy() {
-    this.fridgeService.resetFood();
   }
 
   @HostBinding('class')
