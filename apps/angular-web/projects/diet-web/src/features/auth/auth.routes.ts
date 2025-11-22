@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 
 import { ROUTES } from '@/core/router/routes';
 
-import { CidSignIn } from './sign-in/sign-in';
-import { CidSignUp } from './sign-up/sign-up';
+import { CidSignIn } from './components/sign-in/sign-in';
+import { CidSignUp } from './components/sign-up/sign-up';
 
 export const authRoutes: Routes = [
   { path: '', redirectTo: ROUTES.AUTH.SIGN_IN.declare(), pathMatch: 'full' },

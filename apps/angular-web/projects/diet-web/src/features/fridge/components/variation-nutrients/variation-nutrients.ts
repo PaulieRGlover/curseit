@@ -11,9 +11,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { FridgeService } from '../fridge.service';
-import { VariationNutrientsStore } from '../store/variation-nutrients.store';
-import { VariationNutrient } from '../types/external/food.types';
+import { FridgeService } from '../../fridge.service';
+import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
+import { VariationNutrient } from '../../types/external/food.types';
 import { CidVariationNutrient } from '../variation-nutrient/variation-nutrient';
 
 import { variationNutrientToVariationNutrientListItem } from './transformers/variation-nutrient-to-variation-nutrient-list-item.transformer';

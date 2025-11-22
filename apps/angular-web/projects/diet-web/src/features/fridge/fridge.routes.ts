@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 
 import { ROUTES } from '@/core/router/routes';
 
-import { CidFoodInfo } from './food-info/food-info';
-import { CidFoodList } from './food-list/food-list';
-import { CidFoodPortions } from './food-portions/food-portions';
-import { CidFood } from './food/food';
+import { CidFoodInfo } from './components/food-info/food-info';
+import { CidFoodList } from './components/food-list/food-list';
+import { CidFoodPortions } from './components/food-portions/food-portions';
+import { CidFood } from './components/food/food';
 
 export const fridgeRoutes: Routes = [
   { path: '', redirectTo: ROUTES.FRIDGE.FOODS.ROOT.declare(), pathMatch: 'full' },

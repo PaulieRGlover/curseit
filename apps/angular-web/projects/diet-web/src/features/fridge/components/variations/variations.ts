@@ -10,9 +10,9 @@ import {
   SelectService,
 } from '@curseit/ciui';
 
-import { FridgeService } from '../fridge.service';
-import { VariationsStore } from '../store/variations.store';
-import { VariationAbridged } from '../types/external/food.types';
+import { FridgeService } from '../../fridge.service';
+import { VariationsStore } from '../../store/variations.store';
+import { VariationAbridged } from '../../types/external/food.types';
 import { CidVariation } from '../variation/variation';
 
 @Component({

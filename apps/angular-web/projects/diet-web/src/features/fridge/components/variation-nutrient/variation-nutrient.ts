@@ -5,10 +5,10 @@ import { CiuiButton, CiuiInputSelect, CiuiSelect } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 import { UNITS, Unit } from '@curseit/units';
 
-import { FridgeService } from '../fridge.service';
-import { NutrientsSearchStore } from '../store/nutrients-search.store';
-import { VariationNutrientsStore } from '../store/variation-nutrients.store';
-import { NutrientAbridged } from '../types/external/food.types';
+import { FridgeService } from '../../fridge.service';
+import { NutrientsSearchStore } from '../../store/nutrients-search.store';
+import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
+import { NutrientAbridged } from '../../types/external/food.types';
 import {
   VariationNutrientListItem,
   VariationNutrientListItemUpdate,

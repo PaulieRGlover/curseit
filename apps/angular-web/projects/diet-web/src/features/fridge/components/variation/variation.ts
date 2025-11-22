@@ -21,13 +21,13 @@ import {
 import { Nullable } from '@curseit/types';
 import { ENERGY, ENERGY_ARRAY, UNITS, convertToKj } from '@curseit/units';
 
-import { FridgeService } from '../fridge.service';
+import { FridgeService } from '../../fridge.service';
+import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
+import { VariationStore } from '../../store/variation.store';
+import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
 import { CidPortionBadge } from '../portion-badge/portion-badge';
-import { VariationNutrientsStore } from '../store/variation-nutrients.store';
-import { VariationStore } from '../store/variation.store';
 import { CidVariationNutrients } from '../variation-nutrients/variation-nutrients';
 
-import { CidEmojiPicker } from './emoji-picker/emoji-picker';
 import { variationInputUpdateToVariationUpdate } from './transformers/variation-input-to-variation-update.transformer';
 import { variationToVariationInput } from './transformers/variation-to-variation-input.transformer';
 import { Energy, PortionSize, ReferenceSize, VariationInput } from './types/variation-input.types';

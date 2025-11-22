@@ -11,10 +11,10 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CiuiCheckbox, CiuiInput, CiuiTextarea } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
-import { FridgeService } from '../fridge.service';
-import { FoodStore } from '../store/food.store';
-import { Food } from '../types/external/food.types';
-import { FoodsInternalValidationService } from '../validation/foods-internal-validation.service';
+import { FridgeService } from '../../fridge.service';
+import { FoodStore } from '../../store/food.store';
+import { Food } from '../../types/external/food.types';
+import { FoodsInternalValidationService } from '../../validation/foods-internal-validation.service';
 
 @Component({
   selector: 'cid-food-basic-info',

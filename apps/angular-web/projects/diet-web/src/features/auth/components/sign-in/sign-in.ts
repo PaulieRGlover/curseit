@@ -9,7 +9,7 @@ import { NavigationService } from '@/core/router/navigation.service';
 import { ROUTES } from '@/core/router/routes';
 import { AuthInternalValidationService } from '@/features/auth/validation/auth-internal-validation.service';
 
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'cid-sign-in',

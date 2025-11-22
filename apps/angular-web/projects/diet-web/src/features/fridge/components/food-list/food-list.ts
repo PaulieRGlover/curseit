@@ -1,4 +1,12 @@
-import { Component, HostBinding, ViewEncapsulation, effect, inject, untracked, viewChild } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  ViewEncapsulation,
+  effect,
+  inject,
+  untracked,
+  viewChild,
+} from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 import { Subscription } from 'rxjs';
@@ -7,14 +15,14 @@ import { CiuiDialog, DialogService } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
 import { NavigationService } from '@/core/router/navigation.service';
-import { LeafRouteSnapshot, RouterService } from '@/core/router/router.service';
+import { RouterService } from '@/core/router/router.service';
 import { ROUTES } from '@/core/router/routes';
 
+import { FridgeService } from '../../fridge.service';
+import { FoodStore } from '../../store/food.store';
+import { FoodsStore } from '../../store/foods.store';
 import { CidFoodCreateNew } from '../food-create-new/food-create-new';
 import { CidFoodListItem } from '../food-list-item/food-list-item';
-import { FridgeService } from '../fridge.service';
-import { FoodStore } from '../store/food.store';
-import { FoodsStore } from '../store/foods.store';
 
 @Component({
   selector: 'cid-food-list',
@@ -79,14 +87,13 @@ export class CidFoodList {
   handleDialog(leafId: Nullable<symbol>) {
     if (
       leafId &&
-      Object.values(ROUTES.FRIDGE.FOODS.FOOD).map(({ id }) => id).includes(leafId) &&
+      Object.values(ROUTES.FRIDGE.FOODS.FOOD)
+        .map(({ id }) => id)
+        .includes(leafId) &&
       !this.dialogRef().isOpened()
     ) {
       this.dialogService.toggleDialog(this.dialogRef(), true);
-    } else if (
-      leafId === ROUTES.FRIDGE.FOODS.ROOT.id &&
-      this.dialogRef().isOpened()
-    ) {
+    } else if (leafId === ROUTES.FRIDGE.FOODS.ROOT.id && this.dialogRef().isOpened()) {
       this.dialogService.toggleDialog(this.dialogRef(), false);
     }
   }
