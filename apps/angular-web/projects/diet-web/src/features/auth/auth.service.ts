@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   async signUp(login: string, password: string): AuthApiResult {
-    const result = await this.authResource.signUp({ login, password });
+    const result = await this.authResource.signUp({ body: { login, password } });
 
     if (result.success) {
       this._accessToken.set(result.success.access_token);
@@ -66,7 +66,7 @@ export class AuthService {
   }
 
   async signIn(login: string, password: string): AuthApiResult {
-    const result = await this.authResource.signIn({ login, password });
+    const result = await this.authResource.signIn({ body: { login, password } });
 
     if (result.success) {
       this._accessToken.set(result.success.access_token);
@@ -83,7 +83,7 @@ export class AuthService {
     this._idToken.set(null);
     this._idTokenDecoded.set(null);
 
-    return this.authResource.signOut(undefined, { authToken: idToken });
+    return this.authResource.signOut({ authToken: idToken });
   }
 
   private _idToken = signal<Nullable<string>>(null);

@@ -375,13 +375,21 @@ export class FridgeService {
     );
   }
 
-  async getNutrientsNotRepeated(
+  async getNutrients(
     userId: UserDto['id'],
-    variationId: VariationDto['id'],
     search?: string,
+    noRepeatIn?: VariationDto['id'],
   ): Promise<NutrientsAbridgedDto> {
-    const variation = await this.getUserFoodVariation(userId, variationId);
-    const existingNutrientIds = variation.nutrients.map(({ nutrientId }) => nutrientId);
+    let existingNutrientIds: Array<string> = [];
+
+    if (noRepeatIn) {
+      const variation = await this.getUserFoodVariation(userId, noRepeatIn);
+      if (!variation) {
+        throw new NotFoundException(FRIDGE_MESSAGES.NO_VARIATION);
+      }
+
+      existingNutrientIds = variation.nutrients.map(({ nutrientId }) => nutrientId);
+    }
 
     let nutrients;
     try {

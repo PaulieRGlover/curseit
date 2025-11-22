@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 
-import { FridgeResource } from './fridge.resource';
+import { FoodResource } from './resources/food.resource';
+import { NutrientResource } from './resources/nutrient.resource';
+import { VariationResource } from './resources/variation.resource';
 import { FoodStore } from './store/food.store';
 import { FoodsStore } from './store/foods.store';
 import { NutrientsSearchStore } from './store/nutrients-search.store';
@@ -21,7 +23,9 @@ import { VariationNutrientCreate, VariationNutrientUpdate } from './types/intern
 
 @Injectable({ providedIn: 'root' })
 export class FridgeService {
-  private fridgeResource = inject(FridgeResource);
+  private foodResource = inject(FoodResource);
+  private variationResource = inject(VariationResource);
+  private nutrientResource = inject(NutrientResource);
   private foodsStore = inject(FoodsStore);
   private foodStore = inject(FoodStore);
   private variationsStore = inject(VariationsStore);
@@ -33,7 +37,7 @@ export class FridgeService {
   async loadFoods() {
     this.foodsStore.loading.set(true);
 
-    const result = await this.fridgeResource.getFoods();
+    const result = await this.foodResource.read();
     if (result.success) {
       this.foodsStore.foods.set(result.success);
     } else {
@@ -46,7 +50,7 @@ export class FridgeService {
   async createFood() {
     this.foodStore.loading.set(true);
 
-    const result = await this.fridgeResource.createFood({});
+    const result = await this.foodResource.create({ body: {} });
     if (result.success) {
       const { variations, ...food } = result.success;
       this.foodStore.food.set(food);
@@ -61,7 +65,7 @@ export class FridgeService {
     this.foodStore.loading.set(true);
     this.variationsStore.loading.set(true);
 
-    const result = await this.fridgeResource.getFood(undefined, { params: { foodId } });
+    const result = await this.foodResource.getById({ params: { foodId } });
     if (result.success) {
       const { variations, ...food } = result.success;
       this.foodStore.food.set(food);
@@ -77,7 +81,7 @@ export class FridgeService {
   async loadVariations(foodId: Food['id']) {
     this.variationsStore.loading.set(true);
 
-    const result = await this.fridgeResource.getVariations(undefined, { params: { foodId } });
+    const result = await this.foodResource.readVariations({ params: { foodId } });
     if (result.success) {
       this.variationsStore.variations.set(result.success);
     } else {
@@ -90,7 +94,7 @@ export class FridgeService {
   async loadPortions(foodId: Food['id']) {
     this.portionsStore.loading.set(true);
 
-    const result = await this.fridgeResource.getPortions(undefined, { params: { foodId } });
+    const result = await this.foodResource.readPortions({ params: { foodId } });
     if (result.success) {
       this.portionsStore.portions.set(result.success);
     } else {
@@ -113,7 +117,7 @@ export class FridgeService {
       throw new Error('no foodId');
     }
 
-    const result = await this.fridgeResource.updateFood(update, { params: { foodId } });
+    const result = await this.foodResource.update({ body: update, params: { foodId } });
     if (result.success) {
       this.foodStore.update(result.success);
       this.foodsStore.update(result.success.id, result.success);
@@ -130,7 +134,8 @@ export class FridgeService {
 
     this.variationsStore.loading.set(true);
 
-    const result = await this.fridgeResource.createVariation(variationCreate, {
+    const result = await this.foodResource.createVariation({
+      body: variationCreate,
       params: { foodId },
     });
     if (result.success) {
@@ -149,7 +154,7 @@ export class FridgeService {
 
     this.variationStore.loading.set(true);
 
-    const result = await this.fridgeResource.getVariation(undefined, { params: { variationId } });
+    const result = await this.variationResource.getById({ params: { variationId } });
     if (result.success) {
       const { nutrients, ...variation } = result.success;
       this.variationStore.variation.set(variation);
@@ -169,7 +174,10 @@ export class FridgeService {
       throw new Error('no variationId');
     }
 
-    const result = await this.fridgeResource.updateVariation(update, { params: { variationId } });
+    const result = await this.variationResource.update({
+      body: update,
+      params: { variationId },
+    });
     if (result.success) {
       this.variationStore.update(result.success);
       this.variationsStore.update(result.success.id, result.success);
@@ -185,9 +193,7 @@ export class FridgeService {
       this.variationStore.loading.set(true);
     }
 
-    const result = await this.fridgeResource.deleteVariation(undefined, {
-      params: { variationId },
-    });
+    const result = await this.variationResource.delete({ params: { variationId } });
     if (result.success) {
       if (result.success.id === this.variationStore.variation()?.id) {
         this.variationNutrientsStore.variationNutrients.set(null);
@@ -210,7 +216,8 @@ export class FridgeService {
 
     this.variationNutrientsStore.loading.set(true);
 
-    const result = await this.fridgeResource.createNutrient(nutrientCreate, {
+    const result = await this.variationResource.createNutrient({
+      body: nutrientCreate,
       params: { variationId },
     });
     if (result.success) {
@@ -237,7 +244,8 @@ export class FridgeService {
     this.nutrientsSearchStore.searchCache.set(null);
     this.variationNutrientsStore.loading.set(true);
 
-    const result = await this.fridgeResource.updateNutrient(nutrientUpdate, {
+    const result = await this.variationResource.updateNutrient({
+      body: nutrientUpdate,
       params: { variationId, variationNutrientId: nutrientUpdate.id },
     });
     if (result.success) {
@@ -259,7 +267,7 @@ export class FridgeService {
 
     this.variationNutrientsStore.loading.set(true);
 
-    const result = await this.fridgeResource.deleteNutrient(undefined, {
+    const result = await this.variationResource.deleteNutrient({
       params: { variationId, variationNutrientId: id },
     });
     if (result.success) {
@@ -285,9 +293,8 @@ export class FridgeService {
 
     this.nutrientsSearchStore.loading.set(true);
 
-    const result = await this.fridgeResource.searchNutrientsNotRepeated(undefined, {
-      params: { variationId },
-      query: { search },
+    const result = await this.nutrientResource.get({
+      query: { search, noRepeatIn: variationId },
     });
     if (result.success) {
       this.nutrientsSearchStore.foundNutrients.set(result.success);

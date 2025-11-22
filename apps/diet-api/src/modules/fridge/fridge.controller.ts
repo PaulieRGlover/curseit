@@ -127,12 +127,12 @@ export class FridgeController {
     return this.fridgeService.deleteUserFoodVariationNutrient(userId, variationId, nutrientId);
   }
 
-  @Get('variations/:variationId/nutrients-not-repeated')
-  getNutrientsNotRepeated(
+  @Get('nutrients')
+  getNutrients(
     @GetUser('id') userId: UserDto['id'],
-    @Param('variationId') variationId: VariationDto['id'],
     @Query('search') search?: string,
+    @Query('variationId') noRepeatIn?: VariationDto['id'],
   ) {
-    return this.fridgeService.getNutrientsNotRepeated(userId, variationId, search);
+    return this.fridgeService.getNutrients(userId, search, noRepeatIn);
   }
 }

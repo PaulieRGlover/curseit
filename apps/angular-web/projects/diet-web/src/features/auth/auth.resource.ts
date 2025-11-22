@@ -19,13 +19,13 @@ export class AuthResource {
 
   @Post('sign-up')
   @UseValidation()
-  async signUp(payload: { login: string; password: string }): AuthApiResult {
+  async signUp(payload: { body: { login: string; password: string } }): AuthApiResult {
     return undefined!;
   }
 
   @Post('sign-in')
   @UseValidation()
-  async signIn(payload: { login: string; password: string }): AuthApiResult {
+  async signIn(payload: { body: { login: string; password: string } }): AuthApiResult {
     return undefined!;
   }
 
@@ -39,8 +39,7 @@ export class AuthResource {
   @UseAuthorization()
   @UseValidation('signOut')
   async signOut(
-    payload: undefined,
-    options: { authToken: Nullable<string> },
+    payload: { authToken: Nullable<string> },
   ): ApiResult<{}, Failure> {
     return undefined!;
   }

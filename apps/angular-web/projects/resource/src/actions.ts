@@ -83,7 +83,7 @@ const getToken = async (authService: MaybeUndefined<AuthService>, tokenKey: stri
 };
 
 export const createAction = (method: Method) => {
-  return function (...actionArgs: Array<string>): MethodDecorator {
+  return function (path: string): MethodDecorator {
     return function (target, propertyKey, descriptor: PropertyDescriptor) {
       const reportError = (error: unknown) => {
         console.error(`At ${target.constructor.name}, in ${propertyKey.toString()}`);
@@ -96,14 +96,13 @@ export const createAction = (method: Method) => {
           validation?: ValidationService,
           authService?: AuthService,
         },
-        payload: any,
-        options?: {
+        payload?: {
+          body: any,
           query?: Record<string, string | number>,
           params?: Record<string, string | number>,
           authToken?: string,
         },
       ): ApiResult<any, any> {
-        const path: string = actionArgs.join('/');
         let processedPath = path;
         if (!this.http) {
           reportError(ERRORS.NO_HTTP_CLIENT);
@@ -113,11 +112,11 @@ export const createAction = (method: Method) => {
 
         const base = Reflect.getMetadata(PATH, target.constructor) ?? '/';
         const paramsFromPath = path.match(/:\w+/g)?.map(paramKey => paramKey.replace(/^:/, ''));
-        if (paramsFromPath?.length && options?.params) {
+        if (paramsFromPath?.length && payload?.params) {
           const missingParams = paramsFromPath.filter(paramKey => {
             return (
-              typeof options.params![paramKey] !== 'string' &&
-              typeof options.params![paramKey] !== 'number'
+              typeof payload?.params![paramKey] !== 'string' &&
+              typeof payload?.params![paramKey] !== 'number'
             );
           });
 
@@ -128,16 +127,16 @@ export const createAction = (method: Method) => {
           paramsFromPath.forEach(paramKey => {
             processedPath = processedPath.replace(
               new RegExp(`:${paramKey}`),
-              options.params![paramKey].toString(),
+              payload?.params![paramKey].toString(),
             );
           });
         }
 
-        let fullPath = `${base}/${processedPath}`;
+        let fullPath = `${base}/${processedPath}`.replace(/\/$/, '');
 
-        const query = Object.keys(options?.query ?? {})
-          .filter(key => options!.query![key] !== undefined)
-          .map(key => [key, options!.query![key]]);
+        const query = Object.keys(payload?.query ?? {})
+          .filter(key => payload!.query![key] !== undefined)
+          .map(key => [key, payload!.query![key]]);
         if (query.length) {
           fullPath += '?' + query.map(([key, value]) => `${key}=${value}`).join('&');
         }
@@ -155,7 +154,7 @@ export const createAction = (method: Method) => {
             Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target, propertyKey) ||
             Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target.constructor);
 
-          const token = options?.authToken ?? await getToken(this.authService, tokenKey);
+          const token = payload?.authToken ?? await getToken(this.authService, tokenKey);
 
           requestOptions.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -168,15 +167,15 @@ export const createAction = (method: Method) => {
               break;
             }
             case 'post': {
-              request = this.http.post(fullPath, payload, requestOptions);
+              request = this.http.post(fullPath, payload?.body, requestOptions);
               break;
             }
             case 'put': {
-              request = this.http.put(fullPath, payload, requestOptions);
+              request = this.http.put(fullPath, payload?.body, requestOptions);
               break;
             }
             case 'patch': {
-              request = this.http.patch(fullPath, payload, requestOptions);
+              request = this.http.patch(fullPath, payload?.body, requestOptions);
               break;
             }
             case 'delete': {
