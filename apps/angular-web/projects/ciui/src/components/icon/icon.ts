@@ -26,9 +26,14 @@ export type Icon =
   | 'cancel'
   | 'check-mark'
   | 'save'
-  | 'star'
   | 'edit'
-  | 'delete';
+  | 'delete'
+  | 'star'
+  | 'plus'
+  | 'cook'
+  | 'eat'
+  | 'trashcan'
+  | 'copy';
 const SvgMap: Record<Icon, string | (() => Promise<{ default: string }>)> = {
   info: () => import('./svg/info.svg'),
   close: () => import('./svg/close.svg'),
@@ -44,6 +49,11 @@ const SvgMap: Record<Icon, string | (() => Promise<{ default: string }>)> = {
   edit: () => import('./svg/edit.svg'),
   delete: () => import('./svg/delete.svg'),
   star: '⭐',
+  plus: '➕',
+  cook: '🍳',
+  eat: '🍽️',
+  trashcan: '🗑️',
+  copy: '👯‍♀️',
 };
 
 @Component({
