@@ -103,7 +103,7 @@ model NutrientInFoodVariation {
   id               String       @id @default(uuid())
   valueInGrams     Float        @map("value_in_grams")
   valueDisplayUnit NutrientUnit @default(g) @map("value_display_unit")
-  addedDate        DateTime     @default(now()) @map("added_date")
+  dateAdded        DateTime     @default(now()) @map("date_added")
 
   foodVariation   FoodVariation @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
   foodVariationId String        @map("food_variation_id")
@@ -115,8 +115,8 @@ model NutrientInFoodVariation {
 
 model FoodPortion {
   id              String   @id
-  timeAdded       DateTime @default(now()) @map("time_added")
-  timeExpiring    DateTime @map("time_expiring")
+  dateAdded       DateTime @default(now()) @map("date_added")
+  dateExpiring    DateTime @map("date_expiring")
   sizeInGrams     Float    @map("size_in_grams")
   sizeDisplayUnit FoodUnit @default(g) @map("size_display_unit")
 

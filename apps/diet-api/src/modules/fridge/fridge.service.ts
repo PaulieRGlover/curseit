@@ -212,7 +212,7 @@ export class FridgeService {
         },
         include: {
           nutrients: {
-            orderBy: { addedDate: 'asc' },
+            orderBy: { dateAdded: 'asc' },
             include: {
               nutrient: true,
             },

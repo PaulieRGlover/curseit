@@ -62,8 +62,8 @@ export const PortionSchema = z.object({
   id: z.string(),
   variationId: z.string(),
   counter: z.string(),
-  timeAdded: z.date(),
-  timeExpiring: z.date(),
+  dateAdded: z.date(),
+  dateExpiring: z.date(),
   sizeInGrams: z.number(),
   sizeDisplayUnit: z.string(),
 });

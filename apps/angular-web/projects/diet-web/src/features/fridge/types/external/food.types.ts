@@ -80,8 +80,8 @@ export type VariationsAbridged = z.infer<typeof variationsAbridged>;
 export const portion = z.object({
   id: z.string(),
   counter: z.emoji(),
-  timeAdded: z.iso.datetime(),
-  timeExpiring: z.iso.datetime(),
+  dateAdded: z.iso.datetime(),
+  dateExpiring: z.iso.datetime(),
   sizeInGrams: z.number(),
   sizeDisplayUnit: foodUnit,
   variationId: z.string(),

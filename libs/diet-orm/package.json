@@ -47,7 +47,7 @@
         "executor": "nx:run-commands",
         "defaultConfiguration": "development",
         "options": {
-          "command": "npx prisma migrate dev",
+          "command": "npx prisma migrate dev --create-only",
           "cwd": "libs/diet-orm"
         }
       },
@@ -55,7 +55,7 @@
         "executor": "nx:run-commands",
         "defaultConfiguration": "development",
         "options": {
-          "command": "npx prisma db push",
+          "command": "npx prisma migrate deploy",
           "cwd": "libs/diet-orm"
         },
         "dependsOn": ["docker-up-dev"]
