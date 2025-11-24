@@ -20,37 +20,37 @@ export class FoodsExternalValidationService {
   }
 
   public async variations(input: unknown) {
-    const schema = (await import('../types/external/food.types')).variations;
+    const schema = (await import('../types/external/variation.types')).variations;
     return zodValidate(schema, input);
   }
 
   public async variation(input: unknown) {
-    const schema = (await import('../types/external/food.types')).variation;
+    const schema = (await import('../types/external/variation.types')).variation;
     return zodValidate(schema, input);
   }
 
   public async portions(input: unknown) {
-    const schema = (await import('../types/external/food.types')).portions;
+    const schema = (await import('../types/external/portion.types')).portions;
     return zodValidate(schema, input);
   }
 
   public async portion(input: unknown) {
-    const schema = (await import('../types/external/food.types')).portion;
+    const schema = (await import('../types/external/portion.types')).portion;
     return zodValidate(schema, input);
   }
 
   public async variationWithNutrients(input: unknown) {
-    const schema = (await import('../types/external/food.types')).variationWithNutrients;
+    const schema = (await import('../types/external/variation.types')).variationWithNutrients;
     return zodValidate(schema, input);
   }
 
   public async nutrientsAbridged(input: unknown) {
-    const schema = (await import('../types/external/food.types')).nutrientsAbridged;
+    const schema = (await import('../types/external/nutrient.types')).nutrientsAbridged;
     return zodValidate(schema, input);
   }
 
   public async variationNutrient(input: unknown) {
-    const schema = (await import('../types/external/food.types')).variationNutrient;
+    const schema = (await import('../types/external/variation.types')).variationNutrient;
     return zodValidate(schema, input);
   }
 }

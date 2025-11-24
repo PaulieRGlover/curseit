@@ -12,7 +12,7 @@ import {
 
 import { FridgeService } from '../../fridge.service';
 import { VariationsStore } from '../../store/variations.store';
-import { VariationAbridged } from '../../types/external/food.types';
+import { VariationAbridged } from '../../types/external/variation.types';
 import { CidVariation } from '../variation/variation';
 
 @Component({

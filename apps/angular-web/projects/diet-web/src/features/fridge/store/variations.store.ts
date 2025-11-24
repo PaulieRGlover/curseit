@@ -4,7 +4,11 @@ import { Nullable } from '@curseit/types';
 
 import { Failure } from '@/core/types/external/failure.types';
 
-import { Variation, VariationAbridged, VariationsAbridged } from '../types/external/food.types';
+import {
+  Variation,
+  VariationAbridged,
+  VariationsAbridged,
+} from '../types/external/variation.types';
 
 @Injectable({ providedIn: 'root' })
 export class VariationsStore {

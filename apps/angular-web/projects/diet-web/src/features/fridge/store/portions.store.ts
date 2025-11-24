@@ -4,7 +4,7 @@ import { Nullable } from '@curseit/types';
 
 import { Failure } from '@/core/types/external/failure.types';
 
-import { Portion, Portions } from '../types/external/food.types';
+import { Portion, Portions } from '../types/external/portion.types';
 
 @Injectable({ providedIn: 'root' })
 export class PortionsStore {

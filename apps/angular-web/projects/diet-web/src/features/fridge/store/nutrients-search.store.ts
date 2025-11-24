@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 
 import { Nullable } from '@curseit/types';
 
-import { NutrientsAbridged } from '../types/external/food.types';
+import { NutrientsAbridged } from '../types/external/nutrient.types';
 import { Failure } from '@/core/types/external/failure.types';
 
 @Injectable({ providedIn: 'root' })

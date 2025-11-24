@@ -1,4 +1,4 @@
-import { Variation, VariationAbridged } from '../types/external/food.types';
+import { Variation, VariationAbridged } from '../types/external/variation.types';
 
 export const variationToVariationAbridged = (variation: Variation): VariationAbridged => {
   return {

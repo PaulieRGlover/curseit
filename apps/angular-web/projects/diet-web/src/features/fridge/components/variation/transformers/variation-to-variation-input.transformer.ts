@@ -1,6 +1,6 @@
 import { convertFromGrams, convertToKj } from '@curseit/units';
 
-import { Variation } from '@/features/fridge/types/external/food.types';
+import { Variation } from '@/features/fridge/types/external/variation.types';
 
 import { EnergyUnit, VariationInput } from '../types/variation-input.types';
 

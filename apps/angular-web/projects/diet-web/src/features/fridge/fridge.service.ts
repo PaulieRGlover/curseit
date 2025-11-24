@@ -11,13 +11,13 @@ import { VariationNutrientsStore } from './store/variation-nutrients.store';
 import { VariationStore } from './store/variation.store';
 import { VariationsStore } from './store/variations.store';
 import { variationToVariationAbridged } from './transformers/variation-to-variation-abridged.transformer';
+import { Food } from './types/external/food.types';
 import {
-  Food,
   Variation,
   VariationCreate,
   VariationNutrient,
   VariationUpdate,
-} from './types/external/food.types';
+} from './types/external/variation.types';
 import { FoodUpdate } from './types/internal/food.types';
 import { VariationNutrientCreate, VariationNutrientUpdate } from './types/internal/nutrient.types';
 

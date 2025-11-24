@@ -1,6 +1,6 @@
 import { convertToGrams, convertToKcal } from '@curseit/units';
 
-import { VariationUpdate } from '@/features/fridge/types/external/food.types';
+import { VariationUpdate } from '@/features/fridge/types/external/variation.types';
 
 import { VariationInputUpdate } from '../types/variation-input.types';
 

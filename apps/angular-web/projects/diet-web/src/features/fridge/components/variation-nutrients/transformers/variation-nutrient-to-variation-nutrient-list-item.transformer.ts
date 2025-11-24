@@ -1,4 +1,4 @@
-import { VariationNutrient } from '../../../types/external/food.types';
+import { VariationNutrient } from '../../../types/external/variation.types';
 import { VariationNutrientListItem } from '../types/variation-nutrient-list-item.types';
 
 export const variationNutrientToVariationNutrientListItem = (

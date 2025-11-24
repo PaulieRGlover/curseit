@@ -1,6 +1,6 @@
 import * as z from 'zod/v4-mini';
 
-import { variationNutrient } from '../../../types/external/food.types';
+import { variationNutrient } from '../../../types/external/variation.types';
 
 export const variationNutrientListItem = z.extend(variationNutrient, {
   id: z.optional(z.string()),

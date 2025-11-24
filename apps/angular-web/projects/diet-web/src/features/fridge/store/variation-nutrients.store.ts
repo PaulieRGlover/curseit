@@ -11,7 +11,7 @@ import {
 } from '@/core/constants/nutrients.constants';
 import { Failure } from '@/core/types/external/failure.types';
 
-import { VariationNutrient } from '../types/external/food.types';
+import { VariationNutrient } from '../types/external/variation.types';
 
 @Injectable({ providedIn: 'root' })
 export class VariationNutrientsStore {

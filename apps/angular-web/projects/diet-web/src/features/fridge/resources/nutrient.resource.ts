@@ -11,9 +11,7 @@ import {
 import { DietResource } from '@/core/diet.resource';
 import { Failure } from '@/core/types/external/failure.types';
 
-import {
-  NutrientsAbridged,
-} from '../types/external/food.types';
+import { NutrientsAbridged } from '../types/external/nutrient.types';
 import { FoodsExternalValidationService } from '../validation/foods-external-validation.service';
 
 @Injectable({ providedIn: 'root' })
