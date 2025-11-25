@@ -2,7 +2,7 @@ import * as z from 'zod/v4-mini';
 
 import { ENERGY } from '@curseit/units';
 
-import { foodUnit } from '@/features/fridge/types/external/food.types';
+import { foodUnit } from '@/features/fridge/types/external/unit.types';
 
 export const referenceSizeValue = z.number().check(z.minimum(0), z.maximum(1000));
 export type ReferenceSizeValue = z.infer<typeof referenceSizeValue>;

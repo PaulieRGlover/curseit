@@ -5,29 +5,29 @@ import { zodValidateForFormControl } from '@/core/validation/zod-validate-for-fo
 import { zodValidate } from '@/core/validation/zod-validate.util';
 
 @Injectable({ providedIn: 'root' })
-export class FoodsInternalValidationService {
+export class FoodValidationService {
   public async name(control: AbstractControl) {
-    const schema = (await import('../types/internal/food.types')).name;
+    const schema = (await import('../../types/internal/food.types')).name;
     return zodValidateForFormControl(schema, control);
   }
 
   public async description(control: AbstractControl) {
-    const schema = (await import('../types/internal/food.types')).description;
+    const schema = (await import('../../types/internal/food.types')).description;
     return zodValidateForFormControl(schema, control);
   }
 
   public async perishable(control: AbstractControl) {
-    const schema = (await import('../types/internal/food.types')).perishable;
+    const schema = (await import('../../types/internal/food.types')).perishable;
     return zodValidateForFormControl(schema, control);
   }
 
   public async favorite(control: AbstractControl) {
-    const schema = (await import('../types/internal/food.types')).favorite;
+    const schema = (await import('../../types/internal/food.types')).favorite;
     return zodValidateForFormControl(schema, control);
   }
 
   public async food(input: unknown) {
-    const schema = (await import('../types/internal/food.types')).foodInputSchema;
+    const schema = (await import('../../types/internal/food.types')).foodInputSchema;
     return zodValidate(schema, input, false);
   }
 }

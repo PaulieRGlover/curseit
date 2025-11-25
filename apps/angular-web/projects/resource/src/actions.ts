@@ -14,9 +14,7 @@ import {
 } from './constants';
 import { ApiResult } from './types';
 
-type ValidationService = {
-  [k: string]: MaybeUndefined<(input: unknown) => any>;
-};
+type ValidationService = any;
 
 type AuthService = {
   isAuthenticated: Signal<boolean>;
@@ -40,7 +38,8 @@ const ERRORS = {
   AUTH_SERVICE_FAILURE: 'AuthService failed to authenticate, so the API cannot be accessed.',
   API_VALIDATION_FAILED: (error: any) => `API result validation failed: ${error}`,
   NO_VALIDATOR: (key: any) => `No validator by address this.validation[${key}]`,
-  API_ERROR_VALIDATION_FAILED: (error: any) => `API error validation failed: ${error}`,
+  API_ERROR_VALIDATION_FAILED: (error: any, validationInfo: any) =>
+    `API error validation failed: ${error}; Decorator: ${validationInfo}`,
 } as const;
 
 const getToken = async (authService: MaybeUndefined<AuthService>, tokenKey: string) => {
@@ -92,15 +91,15 @@ export const createAction = (method: Method) => {
 
       descriptor.value = async function (
         this: {
-          http?: HttpClient,
-          validation?: ValidationService,
-          authService?: AuthService,
+          http?: HttpClient;
+          validation?: ValidationService;
+          authService?: AuthService;
         },
         payload?: {
-          body: any,
-          query?: Record<string, string | number>,
-          params?: Record<string, string | number>,
-          authToken?: string,
+          body: any;
+          query?: Record<string, string | number>;
+          params?: Record<string, string | number>;
+          authToken?: string;
         },
       ): ApiResult<any, any> {
         let processedPath = path;
@@ -154,11 +153,12 @@ export const createAction = (method: Method) => {
             Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target, propertyKey) ||
             Reflect.getMetadata(AUTHORIZATION_TOKEN_KEY, target.constructor);
 
-          const token = payload?.authToken ?? await getToken(this.authService, tokenKey);
+          const token = payload?.authToken ?? (await getToken(this.authService, tokenKey));
 
           requestOptions.headers['Authorization'] = `Bearer ${token}`;
         }
 
+        const validationInfo = Reflect.getMetadata(VALIDATION_SUCCESS, target, propertyKey);
         try {
           let request;
           switch (method) {
@@ -190,16 +190,21 @@ export const createAction = (method: Method) => {
 
           let result = await firstValueFrom(request);
 
-          const validationName = Reflect.getMetadata(VALIDATION_SUCCESS, target, propertyKey);
-          const validator = this.validation?.[validationName];
-          if (validator) {
+          let validator: MaybeUndefined<(input: unknown) => any>;
+          if (validationInfo.match(/\./)) {
+            const [validatorName, validationName] = validationInfo.split('.') as string;
+            validator = this.validation?.[validatorName]?.[validationName];
+          } else {
+            validator = this.validation?.[validationInfo];
+          }
+          if (typeof validator === 'function') {
             try {
               result = await validator(result);
             } catch (error) {
               reportError(ERRORS.API_VALIDATION_FAILED(error));
             }
-          } else if (validationName) {
-            reportError(ERRORS.NO_VALIDATOR(validationName));
+          } else if (validationInfo) {
+            reportError(ERRORS.NO_VALIDATOR(validationInfo));
           }
 
           return { success: result };
@@ -210,7 +215,7 @@ export const createAction = (method: Method) => {
             try {
               error = await validator(error);
             } catch (error) {
-              reportError(ERRORS.API_ERROR_VALIDATION_FAILED(error));
+              reportError(ERRORS.API_ERROR_VALIDATION_FAILED(error, validationInfo));
             }
           }
 

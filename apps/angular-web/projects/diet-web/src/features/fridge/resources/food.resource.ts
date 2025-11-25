@@ -16,30 +16,37 @@ import { Failure } from '@/core/types/external/failure.types';
 
 import { Food, FoodWithVariations, FoodsWithPortions } from '../types/external/food.types';
 import { Portions } from '../types/external/portion.types';
-import { Variation, VariationCreate, Variations } from '../types/external/variation.types';
+import { Variation, Variations } from '../types/external/variation.types';
 import { FoodCreate, FoodUpdate } from '../types/internal/food.types';
-import { FoodsExternalValidationService } from '../validation/foods-external-validation.service';
+import { VariationCreate } from '../types/internal/variation.types';
+import { FoodValidationService } from '../validation/external/food-validation.service';
+import { PortionValidationService } from '../validation/external/portion-validation.service';
+import { VariationValidationService } from '../validation/external/variation-validation.service';
 
 @Injectable({ providedIn: 'root' })
 @Resource('fridge/foods')
 @UseAuthorization()
 export class FoodResource extends DietResource {
-  validation = inject(FoodsExternalValidationService);
+  validation = {
+    food: inject(FoodValidationService),
+    variation: inject(VariationValidationService),
+    portion: inject(PortionValidationService),
+  };
 
   @Get('')
-  @UseValidation('foodsWithPortions')
+  @UseValidation('food.foodsWithPortions')
   async read(): Promise<ApiResult<FoodsWithPortions, Failure>> {
     return undefined!;
   }
 
   @Post('')
-  @UseValidation('foodWithVariations')
+  @UseValidation('food.foodWithVariations')
   async create(payload: { body: FoodCreate }): Promise<ApiResult<FoodWithVariations, Failure>> {
     return undefined!;
   }
 
   @Get(':foodId')
-  @UseValidation('foodWithVariations')
+  @UseValidation('food.foodWithVariations')
   async getById(payload: {
     params: { foodId: string };
   }): Promise<ApiResult<FoodWithVariations, Failure>> {
@@ -47,7 +54,7 @@ export class FoodResource extends DietResource {
   }
 
   @Patch(':foodId')
-  @UseValidation('food')
+  @UseValidation('food.food')
   async update(payload: {
     body: FoodUpdate;
     params: { foodId: string };
@@ -56,7 +63,7 @@ export class FoodResource extends DietResource {
   }
 
   @Get(':foodId/variations')
-  @UseValidation('variations')
+  @UseValidation('variation.variations')
   async readVariations(payload: {
     params: { foodId: string };
   }): Promise<ApiResult<Variations, Failure>> {
@@ -64,7 +71,7 @@ export class FoodResource extends DietResource {
   }
 
   @Post(':foodId/variations')
-  @UseValidation('variation')
+  @UseValidation('variation.variation')
   async createVariation(payload: {
     body: VariationCreate;
     params: { foodId: string };
@@ -73,7 +80,7 @@ export class FoodResource extends DietResource {
   }
 
   @Get(':foodId/portions')
-  @UseValidation('portions')
+  @UseValidation('portion.portions')
   async readPortions(payload: {
     params: { foodId: string };
   }): Promise<ApiResult<Portions, Failure>> {

@@ -1,9 +1,5 @@
 import * as z from 'zod/v4-mini';
 
-import { UNITS } from '@curseit/units';
-
-export const nutrientUnit = z.enum([UNITS.MICROGRAM, UNITS.MILLIGRAM, UNITS.GRAM]);
-
 export const nutrient = z.object({
   id: z.string(),
   name: z.string(),

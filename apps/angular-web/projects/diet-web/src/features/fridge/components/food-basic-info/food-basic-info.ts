@@ -14,7 +14,7 @@ import { Nullable } from '@curseit/types';
 import { FridgeService } from '../../fridge.service';
 import { FoodStore } from '../../store/food.store';
 import { Food } from '../../types/external/food.types';
-import { FoodsInternalValidationService } from '../../validation/foods-internal-validation.service';
+import { FoodValidationService } from '../../validation/internal/food-validation.service';
 
 @Component({
   selector: 'cid-food-basic-info',
@@ -25,11 +25,11 @@ import { FoodsInternalValidationService } from '../../validation/foods-internal-
 })
 export class CidFoodBasicInfo {
   fridgeService = inject(FridgeService);
-  foodsValidationService = inject(FoodsInternalValidationService);
+  foodValidationService = inject(FoodValidationService);
   foodStore = inject(FoodStore);
 
   foodInput = new FormGroup({
-    name: new FormControl('', { asyncValidators: this.foodsValidationService.name }),
+    name: new FormControl('', { asyncValidators: this.foodValidationService.name }),
     description: new FormControl(''),
     perishable: new FormControl(true),
   });
@@ -61,7 +61,7 @@ export class CidFoodBasicInfo {
   }
 
   async handleFoodInputChange() {
-    const foodUpdate = await this.foodsValidationService.food(this.foodInput.value);
+    const foodUpdate = await this.foodValidationService.food(this.foodInput.value);
     if (!foodUpdate) {
       return;
     }

@@ -2,8 +2,7 @@ import * as z from 'zod/v4-mini';
 
 import { ENERGY } from '@curseit/units';
 
-import { foodUnit } from './food.types';
-import { nutrientUnit } from './nutrient.types';
+import { foodUnit, nutrientUnit } from './unit.types';
 
 export const variation = z.object({
   id: z.string(),
@@ -21,12 +20,6 @@ export type Variation = z.infer<typeof variation>;
 
 export const variations = z.array(variation);
 export type Variations = z.infer<typeof variations>;
-
-export const variationCreate = z.pick(variation, { name: true });
-export type VariationCreate = z.infer<typeof variationCreate>;
-
-export const variationUpdate = z.partial(z.omit(variation, { id: true }));
-export type VariationUpdate = z.infer<typeof variationUpdate>;
 
 export const variationAbridged = z.pick(variation, { id: true, name: true });
 export type VariationAbridged = z.infer<typeof variationAbridged>;

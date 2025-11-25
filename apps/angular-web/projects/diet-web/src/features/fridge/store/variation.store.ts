@@ -4,7 +4,8 @@ import { Nullable } from '@curseit/types';
 
 import { Failure } from '@/core/types/external/failure.types';
 
-import { Variation, VariationUpdate } from '../types/external/variation.types';
+import { Variation } from '../types/external/variation.types';
+import { VariationUpdate } from '../types/internal/variation.types';
 
 @Injectable({ providedIn: 'root' })
 export class VariationStore {

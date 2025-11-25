@@ -12,13 +12,13 @@ import { DietResource } from '@/core/diet.resource';
 import { Failure } from '@/core/types/external/failure.types';
 
 import { NutrientsAbridged } from '../types/external/nutrient.types';
-import { FoodsExternalValidationService } from '../validation/foods-external-validation.service';
+import { NutrientValidationService } from '../validation/external/nutrient-validation.service';
 
 @Injectable({ providedIn: 'root' })
 @Resource('fridge/nutrients')
 @UseAuthorization()
 export class NutrientResource extends DietResource {
-  validation = inject(FoodsExternalValidationService);
+  validation = inject(NutrientValidationService);
 
   @Get('')
   @UseValidation('nutrientsAbridged')

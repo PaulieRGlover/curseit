@@ -4,14 +4,6 @@ import { UNITS } from '@curseit/units';
 
 import { variationsAbridged } from './variation.types';
 
-export const foodUnit = z.enum([
-  UNITS.MILLIGRAM,
-  UNITS.GRAM,
-  UNITS.KILOGRAM,
-  UNITS.OUNCE,
-  UNITS.POUND,
-]);
-
 export const food = z.object({
   id: z.string(),
   name: z.string(),

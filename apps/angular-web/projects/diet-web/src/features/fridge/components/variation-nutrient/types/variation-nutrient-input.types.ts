@@ -4,7 +4,7 @@ import {
   unit,
   variationNutrientName,
   variationNutrientValue,
-} from '../../../types/internal/nutrient.types';
+} from '@/features/fridge/types/internal/variation.types';
 
 export const amount = z.tuple([variationNutrientValue, unit]);
 

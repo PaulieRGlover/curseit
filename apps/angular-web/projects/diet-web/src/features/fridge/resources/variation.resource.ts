@@ -17,17 +17,20 @@ import { Failure } from '@/core/types/external/failure.types';
 import {
   Variation,
   VariationNutrient,
-  VariationUpdate,
   VariationWithNutrients,
 } from '../types/external/variation.types';
-import { VariationNutrientCreate, VariationNutrientUpdate } from '../types/internal/nutrient.types';
-import { FoodsExternalValidationService } from '../validation/foods-external-validation.service';
+import {
+  VariationNutrientCreate,
+  VariationNutrientUpdate,
+  VariationUpdate,
+} from '../types/internal/variation.types';
+import { VariationValidationService } from '../validation/external/variation-validation.service';
 
 @Injectable({ providedIn: 'root' })
 @Resource('fridge/variations')
 @UseAuthorization()
 export class VariationResource extends DietResource {
-  validation = inject(FoodsExternalValidationService);
+  validation = inject(VariationValidationService);
 
   @Get(':variationId')
   @UseValidation('variationWithNutrients')
