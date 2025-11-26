@@ -5,6 +5,7 @@ import { CiuiButton, CiuiInputSelect, CiuiSelect } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 import { UNITS, Unit } from '@curseit/units';
 
+import { NUTRIENT_UNITS } from '../../constants/units';
 import { FridgeService } from '../../fridge.service';
 import { NutrientsSearchStore } from '../../store/nutrients-search.store';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
@@ -50,7 +51,7 @@ export class CidVariationNutrient {
     asyncValidators: this.validationService.amount,
   });
 
-  units = [UNITS.GRAM, UNITS.MILLIGRAM, UNITS.MICROGRAM];
+  readonly units = NUTRIENT_UNITS;
 
   ngOnInit() {
     const variationNutrientInput = variationNutrientListItemToVariationNutrientInput(

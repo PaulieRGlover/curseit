@@ -12,11 +12,7 @@ export const FoodUnitSchema = z.enum([
   UNITS.POUND,
 ]);
 
-export const NutrientUnitSchema = z.enum([
-  UNITS.MICROGRAM,
-  UNITS.MILLIGRAM,
-  UNITS.GRAM,
-]);
+export const NutrientUnitSchema = z.enum([UNITS.MICROGRAM, UNITS.MILLIGRAM, UNITS.GRAM]);
 
 export const NutrientSchema = z.object({
   id: z.string(),
@@ -35,9 +31,10 @@ export class NutrientsDto extends createZodDto(NutrientsSchema) {}
 export const NutrientsAbridgedSchema = z.array(NutrientAbridgedSchema);
 export class NutrientsAbridgedDto extends createZodDto(NutrientsAbridgedSchema) {}
 
+const name = z.string();
 export const VariationSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name,
   counter: z.string(),
   referenceSizeInGrams: z.number(),
   referenceSizeDisplayUnit: FoodUnitSchema,
@@ -52,25 +49,31 @@ export class VariationDto extends createZodDto(VariationSchema) {}
 export const VariationsSchema = z.array(VariationSchema);
 export class VariationsDto extends createZodDto(VariationsSchema) {}
 
-export const VariationCreateSchema = VariationSchema.pick({ name: true });
+export const VariationCreateSchema = VariationSchema.omit({ id: true }).partial().extend({ name });
 export class VariationCreateDto extends createZodDto(VariationCreateSchema) {}
 
 export const VariationUpdateSchema = VariationSchema.omit({ id: true }).partial();
 export class VariationUpdateDto extends createZodDto(VariationUpdateSchema) {}
 
+const variationId = z.string();
 export const PortionSchema = z.object({
   id: z.string(),
-  variationId: z.string(),
+  variationId,
   counter: z.string(),
   dateAdded: z.date(),
-  dateExpiring: z.date(),
+  dateExpiring: z.date().nullable(),
   sizeInGrams: z.number(),
-  sizeDisplayUnit: z.string(),
+  sizeDisplayUnit: FoodUnitSchema,
 });
 export class PortionDto extends createZodDto(PortionSchema) {}
 
 export const PortionsSchema = z.array(PortionSchema);
 export class PortionsDto extends createZodDto(PortionsSchema) {}
+
+export const PortionCreateSchema = PortionSchema.omit({ id: true })
+  .partial()
+  .extend({ variationId });
+export class PortionCreateDto extends createZodDto(PortionCreateSchema) {}
 
 export const VariationNutrientSchema = z.object({
   id: z.string(),

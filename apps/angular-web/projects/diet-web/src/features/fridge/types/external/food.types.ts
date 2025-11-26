@@ -1,7 +1,5 @@
 import * as z from 'zod/v4-mini';
 
-import { UNITS } from '@curseit/units';
-
 import { variationsAbridged } from './variation.types';
 
 export const food = z.object({

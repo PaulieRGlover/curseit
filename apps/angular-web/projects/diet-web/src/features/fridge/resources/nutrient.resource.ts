@@ -20,7 +20,7 @@ import { NutrientValidationService } from '../validation/external/nutrient-valid
 export class NutrientResource extends DietResource {
   validation = inject(NutrientValidationService);
 
-  @Get('')
+  @Get()
   @UseValidation('nutrientsAbridged')
   async get(
     payload: { query: { search?: string, noRepeatIn?: string } },

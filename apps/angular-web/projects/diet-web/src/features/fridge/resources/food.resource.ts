@@ -15,9 +15,10 @@ import { DietResource } from '@/core/diet.resource';
 import { Failure } from '@/core/types/external/failure.types';
 
 import { Food, FoodWithVariations, FoodsWithPortions } from '../types/external/food.types';
-import { Portions } from '../types/external/portion.types';
+import { Portion, Portions } from '../types/external/portion.types';
 import { Variation, Variations } from '../types/external/variation.types';
 import { FoodCreate, FoodUpdate } from '../types/internal/food.types';
+import { PortionCreate } from '../types/internal/portion.types';
 import { VariationCreate } from '../types/internal/variation.types';
 import { FoodValidationService } from '../validation/external/food-validation.service';
 import { PortionValidationService } from '../validation/external/portion-validation.service';
@@ -33,13 +34,13 @@ export class FoodResource extends DietResource {
     portion: inject(PortionValidationService),
   };
 
-  @Get('')
+  @Get()
   @UseValidation('food.foodsWithPortions')
   async read(): Promise<ApiResult<FoodsWithPortions, Failure>> {
     return undefined!;
   }
 
-  @Post('')
+  @Post()
   @UseValidation('food.foodWithVariations')
   async create(payload: { body: FoodCreate }): Promise<ApiResult<FoodWithVariations, Failure>> {
     return undefined!;
@@ -84,6 +85,15 @@ export class FoodResource extends DietResource {
   async readPortions(payload: {
     params: { foodId: string };
   }): Promise<ApiResult<Portions, Failure>> {
+    return undefined!;
+  }
+
+  @Post(':foodId/portions')
+  @UseValidation('portion.portion')
+  async createPortion(payload: {
+    body: PortionCreate;
+    params: { foodId: string };
+  }): Promise<ApiResult<Portion, Failure>> {
     return undefined!;
   }
 }

@@ -1,0 +1,77 @@
+@let portion_ = portion();
+@let variations_ = variationsStore.variations()!;
+
+<cid-portion-badge
+  ciui-context-menu-trigger
+  trigger="click"
+  class="cid-food-variation__counter"
+  [indicator]="portion_.counter"
+/>
+
+<ciui-context-menu
+  #contextMenu
+  menuTitle="Select counter emoji"
+  closable
+  [width]="387"
+>
+  <div class="ciui-context-menu__content">
+    @if (_contextMenuRef().isOpen()) {
+      <cid-emoji-picker (pick)="handleEmojiPick($event)" />
+    }
+  </div>
+</ciui-context-menu>
+
+<ciui-select
+  label="Variation"
+  labelInvisible
+  theme="white"
+  labelKey="name"
+  placeholder="Select food variation"
+  [options]="variations_"
+  [formControl]="variation"
+  (change)="handleChange()"
+/>
+
+<ciui-input
+  label="Food added on"
+  labelInvisible
+  theme="white"
+  type="date"
+  [formControl]="dateAdded"
+  (change)="handleChange()"
+/>
+
+<ciui-input
+  label="Food expiring on"
+  labelInvisible
+  theme="white"
+  type="date"
+  [formControl]="dateExpiring"
+  (change)="handleChange()"
+/>
+
+<ciui-input-select
+  label="Size"
+  labelInvisible
+  labelSelect="Size unit"
+  type="number"
+  row
+  theme="white"
+  [min]="0"
+  [max]="1000"
+  [options]="portionSizeOptions"
+  [formControl]="portionSize"
+  (change)="handleChange()"
+/>
+
+<ciui-checkbox
+  label="Select portion"
+  labelInvisible
+  name="portion-selected"
+  transparent
+  row
+  theme="white"
+  [formControl]="selectedControl"
+  (change)="selectToggled.emit()"
+/>
+

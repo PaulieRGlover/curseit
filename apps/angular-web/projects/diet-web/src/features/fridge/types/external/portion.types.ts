@@ -6,7 +6,7 @@ export const portion = z.object({
   id: z.string(),
   counter: z.emoji(),
   dateAdded: z.iso.datetime(),
-  dateExpiring: z.iso.datetime(),
+  dateExpiring: z.nullable(z.iso.datetime()),
   sizeInGrams: z.number(),
   sizeDisplayUnit: foodUnit,
   variationId: z.string(),

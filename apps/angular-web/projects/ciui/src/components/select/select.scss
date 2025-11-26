@@ -24,9 +24,9 @@
 
     &__item-actions {
       display: flex;
-      gap: 1rem;
       justify-content: flex-start;
       align-items: center;
+      gap: 1rem;
     }
 
     &__add {
@@ -69,6 +69,7 @@
     }
 
     .ciui-input__input {
+      cursor: pointer;
       padding-right: 6.5rem;
     }
   }

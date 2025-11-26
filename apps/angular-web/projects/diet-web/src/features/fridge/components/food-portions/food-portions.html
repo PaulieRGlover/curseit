@@ -1,1 +1,87 @@
-<div>Portions</div>
+@if (loading()) {
+  <ciui-loader class="cid-food-portions__loader" theme="white" size="big" />
+} @else {
+  <div class="cid-food-portions__header">
+    <div class="cid-food-portions__label">State</div>
+    <div class="cid-food-portions__label">Variation</div>
+    <div class="cid-food-portions__label">Added</div>
+    <div class="cid-food-portions__label">Expiring</div>
+    <div class="cid-food-portions__label">Size</div>
+    <ciui-checkbox
+      class="cid-food-portions__select-all"
+      label="Select all portions"
+      labelInvisible
+      name="all-portions-selected"
+      transparent
+      row
+      theme="white"
+      [formControl]="allSelected"
+      (change)="handleAllSelectedChange()"
+    />
+  </div>
+
+  <div class="cid-food-portions__list">
+    @for (portion of portionsStore.portions(); track portion.id) {
+      <cid-food-portion
+        class="cid-food-portions__portion"
+        [portion]="portion"
+        [selected]="selectedPortions().includes(portion)"
+        (selectToggled)="toggleSelect(portion)"
+      />
+    }
+  </div>
+
+  <div class="cid-food-portions__actions">
+    @if (selectedPortions().length) {
+      <button
+        ciui-button
+        icon="copy"
+        size="medium"
+        (click)="handleCopy()"
+      ></button>
+    } @else {
+      <button
+        ciui-button
+        ciui-context-menu-trigger
+        trigger="click"
+        icon="plus"
+        size="medium"
+      ></button>
+
+      <ciui-context-menu #contextMenu [width]="200">
+        <ul class="cid-food-portions-variations-list">
+          @for (variation of variationsStore.variations()!; track variation.id) {
+            <li
+              [attr.title]="variation.name"
+              class="ciui-context-menu__item ciui-ellipsis"
+              (click)="handleAdd(variation)"
+            >
+              <span class="ciui-ellipsis__text">{{ variation.name }}</span>
+            </li>
+          }
+        </ul>
+      </ciui-context-menu>
+    }
+
+    <button
+      ciui-button
+      icon="cook"
+      size="medium"
+      (click)="handleCook()"
+    ></button>
+
+    <button
+      ciui-button
+      icon="eat"
+      size="medium"
+      (click)="handleEat()"
+    ></button>
+
+    <button
+      ciui-button
+      icon="trashcan"
+      size="medium"
+      (click)="handleRemove()"
+    ></button>
+  </div>
+}

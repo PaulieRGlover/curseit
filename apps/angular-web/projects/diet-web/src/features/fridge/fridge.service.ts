@@ -208,6 +208,18 @@ export class FridgeService {
     this.variationStore.loading.set(false);
   }
 
+  async createPortion(foodId: Food['id'], variationId: Variation['id']) {
+    const result = await this.foodResource.createPortion({
+      body: { variationId },
+      params: { foodId },
+    });
+    if (result.success) {
+      this.portionsStore.add(result.success);
+    } else {
+      this.portionsStore.failure.set(result.failure);
+    }
+  }
+
   async createVariationNutrient(nutrientCreate: VariationNutrientCreate) {
     const variationId = this.variationStore.variation()?.id;
     if (!variationId) {

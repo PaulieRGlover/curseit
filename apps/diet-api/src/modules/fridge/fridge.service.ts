@@ -23,6 +23,9 @@ import {
   FoodsWithPortionsSchema,
   NutrientsAbridgedDto,
   NutrientsAbridgedSchema,
+  PortionCreateDto,
+  PortionDto,
+  PortionSchema,
   PortionsDto,
   PortionsSchema,
   VariationCreateDto,
@@ -196,6 +199,59 @@ export class FridgeService {
     return this.validationService.validate<typeof PortionsSchema>(
       PortionsSchema,
       portions.map(portionToPortionDto),
+    );
+  }
+
+  async createUserFoodPortion(
+    userId: UserDto['id'],
+    foodId: FoodDto['id'],
+    dto: PortionCreateDto,
+  ): Promise<PortionDto> {
+    const { variationId, ...dtoWithoutVariationId } = dto;
+    let variation;
+    try {
+      variation = await this.prismaService.foodVariation.findUnique({
+        where: { id: variationId, food: { id: foodId, user: { id: userId } } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    if (!variation) {
+      throw new NotFoundException(FRIDGE_MESSAGES.NO_VARIATION);
+    }
+
+    const sizeInGrams = variation.portionSizeInGrams;
+    const sizeDisplayUnit = variation.portionSizeDisplayUnit;
+
+    let portion;
+    try {
+      portion = await this.prismaService.foodPortion.create({
+        data: {
+          foodVariation: {
+            connect: {
+              id: variationId,
+              food: {
+                user: {
+                  id: userId,
+                },
+                id: foodId,
+              },
+            },
+          },
+          sizeInGrams,
+          sizeDisplayUnit,
+          ...dtoWithoutVariationId,
+        },
+        include: { foodVariation: { select: { id: true, counter: true } } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof PortionSchema>(
+      PortionSchema,
+      portionToPortionDto(portion),
     );
   }
 

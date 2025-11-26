@@ -1,13 +1,7 @@
 import * as z from 'zod/v4-mini';
 
-import { UNITS } from '@curseit/units';
+import { FOOD_UNITS, NUTRIENT_UNITS } from '../../constants/units';
 
-export const foodUnit = z.enum([
-  UNITS.MILLIGRAM,
-  UNITS.GRAM,
-  UNITS.KILOGRAM,
-  UNITS.OUNCE,
-  UNITS.POUND,
-]);
+export const foodUnit = z.enum(FOOD_UNITS);
 
-export const nutrientUnit = z.enum([UNITS.MICROGRAM, UNITS.MILLIGRAM, UNITS.GRAM]);
+export const nutrientUnit = z.enum(NUTRIENT_UNITS);

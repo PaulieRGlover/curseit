@@ -17,7 +17,7 @@ export class VariationValidationService {
   }
 
   public async portionSize(control: AbstractControl) {
-    const schema = (await import('../types/variation-input.types')).portionSize;
+    const schema = (await import('@/features/fridge/types/internal/variation.types')).portionSize;
     return zodValidateForFormControl(schema, control);
   }
 
@@ -32,7 +32,7 @@ export class VariationValidationService {
   }
 
   public async counter(control: AbstractControl) {
-    const schema = (await import('../types/variation-input.types')).counter;
+    const schema = (await import('@/features/fridge/types/internal/variation.types')).counter;
     return zodValidateForFormControl(schema, control);
   }
 }

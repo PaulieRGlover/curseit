@@ -2,6 +2,7 @@ import * as z from 'zod/v4-mini';
 
 import { UNITS } from '@curseit/units';
 
+import { foodUnit } from '../external/unit.types';
 import { variation } from '../external/variation.types';
 
 export const variationNutrientName = z
@@ -17,6 +18,18 @@ export const variationNutrientValue = z
     z.minimum(0, { message: 'Value should be a positive number' }),
     z.maximum(1000000, { message: "Maybe it's worth considering to upscale the unit?" }),
   );
+
+export const portionSizeValue = z.number().check(z.minimum(0), z.maximum(1000));
+export type PortionSizeValue = z.infer<typeof portionSizeValue>;
+
+export const portionSizeUnit = foodUnit;
+export type PortionSizeUnit = z.infer<typeof portionSizeUnit>;
+
+export const portionSize = z.tuple([portionSizeValue, portionSizeUnit]);
+export type PortionSize = z.infer<typeof portionSize>;
+
+export const counter = z.emoji();
+export type Counter = z.infer<typeof counter>;
 
 export const unit = z.enum([UNITS.GRAM, UNITS.MILLIGRAM, UNITS.MICROGRAM]);
 

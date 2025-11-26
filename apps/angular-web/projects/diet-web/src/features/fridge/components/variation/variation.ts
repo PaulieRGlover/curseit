@@ -21,16 +21,18 @@ import {
 import { Nullable } from '@curseit/types';
 import { ENERGY, ENERGY_ARRAY, UNITS, convertToKj } from '@curseit/units';
 
+import { FOOD_UNITS } from '../../constants/units';
 import { FridgeService } from '../../fridge.service';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { VariationStore } from '../../store/variation.store';
+import { PortionSize } from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
 import { CidPortionBadge } from '../portion-badge/portion-badge';
 import { CidVariationNutrients } from '../variation-nutrients/variation-nutrients';
 
 import { variationInputUpdateToVariationUpdate } from './transformers/variation-input-to-variation-update.transformer';
 import { variationToVariationInput } from './transformers/variation-to-variation-input.transformer';
-import { Energy, PortionSize, ReferenceSize, VariationInput } from './types/variation-input.types';
+import { Energy, ReferenceSize, VariationInput } from './types/variation-input.types';
 import { VariationValidationService } from './validation/variation-validation.service';
 
 @Component({
@@ -56,8 +58,6 @@ export class CidVariation {
   variationNutrientsStore = inject(VariationNutrientsStore);
   fridgeService = inject(FridgeService);
   validationService = inject(VariationValidationService);
-
-  protected _contextMenuRef = viewChild.required<CiuiContextMenu>('contextMenu');
 
   variationInput = computed<Nullable<VariationInput>>(() => {
     const variation = this.variationStore.variation();
@@ -94,9 +94,9 @@ export class CidVariation {
   });
   counter = new FormControl('🥫', { nonNullable: true });
 
-  readonly referenceSizeOptions = [UNITS.GRAM, UNITS.KILOGRAM, UNITS.OUNCE, UNITS.POUND];
+  readonly referenceSizeOptions = FOOD_UNITS;
   readonly energyOptions = [...ENERGY_ARRAY];
-  readonly portionSizeOptions = [UNITS.GRAM, UNITS.KILOGRAM, UNITS.OUNCE, UNITS.POUND];
+  readonly portionSizeOptions = FOOD_UNITS;
 
   constructor() {
     effect(() => {
@@ -158,4 +158,6 @@ export class CidVariation {
 
   @HostBinding('class')
   hostClass = 'cid-food-variation';
+
+  protected _contextMenuRef = viewChild.required<CiuiContextMenu>('contextMenu');
 }

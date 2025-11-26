@@ -82,7 +82,7 @@ const getToken = async (authService: MaybeUndefined<AuthService>, tokenKey: stri
 };
 
 export const createAction = (method: Method) => {
-  return function (path: string): MethodDecorator {
+  return function (path: string = ''): MethodDecorator {
     return function (target, propertyKey, descriptor: PropertyDescriptor) {
       const reportError = (error: unknown) => {
         console.error(`At ${target.constructor.name}, in ${propertyKey.toString()}`);

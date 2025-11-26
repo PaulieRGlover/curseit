@@ -17,6 +17,7 @@ import { AccessJwtGuard } from '@/guards';
 import {
   FoodDto,
   FoodInputDto,
+  PortionCreateDto,
   VariationCreateDto,
   VariationDto,
   VariationNutrientCreateDto,
@@ -72,6 +73,15 @@ export class FridgeController {
   @Get('foods/:foodId/portions')
   getPortions(@GetUser('id') userId: UserDto['id'], @Param('foodId') foodId: FoodDto['id']) {
     return this.fridgeService.getUserFoodPortions(userId, foodId);
+  }
+
+  @Post('foods/:foodId/portions')
+  createPortion(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('foodId') foodId: FoodDto['id'],
+    @Body() dto: PortionCreateDto,
+  ) {
+    return this.fridgeService.createUserFoodPortion(userId, foodId, dto);
   }
 
   @Get('variations/:variationId')
