@@ -60,30 +60,46 @@
       cursor: not-allowed;
     }
 
-    &.ciui-button--button-theme-primary:not(.ciui-button--icon) {
-      background: var(--background-gradient-main);
-      color: var(--text-white);
-
-      &.ciui-button--disabled {
-        background: var(--background-gradient-disabled);
-        color: var(--text-white-disabled);
-      }
-    }
-
-    &.ciui-button--button-theme-secondary:not(.ciui-button--icon) {
-      background: var(--background-white-less-dim);
-      color: var(--text-blue-accented);
-
-      &.ciui-button--disabled {
-        background: var(--background-white-disabled);
-      }
-    }
-
-    &.ciui-button--button-theme-primary,
-    &.ciui-button--button-theme-secondary {
-      &.ciui-button--error {
-        background: var(--background-error);
+    &.ciui-button--theme-white {
+      &.ciui-button--priority-primary:not(.ciui-button--transparent) {
+        background: var(--background-gradient-main);
         color: var(--text-white);
+
+        &.ciui-button--disabled {
+          background: var(--background-gradient-disabled);
+          color: var(--text-white-disabled);
+        }
+      }
+
+      &.ciui-button--priority-secondary:not(.ciui-button--transparent) {
+        background: var(--background-white-less-dim);
+        color: var(--text-blue-accented);
+
+        &.ciui-button--disabled {
+          background: var(--background-white-disabled);
+        }
+      }
+
+      &.ciui-button--priority-tertiary:not(.ciui-button--transparent) {
+        background: var(--background-white-dimmer);
+        color: var(--text-gray-blue);
+
+        &:hover {
+          background: var(--background-white-dimmest);
+        }
+
+        &.ciui-button--disabled {
+          background: var(--background-white-disabled);
+        }
+      }
+
+      &.ciui-button--priority-primary,
+      &.ciui-button--priority-secondary,
+      &.ciui-button--priority-tertiary {
+        &:not(.ciui-button--transparent).ciui-button--error {
+          background: var(--background-error);
+          color: var(--text-white);
+        }
       }
     }
 

@@ -37,6 +37,7 @@
         ciui-button
         icon="copy"
         size="medium"
+        priority="tertiary"
         (click)="handleCopy()"
       ></button>
     } @else {
@@ -46,6 +47,7 @@
         trigger="click"
         icon="plus"
         size="medium"
+        priority="tertiary"
       ></button>
 
       <ciui-context-menu #contextMenu [width]="200">
@@ -67,6 +69,7 @@
       ciui-button
       icon="cook"
       size="medium"
+      priority="tertiary"
       (click)="handleCook()"
     ></button>
 
@@ -74,6 +77,7 @@
       ciui-button
       icon="eat"
       size="medium"
+      priority="tertiary"
       (click)="handleEat()"
     ></button>
 
@@ -81,6 +85,7 @@
       ciui-button
       icon="trashcan"
       size="medium"
+      priority="tertiary"
       (click)="handleRemove()"
     ></button>
   </div>

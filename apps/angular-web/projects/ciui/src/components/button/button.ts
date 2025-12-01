@@ -14,7 +14,7 @@ import { downscaleSize, invertTheme, Size, Theme } from '../../shared/constants'
 import { CiuiIcon, Icon } from '../icon/icon';
 import { CiuiLoader } from '../loader/loader';
 
-export type ButtonTheme = 'primary' | 'secondary';
+export type Priority = 'primary' | 'secondary' | 'tertiary';
 
 @Component({
   selector: '[ciui-button]',
@@ -27,7 +27,8 @@ export class CiuiButton {
   loading = input<boolean, any>(false, { transform: booleanAttribute });
   error = input<boolean, any>(false, { transform: booleanAttribute });
   theme = input<Theme>('white');
-  buttonTheme = input<ButtonTheme>('primary');
+  priority = input<Priority>('primary');
+  transparent = input<boolean, any>(false, { transform: booleanAttribute });
   size = input<Size>('medium');
   icon = input<Nullable<Icon>>(null);
   iconSize = input<Size>('medium');
@@ -53,9 +54,11 @@ export class CiuiButton {
       ciui-button
       ${this.disabledSource() ? 'ciui-button--disabled' : ''}
       ${this.loading() ? 'ciui-button--loading' : ''}
+      ${this.transparent() ? 'ciui-button--transparent' : ''}
       ${this.error() ? 'ciui-button--error' : ''}
       ${this.icon() ? 'ciui-button--icon' : ''}
-      ciui-button--button-theme-${this.buttonTheme()}
+      ciui-button--priority-${this.priority()}
+      ciui-button--theme-${this.theme()}
       ciui-button--size-${this.size()}
     `;
   }
