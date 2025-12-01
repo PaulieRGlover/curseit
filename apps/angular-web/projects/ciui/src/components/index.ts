@@ -15,3 +15,4 @@ export * from './checkbox/checkbox';
 export * from './select/select';
 export * from './select/select.service';
 export * from './input-select/input-select';
+export * from './date-input/date-input';
