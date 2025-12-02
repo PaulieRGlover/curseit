@@ -4,7 +4,6 @@
 <cid-portion-badge
   ciui-context-menu-trigger
   trigger="click"
-  class="cid-food-variation__counter"
   [indicator]="portion_.counter"
 />
 
@@ -14,7 +13,7 @@
   closable
   [width]="387"
 >
-  <div class="ciui-context-menu__content">
+  <div>
     @if (_contextMenuRef().isOpen()) {
       <cid-emoji-picker (pick)="handleEmojiPick($event)" />
     }
@@ -64,14 +63,20 @@
   (change)="handleChange()"
 />
 
-<ciui-checkbox
-  label="Select portion"
-  labelInvisible
-  name="portion-selected"
-  transparent
-  row
-  theme="white"
-  [formControl]="selectedControl"
-  (change)="selectToggled.emit()"
-/>
+@if (isPortionLoading()) {
+  <div class="cid-food-portion__loader-wrapper">
+    <ciui-loader />
+  </div>
+} @else {
+  <ciui-checkbox
+    label="Select portion"
+    labelInvisible
+    name="portion-selected"
+    transparent
+    row
+    theme="white"
+    [formControl]="selectedControl"
+    (change)="selectToggled.emit()"
+  />
+}
 

@@ -1,12 +1,14 @@
-import { Nullable } from '@curseit/types';
+import * as z from 'zod/v4-mini';
 
-import { VariationAbridged } from '@/features/fridge/types/external/variation.types';
-import { Counter, PortionSize } from '@/features/fridge/types/internal/variation.types';
+import { variationAbridged } from '@/features/fridge/types/external/variation.types';
+import { counter, portionSize } from '@/features/fridge/types/internal/variation.types';
 
-export type PortionInput = {
-  variation: VariationAbridged;
-  counter: Counter;
-  dateAdded: Date;
-  dateExpiring: Nullable<Date>;
-  portionSize: PortionSize;
-};
+export const portionInput = z.object({
+  variation: variationAbridged,
+  counter,
+  dateAdded: z.date(),
+  dateExpiring: z.nullable(z.date()),
+  portionSize,
+});
+
+export type PortionInput = z.infer<typeof portionInput>;

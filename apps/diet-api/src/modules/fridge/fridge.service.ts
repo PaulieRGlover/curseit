@@ -26,6 +26,7 @@ import {
   PortionCreateDto,
   PortionDto,
   PortionSchema,
+  PortionUpdateDto,
   PortionsDto,
   PortionsSchema,
   VariationCreateDto,
@@ -242,6 +243,38 @@ export class FridgeService {
           sizeInGrams,
           sizeDisplayUnit,
           ...dtoWithoutVariationId,
+        },
+        include: { foodVariation: { select: { id: true, counter: true } } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof PortionSchema>(
+      PortionSchema,
+      portionToPortionDto(portion),
+    );
+  }
+
+  async updateUserFoodPortion(
+    userId: UserDto['id'],
+    portionId: PortionDto['id'],
+    dto: PortionUpdateDto,
+  ): Promise<PortionDto> {
+    let portion;
+    try {
+      const { variationId, ...update } = dto;
+
+      portion = await this.prismaService.foodPortion.update({
+        where: {
+          id: portionId,
+          foodVariation: { food: { userId } },
+        },
+        data: {
+          foodVariation: {
+            connect: { id: variationId },
+          },
+          ...update,
         },
         include: { foodVariation: { select: { id: true, counter: true } } },
       });

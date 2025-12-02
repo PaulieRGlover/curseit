@@ -2,6 +2,8 @@ import type { Prisma } from '@curseit/diet-orm';
 
 import { FoodWithPortionsDto } from '../dto/fridge.dto';
 
+import { portionToPortionDto } from './portion-to-portion-dto.transformer';
+
 export const foodToFoodWithPortions = (
   food: Prisma.FoodGetPayload<{ include: { variations: { include: { portions: true } } } }>,
 ): FoodWithPortionsDto => {
@@ -9,11 +11,7 @@ export const foodToFoodWithPortions = (
     ...food,
     portions: food.variations.flatMap(variation => {
       return variation.portions.map(portion => {
-        return {
-          ...portion,
-          variationId: variation.id,
-          counter: variation.counter,
-        };
+        return portionToPortionDto({ ...portion, foodVariation: variation });
       });
     }),
   };

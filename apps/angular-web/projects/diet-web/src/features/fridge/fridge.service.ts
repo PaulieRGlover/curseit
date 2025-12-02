@@ -20,11 +20,15 @@ import {
   VariationNutrientUpdate,
   VariationUpdate,
 } from './types/internal/variation.types';
+import { Portion } from './types/external/portion.types';
+import { PortionUpdate } from './types/internal/portion.types';
+import { PortionResource } from './resources/portion.resource';
 
 @Injectable({ providedIn: 'root' })
 export class FridgeService {
   private foodResource = inject(FoodResource);
   private variationResource = inject(VariationResource);
+  private portionResource = inject(PortionResource);
   private nutrientResource = inject(NutrientResource);
   private foodsStore = inject(FoodsStore);
   private foodStore = inject(FoodStore);
@@ -209,6 +213,8 @@ export class FridgeService {
   }
 
   async createPortion(foodId: Food['id'], variationId: Variation['id']) {
+    this.portionsStore.loading.set(true);
+
     const result = await this.foodResource.createPortion({
       body: { variationId },
       params: { foodId },
@@ -218,6 +224,24 @@ export class FridgeService {
     } else {
       this.portionsStore.failure.set(result.failure);
     }
+
+    this.portionsStore.loading.set(false);
+  }
+
+  async updatePortion(portionId: Portion['id'], update: PortionUpdate) {
+    this.portionsStore.loading.set(portionId);
+
+    const result = await this.portionResource.update({
+      params: { portionId },
+      body: update,
+    });
+    if (result.success) {
+      this.portionsStore.update(portionId, result.success);
+    } else {
+      this.portionsStore.failure.set(result.failure);
+    }
+
+    this.portionsStore.loading.set(false);
   }
 
   async createVariationNutrient(nutrientCreate: VariationNutrientCreate) {

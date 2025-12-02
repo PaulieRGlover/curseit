@@ -9,7 +9,7 @@ import { Portion, Portions } from '../types/external/portion.types';
 @Injectable({ providedIn: 'root' })
 export class PortionsStore {
   portions = signal<Nullable<Portions>>(null);
-  loading = signal(false);
+  loading = signal<Portion['id'] | boolean>(false);
   failure = signal<Nullable<Failure>>(null);
 
   add(portion: Portion) {

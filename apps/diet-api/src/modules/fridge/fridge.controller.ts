@@ -18,6 +18,8 @@ import {
   FoodDto,
   FoodInputDto,
   PortionCreateDto,
+  PortionDto,
+  PortionUpdateDto,
   VariationCreateDto,
   VariationDto,
   VariationNutrientCreateDto,
@@ -144,5 +146,14 @@ export class FridgeController {
     @Query('variationId') noRepeatIn?: VariationDto['id'],
   ) {
     return this.fridgeService.getNutrients(userId, search, noRepeatIn);
+  }
+
+  @Patch('portions/:portionId')
+  updatePortion(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('portionId') portionId: PortionDto['id'],
+    @Body() dto: PortionUpdateDto,
+  ) {
+    return this.fridgeService.updateUserFoodPortion(userId, portionId, dto);
   }
 }

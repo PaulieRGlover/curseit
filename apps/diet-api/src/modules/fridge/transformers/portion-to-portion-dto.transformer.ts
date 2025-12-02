@@ -12,5 +12,7 @@ export const portionToPortionDto = (
     ...portionWithoutVariation,
     variationId: foodVariation.id,
     counter: foodVariation.counter,
+    dateAdded: portion.dateAdded.toISOString(),
+    dateExpiring: portion.dateExpiring?.toISOString() ?? null,
   };
 };

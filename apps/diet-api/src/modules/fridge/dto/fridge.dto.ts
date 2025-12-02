@@ -60,8 +60,8 @@ export const PortionSchema = z.object({
   id: z.string(),
   variationId,
   counter: z.string(),
-  dateAdded: z.date(),
-  dateExpiring: z.date().nullable(),
+  dateAdded: z.string().datetime(),
+  dateExpiring: z.string().datetime().nullable(),
   sizeInGrams: z.number(),
   sizeDisplayUnit: FoodUnitSchema,
 });
@@ -70,10 +70,14 @@ export class PortionDto extends createZodDto(PortionSchema) {}
 export const PortionsSchema = z.array(PortionSchema);
 export class PortionsDto extends createZodDto(PortionsSchema) {}
 
-export const PortionCreateSchema = PortionSchema.omit({ id: true })
+export const PortionCreateSchema = PortionSchema.omit({ id: true, counter: true })
   .partial()
-  .extend({ variationId });
+  .required({ variationId: true });
 export class PortionCreateDto extends createZodDto(PortionCreateSchema) {}
+
+export const PortionUpdateSchema = PortionSchema.omit({ id: true, counter: true }).partial();
+export class PortionUpdateDto extends createZodDto(PortionUpdateSchema) {}
+
 
 export const VariationNutrientSchema = z.object({
   id: z.string(),

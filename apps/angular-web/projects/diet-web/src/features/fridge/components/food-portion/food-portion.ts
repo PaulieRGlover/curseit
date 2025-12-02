@@ -2,6 +2,7 @@ import {
   Component,
   HostBinding,
   ViewEncapsulation,
+  computed,
   effect,
   inject,
   input,
@@ -16,8 +17,8 @@ import {
   CiuiContextMenu,
   CiuiContextMenuTrigger,
   CiuiDateInput,
-  CiuiInput,
   CiuiInputSelect,
+  CiuiLoader,
   CiuiSelect,
 } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
@@ -25,6 +26,7 @@ import { UNITS } from '@curseit/units';
 
 import { FOOD_UNITS } from '../../constants/units';
 import { FridgeService } from '../../fridge.service';
+import { PortionsStore } from '../../store/portions.store';
 import { VariationsStore } from '../../store/variations.store';
 import { Portion } from '../../types/external/portion.types';
 import { VariationAbridged } from '../../types/external/variation.types';
@@ -32,6 +34,7 @@ import { Counter, PortionSize } from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
 import { CidPortionBadge } from '../portion-badge/portion-badge';
 
+import { portionInputToPortionUpdate } from './transformers/portion-input-to-portion-update';
 import { portionToPortionInput } from './transformers/portion-to-portion-input';
 import { FoodPortionValidationService } from './validation/food-portion-validation.service';
 
@@ -44,16 +47,19 @@ import { FoodPortionValidationService } from './validation/food-portion-validati
     CiuiContextMenuTrigger,
     CiuiDateInput,
     CiuiInputSelect,
+    CiuiLoader,
     CiuiSelect,
     CidPortionBadge,
     CidEmojiPicker,
   ],
   templateUrl: './food-portion.html',
+  styleUrl: './food-portion.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class CidFoodPortion {
   fridgeService = inject(FridgeService);
   variationsStore = inject(VariationsStore);
+  portionsStore = inject(PortionsStore);
   validationService = inject(FoodPortionValidationService);
 
   portion = input.required<Portion>();
@@ -63,13 +69,16 @@ export class CidFoodPortion {
 
   variation = new FormControl<Nullable<VariationAbridged>>(null);
   counter = new FormControl<Nullable<Counter>>(null);
-  dateAdded = new FormControl<Date>(new Date());
+  dateAdded = new FormControl<Date>(new Date(), { nonNullable: true });
   dateExpiring = new FormControl<Nullable<Date>>(null);
   portionSize = new FormControl<PortionSize>([100, UNITS.GRAM], {
     asyncValidators: this.validationService.portionSize,
+    nonNullable: true,
   });
   // TODO: remove when `base-input` supports no form control
   selectedControl = new FormControl(false);
+
+  isPortionLoading = computed(() => this.portionsStore.loading() === this.portion().id);
 
   readonly portionSizeOptions = FOOD_UNITS;
 
@@ -79,10 +88,13 @@ export class CidFoodPortion {
       const variations_ = this.variationsStore.variations()!;
 
       untracked(() => {
-        const { variation, counter, dateAdded, dateExpiring, portionSize } = portionToPortionInput(
-          portion_,
-          variations_,
-        );
+        const {
+          variation,
+          counter,
+          dateAdded,
+          dateExpiring,
+          portionSize,
+        } = portionToPortionInput(portion_, variations_);
 
         this.variation.setValue(variation);
 
@@ -98,7 +110,18 @@ export class CidFoodPortion {
     // TODO: validation
   }
 
-  handleChange() {}
+  async handleChange() {
+    const portionInput = await this.validationService.portionInput({
+      variation: this.variation.value,
+      dateAdded: this.dateAdded.value,
+      dateExpiring: this.dateExpiring.value,
+      portionSize: this.portionSize.value,
+    });
+
+    const update = portionInputToPortionUpdate(portionInput);
+
+    this.fridgeService.updatePortion(this.portion().id, update);
+  }
 
   @HostBinding('class')
   hostClass = 'cid-food-portion';
