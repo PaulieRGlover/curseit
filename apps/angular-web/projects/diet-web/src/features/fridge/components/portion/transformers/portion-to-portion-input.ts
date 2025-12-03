@@ -1,5 +1,5 @@
 import { Portion } from '@/features/fridge/types/external/portion.types';
-import { PortionInput } from '../types/food-portion.types';
+import { PortionInput } from '../types/portion.types';
 import { VariationsAbridged } from '@/features/fridge/types/external/variation.types';
 import { convertFromGrams } from '@curseit/units';
 

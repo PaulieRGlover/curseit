@@ -2,7 +2,7 @@ import { convertToGrams } from '@curseit/units';
 
 import { PortionUpdate } from '@/features/fridge/types/internal/portion.types';
 
-import { PortionInput } from '../types/food-portion.types';
+import { PortionInput } from '../types/portion.types';
 
 export const portionInputToPortionUpdate = (
   portionInput: Omit<PortionInput, 'counter'>,

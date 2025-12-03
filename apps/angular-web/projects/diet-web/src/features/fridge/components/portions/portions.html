@@ -1,14 +1,14 @@
 @if (loading() === true) {
-  <ciui-loader class="cid-food-portions__loader" theme="white" size="big" />
+  <ciui-loader class="cid-portions__loader" theme="white" size="big" />
 } @else {
-  <div class="cid-food-portions__header">
-    <div class="cid-food-portions__label">State</div>
-    <div class="cid-food-portions__label">Variation</div>
-    <div class="cid-food-portions__label">Added</div>
-    <div class="cid-food-portions__label">Expiring</div>
-    <div class="cid-food-portions__label">Size</div>
+  <div class="cid-portions__header">
+    <div class="cid-portions__label">State</div>
+    <div class="cid-portions__label">Variation</div>
+    <div class="cid-portions__label">Added</div>
+    <div class="cid-portions__label">Expiring</div>
+    <div class="cid-portions__label">Size</div>
     <ciui-checkbox
-      class="cid-food-portions__select-all"
+      class="cid-portions__select-all"
       label="Select all portions"
       labelInvisible
       name="all-portions-selected"
@@ -20,10 +20,10 @@
     />
   </div>
 
-  <div class="cid-food-portions__list">
+  <div class="cid-portions__list">
     @for (portion of portionsStore.portions(); track portion.id) {
-      <cid-food-portion
-        class="cid-food-portions__portion"
+      <cid-portion
+        class="cid-portions__portion"
         [portion]="portion"
         [selected]="selectedPortions().includes(portion)"
         (selectToggled)="toggleSelect(portion)"
@@ -31,7 +31,7 @@
     }
   </div>
 
-  <div class="cid-food-portions__actions">
+  <div class="cid-portions__actions">
     @if (selectedPortions().length) {
       <button
         ciui-button
@@ -51,7 +51,7 @@
       ></button>
 
       <ciui-context-menu #contextMenu [width]="200">
-        <ul class="cid-food-portions-variations-list">
+        <ul class="cid-portions-variations-list">
           @for (variation of variationsStore.variations()!; track variation.id) {
             <li
               [attr.title]="variation.name"

@@ -5,7 +5,7 @@ import { zodValidateForFormControl } from '@/core/validation/zod-validate-for-fo
 import { zodValidate } from '@/core/validation/zod-validate.util';
 
 @Injectable({ providedIn: 'root' })
-export class FoodPortionValidationService {
+export class PortionValidationService {
   public async counter(control: AbstractControl) {
     const schema = (await import('@/features/fridge/types/internal/variation.types')).counter;
     return zodValidateForFormControl(schema, control);
@@ -17,7 +17,7 @@ export class FoodPortionValidationService {
   }
 
   public async portionInput(input: unknown) {
-    const schema = (await import('../types/food-portion.types')).portionInput;
+    const schema = (await import('../types/portion.types')).portionInput;
     return zodValidate(schema, input);
   }
 }

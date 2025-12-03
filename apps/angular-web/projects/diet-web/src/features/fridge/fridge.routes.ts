@@ -4,7 +4,7 @@ import { ROUTES } from '@/core/router/routes';
 
 import { CidFoodInfo } from './components/food-info/food-info';
 import { CidFoodList } from './components/food-list/food-list';
-import { CidFoodPortions } from './components/food-portions/food-portions';
+import { CidPortions } from './components/portions/portions';
 import { CidFood } from './components/food/food';
 
 export const fridgeRoutes: Routes = [
@@ -27,7 +27,7 @@ export const fridgeRoutes: Routes = [
           },
           {
             path: ROUTES.FRIDGE.FOODS.FOOD.PORTIONS.declare(),
-            component: CidFoodPortions,
+            component: CidPortions,
             data: { id: ROUTES.FRIDGE.FOODS.FOOD.PORTIONS.id },
           },
         ],

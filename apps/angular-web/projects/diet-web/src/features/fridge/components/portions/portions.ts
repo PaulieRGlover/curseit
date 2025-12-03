@@ -26,12 +26,12 @@ import { FridgeService } from '../../fridge.service';
 import { PortionsStore } from '../../store/portions.store';
 import { VariationsStore } from '../../store/variations.store';
 import { Portion, Portions } from '../../types/external/portion.types';
-import { CidFoodPortion } from '../food-portion/food-portion';
+import { CidPortion } from '../portion/portion';
 import { ROUTES } from '@/core/router/routes';
 import { VariationAbridged } from '../../types/external/variation.types';
 
 @Component({
-  selector: 'cid-food-portions',
+  selector: 'cid-portions',
   imports: [
     ReactiveFormsModule,
     CiuiButton,
@@ -39,13 +39,13 @@ import { VariationAbridged } from '../../types/external/variation.types';
     CiuiContextMenu,
     CiuiContextMenuTrigger,
     CiuiLoader,
-    CidFoodPortion,
+    CidPortion,
   ],
-  templateUrl: './food-portions.html',
-  styleUrl: './food-portions.scss',
+  templateUrl: './portions.html',
+  styleUrl: './portions.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class CidFoodPortions {
+export class CidPortions {
   routerService = inject(RouterService);
   fridgeService = inject(FridgeService);
   portionsStore = inject(PortionsStore);
@@ -154,7 +154,7 @@ export class CidFoodPortions {
   handleRemove() {}
 
   @HostBinding('class')
-  hostClass = 'cid-food-portions';
+  hostClass = 'cid-portions';
 
   private _contextMenuRef = viewChild<CiuiContextMenu>('contextMenu');
 }

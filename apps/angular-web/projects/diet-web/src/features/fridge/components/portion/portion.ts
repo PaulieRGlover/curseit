@@ -36,10 +36,10 @@ import { CidPortionBadge } from '../portion-badge/portion-badge';
 
 import { portionInputToPortionUpdate } from './transformers/portion-input-to-portion-update';
 import { portionToPortionInput } from './transformers/portion-to-portion-input';
-import { FoodPortionValidationService } from './validation/food-portion-validation.service';
+import { PortionValidationService } from './validation/portion-validation.service';
 
 @Component({
-  selector: 'cid-food-portion',
+  selector: 'cid-portion',
   imports: [
     ReactiveFormsModule,
     CiuiCheckbox,
@@ -52,15 +52,15 @@ import { FoodPortionValidationService } from './validation/food-portion-validati
     CidPortionBadge,
     CidEmojiPicker,
   ],
-  templateUrl: './food-portion.html',
-  styleUrl: './food-portion.scss',
+  templateUrl: './portion.html',
+  styleUrl: './portion.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class CidFoodPortion {
+export class CidPortion {
   fridgeService = inject(FridgeService);
   variationsStore = inject(VariationsStore);
   portionsStore = inject(PortionsStore);
-  validationService = inject(FoodPortionValidationService);
+  validationService = inject(PortionValidationService);
 
   portion = input.required<Portion>();
   selected = input(false);
@@ -124,7 +124,7 @@ export class CidFoodPortion {
   }
 
   @HostBinding('class')
-  hostClass = 'cid-food-portion';
+  hostClass = 'cid-portion';
 
   protected _contextMenuRef = viewChild.required<CiuiContextMenu>('contextMenu');
 }
