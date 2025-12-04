@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { Nullable } from '@curseit/types';
 
 import { Failure } from '@/core/types/external/failure.types';
+import { updateStoreCollectionItemById } from '@/core/utils/store';
 
 import {
   Variation,
@@ -20,14 +21,8 @@ export class VariationsStore {
     this.variations.update(variations => [...(variations ?? []), variation]);
   }
 
-  update(id: Variation['id'], update: VariationAbridged) {
-    this.variations.update(variations => {
-      return (
-        variations?.map(variation => {
-          return variation.id === id ? { id, name: update.name ?? variation.name } : variation;
-        }) ?? null
-      );
-    });
+  update(id: Variation['id'], update: Partial<VariationAbridged>) {
+    updateStoreCollectionItemById(this.variations, id, update);
   }
 
   delete(id: Variation['id']) {

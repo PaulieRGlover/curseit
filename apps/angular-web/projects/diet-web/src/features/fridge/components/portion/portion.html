@@ -1,10 +1,9 @@
-@let portion_ = portion();
 @let variations_ = variationsStore.variations()!;
 
 <cid-portion-badge
   ciui-context-menu-trigger
   trigger="click"
-  [indicator]="portion_.counter"
+  [indicator]="counter.value"
 />
 
 <ciui-context-menu
@@ -13,7 +12,7 @@
   closable
   [width]="387"
 >
-  <div>
+  <div class="ciui-context-menu__content">
     @if (_contextMenuRef().isOpen()) {
       <cid-emoji-picker (pick)="handleEmojiPick($event)" />
     }
@@ -27,7 +26,7 @@
   labelKey="name"
   placeholder="Select food variation"
   [options]="variations_"
-  [formControl]="variation"
+  [formControl]="portionInput.controls.variation"
   (change)="handleChange()"
 />
 
@@ -36,7 +35,7 @@
   labelInvisible
   theme="white"
   type="date"
-  [formControl]="dateAdded"
+  [formControl]="portionInput.controls.dateAdded"
   (change)="handleChange()"
 />
 
@@ -45,7 +44,7 @@
   labelInvisible
   theme="white"
   type="date"
-  [formControl]="dateExpiring"
+  [formControl]="portionInput.controls.dateExpiring"
   (change)="handleChange()"
 />
 
@@ -59,7 +58,7 @@
   [min]="0"
   [max]="1000"
   [options]="portionSizeOptions"
-  [formControl]="portionSize"
+  [formControl]="portionInput.controls.portionSize"
   (change)="handleChange()"
 />
 

@@ -14,7 +14,6 @@ export const portionToPortionInput = (
 
   return {
     variation,
-    counter: portion.counter,
     dateAdded: new Date(portion.dateAdded),
     dateExpiring: portion.dateExpiring ? new Date(portion.dateExpiring) : null,
     portionSize: [

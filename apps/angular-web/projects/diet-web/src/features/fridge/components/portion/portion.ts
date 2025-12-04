@@ -10,7 +10,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import {
   CiuiCheckbox,
@@ -67,14 +67,19 @@ export class CidPortion {
 
   selectToggled = output();
 
-  variation = new FormControl<Nullable<VariationAbridged>>(null);
-  counter = new FormControl<Nullable<Counter>>(null);
-  dateAdded = new FormControl<Date>(new Date(), { nonNullable: true });
-  dateExpiring = new FormControl<Nullable<Date>>(null);
-  portionSize = new FormControl<PortionSize>([100, UNITS.GRAM], {
-    asyncValidators: this.validationService.portionSize,
-    nonNullable: true,
+  portionInput = new FormGroup({
+    variation: new FormControl<Nullable<VariationAbridged>>(null),
+    dateAdded: new FormControl<Date>(new Date(), { nonNullable: true }),
+    dateExpiring: new FormControl<Nullable<Date>>(null),
+    portionSize: new FormControl<PortionSize>([100, UNITS.GRAM], {
+      asyncValidators: this.validationService.portionSize,
+      nonNullable: true,
+    }),
   });
+  counter = new FormControl<Nullable<Counter>>(null, {
+    asyncValidators: this.validationService.counter,
+  });
+
   // TODO: remove when `base-input` supports no form control
   selectedControl = new FormControl(false);
 
@@ -88,35 +93,33 @@ export class CidPortion {
       const variations_ = this.variationsStore.variations()!;
 
       untracked(() => {
-        const {
-          variation,
-          counter,
-          dateAdded,
-          dateExpiring,
-          portionSize,
-        } = portionToPortionInput(portion_, variations_);
+        const { variation, dateAdded, dateExpiring, portionSize } = portionToPortionInput(
+          portion_,
+          variations_,
+        );
 
-        this.variation.setValue(variation);
+        this.counter.setValue(portion_.counter);
 
-        this.counter.setValue(counter);
-        this.dateAdded.setValue(dateAdded);
-        this.dateExpiring.setValue(dateExpiring);
-        this.portionSize.setValue(portionSize);
+        this.portionInput.controls.variation.setValue(variation);
+        this.portionInput.controls.dateAdded.setValue(dateAdded);
+        this.portionInput.controls.dateExpiring.setValue(dateExpiring);
+        this.portionInput.controls.portionSize.setValue(portionSize);
       });
     });
   }
 
-  handleEmojiPick(emoji: string) {
-    // TODO: validation
+  async handleEmojiPick(counter: Portion['counter']) {
+    this.counter.setValue(counter);
+
+    const variationUpdate = await this.validationService.variationUpdate({
+      counter: this.counter.value,
+    });
+
+    this.fridgeService.updateVariation(variationUpdate, this.portion().variationId);
   }
 
   async handleChange() {
-    const portionInput = await this.validationService.portionInput({
-      variation: this.variation.value,
-      dateAdded: this.dateAdded.value,
-      dateExpiring: this.dateExpiring.value,
-      portionSize: this.portionSize.value,
-    });
+    const portionInput = await this.validationService.portionInput(this.portionInput.value);
 
     const update = portionInputToPortionUpdate(portionInput);
 

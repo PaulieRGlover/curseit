@@ -3,7 +3,7 @@ import type { ZodMiniType, infer as ZInfer } from 'zod/v4-mini';
 export const zodValidate = <T extends ZodMiniType>(
   schema: T,
   input: unknown,
-  external = true,
+  external = false,
 ): ZInfer<T> => {
   const result = schema.safeParse(input);
   if (!result.success) {

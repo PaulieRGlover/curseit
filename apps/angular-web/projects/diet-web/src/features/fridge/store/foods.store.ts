@@ -3,9 +3,9 @@ import { Injectable, signal } from '@angular/core';
 import { Nullable } from '@curseit/types';
 
 import { Failure } from '@/core/types/external/failure.types';
+import { addStoreCollectionItems, updateStoreCollectionItemById } from '@/core/utils/store';
 
-import { Food, FoodsWithPortions, FoodWithPortions } from '../types/external/food.types';
-import { FoodInput } from '../types/internal/food.types';
+import { Food, FoodWithPortions, FoodsWithPortions } from '../types/external/food.types';
 
 @Injectable({ providedIn: 'root' })
 export class FoodsStore {
@@ -14,14 +14,10 @@ export class FoodsStore {
   failure = signal<Nullable<Failure>>(null);
 
   add(food: FoodWithPortions) {
-    this.foods.update(foods => [...(foods ?? []), food]);
+    addStoreCollectionItems(this.foods, [food]);
   }
 
-  update(id: Food['id'], update: FoodInput) {
-    this.foods.update(foods => {
-      return foods?.map(food => {
-        return food.id === id ? { ...food, ...update } : food;
-      }) ?? null;
-    });
+  update(id: Food['id'], update: Partial<FoodWithPortions>) {
+    updateStoreCollectionItemById(this.foods, id, update);
   }
 }

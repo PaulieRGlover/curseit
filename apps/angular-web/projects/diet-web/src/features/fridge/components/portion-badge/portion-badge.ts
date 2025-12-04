@@ -18,7 +18,7 @@ export class CidPortionBadge {
     transform: (value: number) => Math.max(0, Math.min(100, value)),
   });
   size = input<Size>('medium');
-  indicator = input<string, string>(DEFAULT_COUNTER, {
+  indicator = input<string, any>(DEFAULT_COUNTER, {
     transform: (value: string) => z.emoji().safeParse(value).data ?? DEFAULT_COUNTER,
   });
 

@@ -10,6 +10,12 @@ import {
   PROTEIN_NAME,
 } from '@/core/constants/nutrients.constants';
 import { Failure } from '@/core/types/external/failure.types';
+import {
+  addStoreCollectionItems,
+  getStoreCollectionItemById,
+  removeStoreCollectionItemById,
+  updateStoreCollectionItemById,
+} from '@/core/utils/store';
 
 import { VariationNutrient } from '../types/external/variation.types';
 
@@ -39,7 +45,7 @@ export class VariationNutrientsStore {
   });
 
   compare(id: VariationNutrient['id'], update: VariationNutrient) {
-    const nutrient = this.variationNutrients()?.find(nutrient => nutrient.id === id);
+    const nutrient = getStoreCollectionItemById(this.variationNutrients, id);
     if (!nutrient) {
       throw new Error('nothing to compare');
     }
@@ -50,21 +56,14 @@ export class VariationNutrientsStore {
   }
 
   add(nutrient: VariationNutrient) {
-    this.variationNutrients.set([...(this.variationNutrients() ?? []), nutrient]);
+    addStoreCollectionItems(this.variationNutrients, [nutrient]);
   }
 
-  update(id: string, update: VariationNutrient) {
-    this.variationNutrients.update(
-      nutrients =>
-        nutrients?.map(nutrient =>
-          nutrient.id === id ? { ...nutrient, ...update, isEmpty: false } : nutrient,
-        ) ?? null,
-    );
+  update(id: string, update: Partial<VariationNutrient>) {
+    updateStoreCollectionItemById(this.variationNutrients, id, update);
   }
 
-  delete(id: VariationNutrient['id']) {
-    this.variationNutrients.set(
-      this.variationNutrients()?.filter(nutrient => nutrient.id !== id) ?? null,
-    );
+  remove(id: VariationNutrient['id']) {
+    removeStoreCollectionItemById(this.variationNutrients, id);
   }
 }

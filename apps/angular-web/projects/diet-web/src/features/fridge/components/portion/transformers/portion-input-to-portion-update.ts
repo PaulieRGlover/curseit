@@ -5,7 +5,7 @@ import { PortionUpdate } from '@/features/fridge/types/internal/portion.types';
 import { PortionInput } from '../types/portion.types';
 
 export const portionInputToPortionUpdate = (
-  portionInput: Omit<PortionInput, 'counter'>,
+  portionInput: PortionInput,
 ): PortionUpdate => {
   const [portionSize, portionSizeDisplayUnit] = portionInput.portionSize;
 

@@ -4,6 +4,11 @@
 @layer ciui;
 
 @layer ciui {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-gray-blue) var(--background-white-semitransparent);
+  }
+
   *,
   *::before,
   *::after {

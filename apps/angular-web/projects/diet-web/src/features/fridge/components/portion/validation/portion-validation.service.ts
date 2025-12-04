@@ -20,4 +20,9 @@ export class PortionValidationService {
     const schema = (await import('../types/portion.types')).portionInput;
     return zodValidate(schema, input);
   }
+
+  public async variationUpdate(input: unknown) {
+    const schema = (await import('../../../types/internal/variation.types')).variationUpdate;
+    return zodValidate(schema, input);
+  }
 }

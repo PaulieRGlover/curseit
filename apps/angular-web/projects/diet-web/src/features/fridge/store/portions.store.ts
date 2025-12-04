@@ -3,8 +3,15 @@ import { Injectable, signal } from '@angular/core';
 import { Nullable } from '@curseit/types';
 
 import { Failure } from '@/core/types/external/failure.types';
+import {
+  addStoreCollectionItems,
+  removeStoreCollectionItemById,
+  updateStoreCollectionItems,
+  updateStoreCollectionItemById,
+} from '@/core/utils/store';
 
 import { Portion, Portions } from '../types/external/portion.types';
+import { Variation } from '../types/external/variation.types';
 
 @Injectable({ providedIn: 'root' })
 export class PortionsStore {
@@ -13,20 +20,22 @@ export class PortionsStore {
   failure = signal<Nullable<Failure>>(null);
 
   add(portion: Portion) {
-    this.portions.update(portions => [...(portions ?? []), portion]);
+    addStoreCollectionItems(this.portions, [portion]);
   }
 
-  update(id: Portion['id'], update: Portion) {
-    this.portions.update(portions => {
-      return (
-        portions?.map(portion => {
-          return portion.id === id ? { ...portion, ...update } : portion;
-        }) ?? null
-      );
-    });
+  update(id: Portion['id'], update: Partial<Portion>) {
+    updateStoreCollectionItemById(this.portions, id, update);
   }
 
-  delete(id: Portion['id']) {
-    this.portions.set(this.portions()?.filter(portion => portion.id !== id) ?? null);
+  updateByVariationId(variationId: Variation['id'], update: Partial<Portion>) {
+    updateStoreCollectionItems(
+      this.portions,
+      portion => portion.variationId === variationId,
+      update,
+    );
+  }
+
+  remove(id: Portion['id']) {
+    removeStoreCollectionItemById(this.portions, id);
   }
 }

@@ -174,6 +174,8 @@ export class FridgeService {
     update: VariationUpdate,
     variationId = this.variationStore.variation()?.id,
   ) {
+    const oldCounter = this.variationStore.variation()?.counter;
+
     if (!variationId) {
       throw new Error('no variationId');
     }
@@ -185,6 +187,10 @@ export class FridgeService {
     if (result.success) {
       this.variationStore.update(result.success);
       this.variationsStore.update(result.success.id, result.success);
+
+      if (oldCounter !== result.success.counter) {
+        this.portionsStore.updateByVariationId(variationId, { counter: result.success.counter });
+      }
     } else {
       this.variationStore.failure.set(result.failure);
     }
@@ -307,7 +313,7 @@ export class FridgeService {
       params: { variationId, variationNutrientId: id },
     });
     if (result.success) {
-      this.variationNutrientsStore.delete(result.success.id);
+      this.variationNutrientsStore.remove(result.success.id);
     } else {
       this.variationNutrientsStore.failure.set(result.failure);
     }
