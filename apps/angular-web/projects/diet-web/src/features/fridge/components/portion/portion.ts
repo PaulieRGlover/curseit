@@ -83,7 +83,7 @@ export class CidPortion {
   // TODO: remove when `base-input` supports no form control
   selectedControl = new FormControl(false);
 
-  isPortionLoading = computed(() => this.portionsStore.loading() === this.portion().id);
+  isPortionLoading = computed(() => this.portionsStore.isPortionLoading(this.portion().id));
 
   readonly portionSizeOptions = FOOD_UNITS;
 

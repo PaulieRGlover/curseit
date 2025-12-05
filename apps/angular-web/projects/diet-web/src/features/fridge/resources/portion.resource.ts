@@ -1,12 +1,20 @@
 import { Injectable, inject } from '@angular/core';
 
-import { ApiResult, Patch, Resource, UseAuthorization, UseValidation } from '@curseit/resource';
+import {
+  ApiResult,
+  Delete,
+  Patch,
+  Post,
+  Resource,
+  UseAuthorization,
+  UseValidation,
+} from '@curseit/resource';
 
 import { DietResource } from '@/core/diet.resource';
 import { Failure } from '@/core/types/external/failure.types';
 
-import { Portion } from '../types/external/portion.types';
-import { PortionUpdate } from '../types/internal/portion.types';
+import { Portion, Portions } from '../types/external/portion.types';
+import { PortionUpdate, PortionsCreate } from '../types/internal/portion.types';
 import { PortionValidationService } from '../validation/external/portion-validation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +29,26 @@ export class PortionResource extends DietResource {
     params: { portionId: string };
     body: PortionUpdate;
   }): Promise<ApiResult<Portion, Failure>> {
+    return undefined!;
+  }
+
+  @Delete(':portionId')
+  @UseValidation('portion')
+  async delete(payload: { params: { portionId: string } }): Promise<ApiResult<Portion, Failure>> {
+    return undefined!;
+  }
+
+  @Post('action/bulk-create')
+  @UseValidation('portions')
+  async bulkCreate(payload: { body: PortionsCreate }): Promise<ApiResult<Portions, Failure>> {
+    return undefined!;
+  }
+
+  @Post('action/bulk-delete')
+  @UseValidation('portions')
+  async bulkDelete(payload: {
+    body: { ids: Array<Portion['id']> };
+  }): Promise<ApiResult<Portions, Failure>> {
     return undefined!;
   }
 }

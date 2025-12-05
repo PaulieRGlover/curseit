@@ -16,19 +16,24 @@ import {
   CiuiCheckbox,
   CiuiContextMenu,
   CiuiContextMenuTrigger,
+  CiuiInput,
   CiuiLoader,
 } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
 import { RouterService } from '@/core/router/router.service';
+import { ROUTES } from '@/core/router/routes';
 
 import { FridgeService } from '../../fridge.service';
 import { PortionsStore } from '../../store/portions.store';
 import { VariationsStore } from '../../store/variations.store';
 import { Portion, Portions } from '../../types/external/portion.types';
-import { CidPortion } from '../portion/portion';
-import { ROUTES } from '@/core/router/routes';
 import { VariationAbridged } from '../../types/external/variation.types';
+import { CidPortion } from '../portion/portion';
+
+import { PortionsValidationService } from './validation/portions-validation.service';
+
+const DEFAULT_PORTIONS_NUMBER = 1;
 
 @Component({
   selector: 'cid-portions',
@@ -38,6 +43,7 @@ import { VariationAbridged } from '../../types/external/variation.types';
     CiuiCheckbox,
     CiuiContextMenu,
     CiuiContextMenuTrigger,
+    CiuiInput,
     CiuiLoader,
     CidPortion,
   ],
@@ -50,8 +56,13 @@ export class CidPortions {
   fridgeService = inject(FridgeService);
   portionsStore = inject(PortionsStore);
   variationsStore = inject(VariationsStore);
+  validationService = inject(PortionsValidationService);
 
   allSelected = new FormControl(false);
+  createPortionsCount = new FormControl(DEFAULT_PORTIONS_NUMBER, {
+    asyncValidators: this.validationService.createPortionsCount,
+    nonNullable: true,
+  });
 
   isInitialized = signal(false);
   selectedPortions = signal<Portions>([]);
@@ -61,11 +72,7 @@ export class CidPortions {
     return this.routerService.findInTreeById(FOOD.ROOT.id)?.params?.['foodId'] ?? null;
   });
   loading = computed(() => {
-    return (
-      this.portionsStore.loading() ||
-      this.variationsStore.loading() ||
-      !this.isInitialized()
-    );
+    return this.portionsStore.loading() || this.variationsStore.loading() || !this.isInitialized();
   });
   areAllSelected = computed(() => {
     const portions_ = this.portionsStore.portions();
@@ -131,12 +138,18 @@ export class CidPortions {
   }
 
   async handleAdd(variation: VariationAbridged) {
+    if (!this.createPortionsCount.valid) {
+      return;
+    }
+
     const foodId_ = this.foodId();
     if (!foodId_) {
       throw new Error('no food id');
     }
 
-    await this.fridgeService.createPortion(foodId_, variation.id);
+    await this.fridgeService.addPortions(variation.id, this.createPortionsCount.value);
+
+    this.createPortionsCount.setValue(DEFAULT_PORTIONS_NUMBER);
 
     this._contextMenuRef()?.toggle(false);
   }
@@ -151,7 +164,16 @@ export class CidPortions {
     // TODO: waiting for dashboard module
   }
 
-  handleRemove() {}
+  handleRemove() {
+    const selectedPortions_ = this.selectedPortions();
+    if (!selectedPortions_.length) {
+      return;
+    }
+
+    this.fridgeService.deletePortions(selectedPortions_.map(({ id }) => id));
+
+    this.selectedPortions.set([]);
+  }
 
   @HostBinding('class')
   hostClass = 'cid-portions';

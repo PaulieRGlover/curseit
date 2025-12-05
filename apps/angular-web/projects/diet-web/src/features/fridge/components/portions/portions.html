@@ -50,18 +50,33 @@
         priority="tertiary"
       ></button>
 
-      <ciui-context-menu #contextMenu [width]="200">
-        <ul class="cid-portions-variations-list">
-          @for (variation of variationsStore.variations()!; track variation.id) {
-            <li
-              [attr.title]="variation.name"
-              class="ciui-context-menu__item ciui-ellipsis"
-              (click)="handleAdd(variation)"
-            >
-              <span class="ciui-ellipsis__text">{{ variation.name }}</span>
-            </li>
-          }
-        </ul>
+      <ciui-context-menu
+        #contextMenu
+        theme="white-transparent"
+        [width]="200"
+      >
+        <div class="cid-portions__add">
+          <ul class="cid-portions-variations-list ciui-card ciui-card--theme-white">
+            @for (variation of variationsStore.variations()!; track variation.id) {
+              <li
+                [attr.title]="variation.name"
+                class="ciui-context-menu__item ciui-ellipsis"
+                (click)="handleAdd(variation)"
+              >
+                <span class="ciui-ellipsis__text">{{ variation.name }}</span>
+              </li>
+            }
+          </ul>
+
+          <ciui-input
+            type="number"
+            label="Number of portions to add"
+            labelInvisible
+            [min]="1"
+            [max]="20"
+            [formControl]="createPortionsCount"
+          />
+        </div>
       </ciui-context-menu>
     }
 

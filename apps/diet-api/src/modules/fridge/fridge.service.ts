@@ -23,6 +23,8 @@ import {
   FoodsWithPortionsSchema,
   NutrientsAbridgedDto,
   NutrientsAbridgedSchema,
+  PortionBulkCreateDto,
+  PortionBulkDeleteDto,
   PortionCreateDto,
   PortionDto,
   PortionSchema,
@@ -205,14 +207,13 @@ export class FridgeService {
 
   async createUserFoodPortion(
     userId: UserDto['id'],
-    foodId: FoodDto['id'],
     dto: PortionCreateDto,
   ): Promise<PortionDto> {
     const { variationId, ...dtoWithoutVariationId } = dto;
     let variation;
     try {
       variation = await this.prismaService.foodVariation.findUnique({
-        where: { id: variationId, food: { id: foodId, user: { id: userId } } },
+        where: { id: variationId, food: { user: { id: userId } } },
       });
     } catch {
       throw new InternalServerErrorException();
@@ -230,15 +231,7 @@ export class FridgeService {
       portion = await this.prismaService.foodPortion.create({
         data: {
           foodVariation: {
-            connect: {
-              id: variationId,
-              food: {
-                user: {
-                  id: userId,
-                },
-                id: foodId,
-              },
-            },
+            connect: { id: variationId },
           },
           sizeInGrams,
           sizeDisplayUnit,
@@ -285,6 +278,110 @@ export class FridgeService {
     return this.validationService.validate<typeof PortionSchema>(
       PortionSchema,
       portionToPortionDto(portion),
+    );
+  }
+
+  async deleteUserFoodPortion(
+    userId: UserDto['id'],
+    portionId: PortionDto['id'],
+  ): Promise<PortionDto> {
+    let portion;
+    try {
+      portion = await this.prismaService.foodPortion.delete({
+        where: {
+          id: portionId,
+          foodVariation: { food: { userId } },
+        },
+        include: { foodVariation: { select: { id: true, counter: true } } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof PortionSchema>(
+      PortionSchema,
+      portionToPortionDto(portion),
+    );
+  }
+
+  async bulkCreateUserFoodPortions(
+    userId: UserDto['id'],
+    dto: PortionBulkCreateDto,
+  ): Promise<PortionsDto> {
+    const variationsIds = dto.map(({ variationId }) => variationId);
+    let variations;
+    try {
+      variations = await this.prismaService.foodVariation.findMany({
+        where: { id: { in: variationsIds }, food: { user: { id: userId } } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    let portions;
+    try {
+      portions = await this.prismaService.foodPortion.createManyAndReturn({
+        data: dto.map(portion => {
+          const { variationId, ...portionWithoutVariationId } = portion;
+
+          const variation = variations.find(({ id }) => id === variationId);
+          if (!variation) {
+            throw new NotFoundException(FRIDGE_MESSAGES.NO_VARIATION);
+          }
+
+          let sizeInGrams;
+          let sizeDisplayUnit;
+          if (portion.sizeInGrams && portion.sizeDisplayUnit) {
+            sizeInGrams = portion.sizeInGrams;
+            sizeDisplayUnit = portion.sizeDisplayUnit;
+          } else {
+            sizeInGrams = variation.portionSizeInGrams;
+            sizeDisplayUnit = variation.portionSizeDisplayUnit;
+          }
+
+          return {
+            foodVariationId: variationId,
+            sizeInGrams,
+            sizeDisplayUnit,
+            ...portionWithoutVariationId,
+          };
+        }),
+        include: { foodVariation: { select: { id: true, counter: true } } },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof PortionsSchema>(
+      PortionsSchema,
+      portions.map(portionToPortionDto),
+    );
+  }
+
+  async bulkDeleteUserFoodPortions(
+    userId: UserDto['id'],
+    dto: PortionBulkDeleteDto,
+  ): Promise<PortionsDto> {
+    const { ids } = dto;
+    let portions;
+    try {
+      const where = {
+        id: { in: ids },
+        foodVariation: { food: { userId } },
+      };
+      portions = await this.prismaService.foodPortion.findMany({
+        where,
+        include: { foodVariation: { select: { id: true, counter: true } } },
+      });
+
+      await this.prismaService.foodPortion.deleteMany({ where });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof PortionsSchema>(
+      PortionsSchema,
+      portions.map(portionToPortionDto),
     );
   }
 

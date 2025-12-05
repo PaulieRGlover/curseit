@@ -17,6 +17,8 @@ import { AccessJwtGuard } from '@/guards';
 import {
   FoodDto,
   FoodInputDto,
+  PortionBulkCreateDto,
+  PortionBulkDeleteDto,
   PortionCreateDto,
   PortionDto,
   PortionUpdateDto,
@@ -75,15 +77,6 @@ export class FridgeController {
   @Get('foods/:foodId/portions')
   getPortions(@GetUser('id') userId: UserDto['id'], @Param('foodId') foodId: FoodDto['id']) {
     return this.fridgeService.getUserFoodPortions(userId, foodId);
-  }
-
-  @Post('foods/:foodId/portions')
-  createPortion(
-    @GetUser('id') userId: UserDto['id'],
-    @Param('foodId') foodId: FoodDto['id'],
-    @Body() dto: PortionCreateDto,
-  ) {
-    return this.fridgeService.createUserFoodPortion(userId, foodId, dto);
   }
 
   @Get('variations/:variationId')
@@ -148,6 +141,14 @@ export class FridgeController {
     return this.fridgeService.getNutrients(userId, search, noRepeatIn);
   }
 
+  @Post('portions')
+  createPortion(
+    @GetUser('id') userId: UserDto['id'],
+    @Body() dto: PortionCreateDto,
+  ) {
+    return this.fridgeService.createUserFoodPortion(userId, dto);
+  }
+
   @Patch('portions/:portionId')
   updatePortion(
     @GetUser('id') userId: UserDto['id'],
@@ -155,5 +156,29 @@ export class FridgeController {
     @Body() dto: PortionUpdateDto,
   ) {
     return this.fridgeService.updateUserFoodPortion(userId, portionId, dto);
+  }
+
+  @Delete('portions/:portionId')
+  deletePortion(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('portionId') portionId: PortionDto['id'],
+  ) {
+    return this.fridgeService.deleteUserFoodPortion(userId, portionId);
+  }
+
+  @Post('portions/action/bulk-create')
+  bulkCreatePortions(
+    @GetUser('id') userId: UserDto['id'],
+    @Body() dto: PortionBulkCreateDto,
+  ) {
+    return this.fridgeService.bulkCreateUserFoodPortions(userId, dto);
+  }
+
+  @Post('portions/action/bulk-delete')
+  bulkDeletePortions(
+    @GetUser('id') userId: UserDto['id'],
+    @Body() dto: PortionBulkDeleteDto,
+  ) {
+    return this.fridgeService.bulkDeleteUserFoodPortions(userId, dto);
   }
 }

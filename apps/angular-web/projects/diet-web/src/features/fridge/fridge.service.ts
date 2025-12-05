@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 
 import { FoodResource } from './resources/food.resource';
 import { NutrientResource } from './resources/nutrient.resource';
+import { PortionResource } from './resources/portion.resource';
 import { VariationResource } from './resources/variation.resource';
 import { FoodStore } from './store/food.store';
 import { FoodsStore } from './store/foods.store';
@@ -12,17 +13,16 @@ import { VariationStore } from './store/variation.store';
 import { VariationsStore } from './store/variations.store';
 import { variationToVariationAbridged } from './transformers/variation-to-variation-abridged.transformer';
 import { Food } from './types/external/food.types';
+import { Portion } from './types/external/portion.types';
 import { Variation, VariationNutrient } from './types/external/variation.types';
 import { FoodUpdate } from './types/internal/food.types';
+import { PortionCreate, PortionUpdate, PortionsCreate } from './types/internal/portion.types';
 import {
   VariationCreate,
   VariationNutrientCreate,
   VariationNutrientUpdate,
   VariationUpdate,
 } from './types/internal/variation.types';
-import { Portion } from './types/external/portion.types';
-import { PortionUpdate } from './types/internal/portion.types';
-import { PortionResource } from './resources/portion.resource';
 
 @Injectable({ providedIn: 'root' })
 export class FridgeService {
@@ -218,12 +218,11 @@ export class FridgeService {
     this.variationStore.loading.set(false);
   }
 
-  async createPortion(foodId: Food['id'], variationId: Variation['id']) {
+  async addPortions(variationId: Variation['id'], count = 1) {
     this.portionsStore.loading.set(true);
 
-    const result = await this.foodResource.createPortion({
-      body: { variationId },
-      params: { foodId },
+    const result = await this.portionResource.bulkCreate({
+      body: Array.from({ length: count }, () => ({ variationId })),
     });
     if (result.success) {
       this.portionsStore.add(result.success);
@@ -234,8 +233,21 @@ export class FridgeService {
     this.portionsStore.loading.set(false);
   }
 
+  async createPortions(payload: PortionsCreate) {
+    this.portionsStore.loading.set(true);
+
+    const result = await this.portionResource.bulkCreate({ body: payload });
+    if (result.success) {
+      this.portionsStore.add(result.success);
+    } else {
+      this.portionsStore.failure.set(result.failure);
+    }
+
+    this.portionsStore.loading.set(false);
+  }
+
   async updatePortion(portionId: Portion['id'], update: PortionUpdate) {
-    this.portionsStore.loading.set(portionId);
+    this.portionsStore.loading.set([portionId]);
 
     const result = await this.portionResource.update({
       params: { portionId },
@@ -243,6 +255,19 @@ export class FridgeService {
     });
     if (result.success) {
       this.portionsStore.update(portionId, result.success);
+    } else {
+      this.portionsStore.failure.set(result.failure);
+    }
+
+    this.portionsStore.loading.set(false);
+  }
+
+  async deletePortions(portionIds: Array<Portion['id']>) {
+    this.portionsStore.loading.set(portionIds);
+
+    const result = await this.portionResource.bulkDelete({ body: { ids: portionIds } });
+    if (result.success) {
+      this.portionsStore.removeByIds(portionIds);
     } else {
       this.portionsStore.failure.set(result.failure);
     }
