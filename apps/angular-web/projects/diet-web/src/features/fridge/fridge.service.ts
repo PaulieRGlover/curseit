@@ -219,8 +219,6 @@ export class FridgeService {
   }
 
   async addPortions(variationId: Variation['id'], count = 1) {
-    this.portionsStore.loading.set(true);
-
     const result = await this.portionResource.bulkCreate({
       body: Array.from({ length: count }, () => ({ variationId })),
     });
@@ -229,8 +227,6 @@ export class FridgeService {
     } else {
       this.portionsStore.failure.set(result.failure);
     }
-
-    this.portionsStore.loading.set(false);
   }
 
   async createPortions(payload: PortionsCreate) {

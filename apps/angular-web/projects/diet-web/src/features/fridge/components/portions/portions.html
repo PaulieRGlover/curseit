@@ -48,6 +48,8 @@
         icon="plus"
         size="medium"
         priority="tertiary"
+        [loading]="isAdding()"
+        [disabled]="isAdding()"
       ></button>
 
       <ciui-context-menu
@@ -101,6 +103,8 @@
       icon="trashcan"
       size="medium"
       priority="tertiary"
+      [loading]="isRemoving()"
+      [disabled]="isRemoving()"
       (click)="handleRemove()"
     ></button>
   </div>

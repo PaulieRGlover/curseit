@@ -66,6 +66,8 @@ export class CidPortions {
 
   isInitialized = signal(false);
   selectedPortions = signal<Portions>([]);
+  isAdding = signal(false);
+  isRemoving = signal(false);
 
   foodId = computed<Nullable<string>>(() => {
     const { FOOD } = ROUTES.FRIDGE.FOODS;
@@ -142,6 +144,9 @@ export class CidPortions {
       return;
     }
 
+    this.isAdding.set(true);
+    this._contextMenuRef()?.toggle(false);
+
     const foodId_ = this.foodId();
     if (!foodId_) {
       throw new Error('no food id');
@@ -150,8 +155,7 @@ export class CidPortions {
     await this.fridgeService.addPortions(variation.id, this.createPortionsCount.value);
 
     this.createPortionsCount.setValue(DEFAULT_PORTIONS_NUMBER);
-
-    this._contextMenuRef()?.toggle(false);
+    this.isAdding.set(false);
   }
 
   handleCopy() {}
@@ -164,15 +168,18 @@ export class CidPortions {
     // TODO: waiting for dashboard module
   }
 
-  handleRemove() {
+  async handleRemove() {
     const selectedPortions_ = this.selectedPortions();
     if (!selectedPortions_.length) {
       return;
     }
 
-    this.fridgeService.deletePortions(selectedPortions_.map(({ id }) => id));
+    this.isRemoving.set(true);
+
+    await this.fridgeService.deletePortions(selectedPortions_.map(({ id }) => id));
 
     this.selectedPortions.set([]);
+    this.isRemoving.set(false);
   }
 
   @HostBinding('class')
