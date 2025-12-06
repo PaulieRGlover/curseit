@@ -27,7 +27,7 @@ import {
   PortionBulkDeleteDto,
   PortionCreateDto,
   PortionDto,
-  PortionSchema,
+  PortionSchemaRaw,
   PortionUpdateDto,
   PortionsDto,
   PortionsSchema,
@@ -243,8 +243,8 @@ export class FridgeService {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof PortionSchema>(
-      PortionSchema,
+    return this.validationService.validate<typeof PortionSchemaRaw>(
+      PortionSchemaRaw,
       portionToPortionDto(portion),
     );
   }
@@ -275,8 +275,8 @@ export class FridgeService {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof PortionSchema>(
-      PortionSchema,
+    return this.validationService.validate<typeof PortionSchemaRaw>(
+      PortionSchemaRaw,
       portionToPortionDto(portion),
     );
   }
@@ -298,8 +298,8 @@ export class FridgeService {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof PortionSchema>(
-      PortionSchema,
+    return this.validationService.validate<typeof PortionSchemaRaw>(
+      PortionSchemaRaw,
       portionToPortionDto(portion),
     );
   }

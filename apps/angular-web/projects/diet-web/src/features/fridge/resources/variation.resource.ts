@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   ApiResult,
   Delete,
+  Failure,
   Get,
   Patch,
   Post,
@@ -12,7 +13,6 @@ import {
 } from '@curseit/resource';
 
 import { DietResource } from '@/core/diet.resource';
-import { Failure } from '@/core/types/external/failure.types';
 
 import {
   Variation,

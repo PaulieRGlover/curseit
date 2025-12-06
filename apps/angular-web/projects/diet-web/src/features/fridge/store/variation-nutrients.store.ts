@@ -1,5 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 
+import { Failure } from '@curseit/resource';
 import { Nullable } from '@curseit/types';
 import { calculateAtwaterKcal } from '@curseit/units';
 
@@ -9,7 +10,6 @@ import {
   FATS_NAME,
   PROTEIN_NAME,
 } from '@/core/constants/nutrients.constants';
-import { Failure } from '@/core/types/external/failure.types';
 import {
   addStoreCollectionItems,
   getStoreCollectionItemById,

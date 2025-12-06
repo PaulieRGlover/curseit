@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 
 import {
   ApiResult,
+  Failure,
   Get,
   Resource,
   UseAuthorization,
@@ -9,7 +10,6 @@ import {
 } from '@curseit/resource';
 
 import { DietResource } from '@/core/diet.resource';
-import { Failure } from '@/core/types/external/failure.types';
 
 import { NutrientsAbridged } from '../types/external/nutrient.types';
 import { NutrientValidationService } from '../validation/external/nutrient-validation.service';
@@ -22,9 +22,9 @@ export class NutrientResource extends DietResource {
 
   @Get()
   @UseValidation('nutrientsAbridged')
-  async get(
-    payload: { query: { search?: string, noRepeatIn?: string } },
-  ): Promise<ApiResult<NutrientsAbridged, Failure>> {
+  async get(payload: {
+    query: { search?: string; noRepeatIn?: string };
+  }): Promise<ApiResult<NutrientsAbridged, Failure>> {
     return undefined!;
   }
 }

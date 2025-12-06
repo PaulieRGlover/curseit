@@ -1,8 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 
+import { Failure } from '@curseit/resource';
 import { Nullable } from '@curseit/types';
 
-import { Failure } from '@/core/types/external/failure.types';
 import { addStoreCollectionItems, updateStoreCollectionItemById } from '@/core/utils/store';
 
 import { Food, FoodWithPortions, FoodsWithPortions } from '../types/external/food.types';

@@ -1,8 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 
+import { Failure } from '@curseit/resource';
 import { Nullable } from '@curseit/types';
-
-import { Failure } from '@/core/types/external/failure.types';
 
 import { Variation } from '../types/external/variation.types';
 import { VariationUpdate } from '../types/internal/variation.types';

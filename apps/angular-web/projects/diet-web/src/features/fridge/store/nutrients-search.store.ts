@@ -1,9 +1,9 @@
 import { Injectable, signal } from '@angular/core';
 
+import { Failure } from '@curseit/resource';
 import { Nullable } from '@curseit/types';
 
 import { NutrientsAbridged } from '../types/external/nutrient.types';
-import { Failure } from '@/core/types/external/failure.types';
 
 @Injectable({ providedIn: 'root' })
 export class NutrientsSearchStore {

@@ -45,6 +45,7 @@
   theme="white"
   type="date"
   [formControl]="portionInput.controls.dateExpiring"
+  [min]="portionInput.controls.dateAdded.value"
   (change)="handleChange()"
 />
 

@@ -39,7 +39,9 @@ export class CidSignUp {
     if (!failure) {
       await this.navigationService.replaceWith(ROUTES.DASHBOARD);
     } else if (failure.status === ERROR_STATUS_CODES.CONFLICT) {
-      this.signUpData.controls.login.setErrors({ conflict: failure.error.message });
+      this.signUpData.controls.login.setErrors(
+        failure.error.message.map(({ description }) => description),
+      );
     }
 
     this.loading.set(false);

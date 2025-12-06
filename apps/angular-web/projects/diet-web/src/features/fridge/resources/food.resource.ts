@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 
 import {
   ApiResult,
+  Failure,
   Get,
   Patch,
   Post,
@@ -11,7 +12,6 @@ import {
 } from '@curseit/resource';
 
 import { DietResource } from '@/core/diet.resource';
-import { Failure } from '@/core/types/external/failure.types';
 
 import { Food, FoodWithVariations, FoodsWithPortions } from '../types/external/food.types';
 import { Portions } from '../types/external/portion.types';

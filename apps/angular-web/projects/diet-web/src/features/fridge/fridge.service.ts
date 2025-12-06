@@ -16,13 +16,14 @@ import { Food } from './types/external/food.types';
 import { Portion } from './types/external/portion.types';
 import { Variation, VariationNutrient } from './types/external/variation.types';
 import { FoodUpdate } from './types/internal/food.types';
-import { PortionCreate, PortionUpdate, PortionsCreate } from './types/internal/portion.types';
+import { PortionUpdate, PortionsCreate } from './types/internal/portion.types';
 import {
   VariationCreate,
   VariationNutrientCreate,
   VariationNutrientUpdate,
   VariationUpdate,
 } from './types/internal/variation.types';
+import { failureToPortionErrors } from './transformers/failure-to-portion-errors';
 
 @Injectable({ providedIn: 'root' })
 export class FridgeService {
@@ -251,8 +252,11 @@ export class FridgeService {
     });
     if (result.success) {
       this.portionsStore.update(portionId, result.success);
+      this.portionsStore.removePortionErrorsByIds([portionId]);
     } else {
       this.portionsStore.failure.set(result.failure);
+      const portionErrors = failureToPortionErrors(result.failure, portionId);
+      this.portionsStore.addPortionErrors(portionErrors);
     }
 
     this.portionsStore.loading.set(false);
@@ -264,6 +268,7 @@ export class FridgeService {
     const result = await this.portionResource.bulkDelete({ body: { ids: portionIds } });
     if (result.success) {
       this.portionsStore.removeByIds(portionIds);
+      this.portionsStore.removePortionErrorsByIds(portionIds);
     } else {
       this.portionsStore.failure.set(result.failure);
     }

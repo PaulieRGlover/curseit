@@ -12,24 +12,27 @@ import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 import type { HTMLInputTypeAttribute } from 'react';
 
+import { Nullable } from '@curseit/types';
+
+import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
 import { FormErrorService } from '../../shared/services/form-error.service';
-import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 
 const dateToInputFormat = (date: Date): string => {
-  const year   = date.getFullYear();
-  const month  = String(date.getMonth() + 1).padStart(2, '0');
-  const day    = String(date.getDate()).padStart(2, '0');
-  const hours  = String(date.getHours()).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
 
   return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
+};
 
 @Component({
   selector: 'ciui-date-input',
   imports: [ReactiveFormsModule, CiuiInputInfo],
   templateUrl: './date-input.html',
+  styleUrl: './date-input.scss',
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -42,8 +45,18 @@ const dateToInputFormat = (date: Date): string => {
 })
 export class CiuiDateInput extends CiuiBaseInput {
   type = input<HTMLInputTypeAttribute>('date');
+  minSource = input<Nullable<Date>>(null, { alias: 'min' });
+  maxSource = input<Nullable<Date>>(null, { alias: 'max' });
 
   activeElements = computed(() => [this._inputRef().nativeElement]);
+  min = computed(() => {
+    const minSource_ = this.minSource();
+    return minSource_ ? dateToInputFormat(minSource_) : null;
+  });
+  max = computed(() => {
+    const maxSource_ = this.maxSource();
+    return maxSource_ ? dateToInputFormat(maxSource_) : null;
+  });
 
   constructor() {
     super();
@@ -54,10 +67,11 @@ export class CiuiDateInput extends CiuiBaseInput {
     return [...super.hostClasses, 'ciui-date-input'];
   }
 
-  onInput(event: Event) {
+  override onBlur() {
     this._resetAngryDelete();
-    const newValue = (event.target as HTMLInputElement).value;
+    const newValue = this._inputRef().nativeElement.value;
     this._onChange(new Date(newValue));
+    super.onBlur();
   }
 
   applyWrite(value: any) {

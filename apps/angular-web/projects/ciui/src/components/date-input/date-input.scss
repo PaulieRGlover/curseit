@@ -1,0 +1,7 @@
+.ciui-date-input {
+  &.ciui-input--errored {
+    .ciui-input__input {
+      padding-right: 5rem;
+    }
+  }
+}

@@ -13,5 +13,11 @@ export const portion = z.object({
 });
 export type Portion = z.infer<typeof portion>;
 
+export const portionErrors = z.object({
+  id: z.string(),
+  dateExpiring: z.array(z.string()),
+});
+export type PortionErrors = z.infer<typeof portionErrors>;
+
 export const portions = z.array(portion);
 export type Portions = z.infer<typeof portions>;

@@ -1,10 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 
-import { ApiResult, Get, Post, Resource, UseAuthorization, UseValidation } from '@curseit/resource';
+import {
+  ApiResult,
+  Failure,
+  Get,
+  Post,
+  Resource,
+  UseAuthorization,
+  UseValidation,
+} from '@curseit/resource';
 import { Nullable } from '@curseit/types';
-
-import { Failure } from '@/core/types/external/failure.types';
 
 import { Success } from './types/external/success.types';
 import { AuthExternalValidationService } from './validation/auth-external-validation.service';
@@ -38,9 +44,7 @@ export class AuthResource {
   @Post('sign-out')
   @UseAuthorization()
   @UseValidation('signOut')
-  async signOut(
-    payload: { authToken: Nullable<string> },
-  ): ApiResult<{}, Failure> {
+  async signOut(payload: { authToken: Nullable<string> }): ApiResult<{}, Failure> {
     return undefined!;
   }
 }

@@ -1,9 +1,9 @@
 import { Injectable, computed, signal } from '@angular/core';
 
+import { Failure } from '@curseit/resource';
 import { Nullable } from '@curseit/types';
 
 import { ERROR_STATUS_CODES } from '@/core/constants/api.constants';
-import { Failure } from '@/core/types/external/failure.types';
 
 import { Food } from '../types/external/food.types';
 

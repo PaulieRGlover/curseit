@@ -4,6 +4,11 @@ import { zodValidate } from '@/core/validation/zod-validate.util';
 
 @Injectable({ providedIn: 'root' })
 export class FoodValidationService {
+  public async failure(input: any) {
+    const schema = (await import('@curseit/resource')).failure;
+    return zodValidate(schema, input);
+  }
+
   public async food(input: unknown) {
     const schema = (await import('../../types/external/food.types')).food;
     return zodValidate(schema, input);

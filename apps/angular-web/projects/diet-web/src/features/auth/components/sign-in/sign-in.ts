@@ -35,7 +35,7 @@ export class CidSignIn {
     if (!failure) {
       await this.navigationService.replaceWith(ROUTES.DASHBOARD);
     } else if (failure?.status === ERROR_STATUS_CODES.UNAUTHORIZED) {
-      this.signInData.setErrors({ unauthorized: failure.error.message });
+      this.signInData.setErrors(failure.error.message.map(({ description }) => description));
     }
 
     this.loading.set(false);

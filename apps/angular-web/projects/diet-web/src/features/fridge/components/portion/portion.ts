@@ -84,6 +84,7 @@ export class CidPortion {
   selectedControl = new FormControl(false);
 
   isPortionLoading = computed(() => this.portionsStore.isPortionLoading(this.portion().id));
+  errors = computed(() => this.portionsStore.getPortionErrors(this.portion().id));
 
   readonly portionSizeOptions = FOOD_UNITS;
 
@@ -104,6 +105,17 @@ export class CidPortion {
         this.portionInput.controls.dateAdded.setValue(dateAdded);
         this.portionInput.controls.dateExpiring.setValue(dateExpiring);
         this.portionInput.controls.portionSize.setValue(portionSize);
+      });
+    });
+
+    effect(() => {
+      const errors_ = this.errors();
+
+      untracked(() => {
+        if (errors_) {
+          this.portionInput.controls.dateExpiring.setErrors(errors_.dateExpiring);
+          this.portionInput.controls.dateExpiring.markAsTouched();
+        }
       });
     });
   }
