@@ -1,33 +1,39 @@
 @if (loading() === true) {
   <ciui-loader class="cid-portions__loader" theme="white" size="big" />
 } @else {
-  <div class="cid-portions__header">
-    <div class="cid-portions__label">State</div>
-    <div class="cid-portions__label">Variation</div>
-    <div class="cid-portions__label">Added</div>
-    <div class="cid-portions__label">Expiring</div>
-    <div class="cid-portions__label">Size</div>
-    <ciui-checkbox
-      class="cid-portions__select-all"
-      label="Select all portions"
-      labelInvisible
-      name="all-portions-selected"
-      transparent
-      row
-      theme="white"
-      [formControl]="allSelected"
-      (change)="handleAllSelectedChange()"
-    />
-  </div>
+  <div class="cid-portions__main">
+    @if (!portionsStore.portions()?.length) {
+      Looks you run out of {{ foodStore.food()?.name }}
+    } @else {
+      <div class="cid-portions__header">
+        <div class="cid-portions__label">State</div>
+        <div class="cid-portions__label">Variation</div>
+        <div class="cid-portions__label">Added</div>
+        <div class="cid-portions__label">Expiring</div>
+        <div class="cid-portions__label">Size</div>
+        <ciui-checkbox
+          class="cid-portions__select-all"
+          label="Select all portions"
+          labelInvisible
+          name="all-portions-selected"
+          transparent
+          row
+          theme="white"
+          [formControl]="allSelected"
+          (change)="handleAllSelectedChange()"
+        />
+      </div>
 
-  <div class="cid-portions__list">
-    @for (portion of portionsStore.portions(); track portion.id) {
-      <cid-portion
-        class="cid-portions__portion"
-        [portion]="portion"
-        [selected]="selectedPortions().includes(portion)"
-        (selectToggled)="toggleSelect(portion)"
-      />
+      <div class="cid-portions__list">
+        @for (portion of portionsStore.portions(); track portion.id) {
+          <cid-portion
+            class="cid-portions__portion"
+            [portion]="portion"
+            [selected]="selectedPortions().includes(portion)"
+            (selectToggled)="toggleSelect(portion)"
+          />
+        }
+      </div>
     }
   </div>
 
@@ -38,6 +44,9 @@
         icon="copy"
         size="medium"
         priority="tertiary"
+        title="Copy portions"
+        [loading]="isAdding()"
+        [disabled]="isAdding()"
         (click)="handleCopy()"
       ></button>
     } @else {
@@ -48,6 +57,7 @@
         icon="plus"
         size="medium"
         priority="tertiary"
+        title="Add portions"
         [loading]="isAdding()"
         [disabled]="isAdding()"
       ></button>
@@ -74,6 +84,7 @@
             type="number"
             label="Number of portions to add"
             labelInvisible
+            showArrows
             [min]="1"
             [max]="20"
             [formControl]="createPortionsCount"
@@ -87,6 +98,7 @@
       icon="cook"
       size="medium"
       priority="tertiary"
+      [disabled]="!selectedPortions().length"
       (click)="handleCook()"
     ></button>
 
@@ -95,6 +107,7 @@
       icon="eat"
       size="medium"
       priority="tertiary"
+      [disabled]="!selectedPortions().length"
       (click)="handleEat()"
     ></button>
 
@@ -103,8 +116,9 @@
       icon="trashcan"
       size="medium"
       priority="tertiary"
+      title="Remove portions"
       [loading]="isRemoving()"
-      [disabled]="isRemoving()"
+      [disabled]="isRemoving() || !selectedPortions().length"
       (click)="handleRemove()"
     ></button>
   </div>

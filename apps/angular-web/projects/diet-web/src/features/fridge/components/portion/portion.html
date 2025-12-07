@@ -3,7 +3,8 @@
 <cid-portion-badge
   ciui-context-menu-trigger
   trigger="click"
-  [indicator]="counter.value"
+  [freshness]="portion().freshness"
+  [counter]="counter.value"
 />
 
 <ciui-context-menu

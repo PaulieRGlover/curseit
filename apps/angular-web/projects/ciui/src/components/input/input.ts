@@ -1,7 +1,9 @@
 import {
   Component,
   ElementRef,
+  HostBinding,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   forwardRef,
   input,
@@ -34,6 +36,7 @@ export class CiuiInput extends CiuiBaseInput {
   min = input<number>();
   max = input<number>();
   autocomplete = input<string>('off');
+  showArrows = input<boolean, any>(false, { transform: booleanAttribute });
 
   activeElements = computed(() => [this._inputRef().nativeElement]);
 
@@ -50,6 +53,14 @@ export class CiuiInput extends CiuiBaseInput {
 
   applyWrite(value: any) {
     this._renderer.setProperty(this._inputRef().nativeElement, 'value', value);
+  }
+
+  @HostBinding('class')
+  override get hostClasses() {
+    return [
+      this.showArrows() && this.type() === 'number' ? 'ciui-input--show-arrows' : '',
+      ...super.hostClasses
+    ];
   }
 
   protected _inputRef = viewChild.required<ElementRef<HTMLInputElement>>('input');

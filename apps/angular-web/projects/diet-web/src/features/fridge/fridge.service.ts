@@ -11,6 +11,8 @@ import { PortionsStore } from './store/portions.store';
 import { VariationNutrientsStore } from './store/variation-nutrients.store';
 import { VariationStore } from './store/variation.store';
 import { VariationsStore } from './store/variations.store';
+import { failureToPortionErrors } from './transformers/failure-to-portion-errors';
+import { portionToPortionAbridged } from './transformers/portion-to-portion-abridged';
 import { variationToVariationAbridged } from './transformers/variation-to-variation-abridged.transformer';
 import { Food } from './types/external/food.types';
 import { Portion } from './types/external/portion.types';
@@ -23,7 +25,6 @@ import {
   VariationNutrientUpdate,
   VariationUpdate,
 } from './types/internal/variation.types';
-import { failureToPortionErrors } from './transformers/failure-to-portion-errors';
 
 @Injectable({ providedIn: 'root' })
 export class FridgeService {
@@ -44,7 +45,7 @@ export class FridgeService {
 
     const result = await this.foodResource.read();
     if (result.success) {
-      this.foodsStore.foods.set(result.success);
+      this.foodsStore.set(result.success);
     } else {
       this.foodsStore.failure.set(result.failure);
     }
@@ -220,27 +221,17 @@ export class FridgeService {
   }
 
   async addPortions(variationId: Variation['id'], count = 1) {
-    const result = await this.portionResource.bulkCreate({
-      body: Array.from({ length: count }, () => ({ variationId })),
-    });
-    if (result.success) {
-      this.portionsStore.add(result.success);
-    } else {
-      this.portionsStore.failure.set(result.failure);
-    }
+    await this.createPortions(Array.from({ length: count }, () => ({ variationId })));
   }
 
   async createPortions(payload: PortionsCreate) {
-    this.portionsStore.loading.set(true);
-
     const result = await this.portionResource.bulkCreate({ body: payload });
     if (result.success) {
       this.portionsStore.add(result.success);
+      this.foodsStore.addPortions(result.success.map(portionToPortionAbridged));
     } else {
       this.portionsStore.failure.set(result.failure);
     }
-
-    this.portionsStore.loading.set(false);
   }
 
   async updatePortion(portionId: Portion['id'], update: PortionUpdate) {
@@ -253,6 +244,7 @@ export class FridgeService {
     if (result.success) {
       this.portionsStore.update(portionId, result.success);
       this.portionsStore.removePortionErrorsByIds([portionId]);
+      this.foodsStore.updatePortion(portionId, portionToPortionAbridged(result.success));
     } else {
       this.portionsStore.failure.set(result.failure);
       const portionErrors = failureToPortionErrors(result.failure, portionId);
@@ -269,6 +261,7 @@ export class FridgeService {
     if (result.success) {
       this.portionsStore.removeByIds(portionIds);
       this.portionsStore.removePortionErrorsByIds(portionIds);
+      this.foodsStore.removePortionsByIds(portionIds);
     } else {
       this.portionsStore.failure.set(result.failure);
     }

@@ -1,13 +1,14 @@
 import { Component, HostBinding, ViewEncapsulation, computed, inject } from '@angular/core';
 
 import { CiuiLoader } from '@curseit/ciui';
-
-import { CidFoodBasicInfo } from '../food-basic-info/food-basic-info';
-import { FoodStore } from '../../store/food.store';
-import { CidVariations } from '../variations/variations';
 import { Nullable } from '@curseit/types';
+
 import { RouterService } from '@/core/router/router.service';
+
 import { FridgeService } from '../../fridge.service';
+import { FoodStore } from '../../store/food.store';
+import { CidFoodBasicInfo } from '../food-basic-info/food-basic-info';
+import { CidVariations } from '../variations/variations';
 
 @Component({
   selector: 'cid-food-info',
@@ -24,9 +25,13 @@ export class CidFoodInfo {
   foodId = computed<Nullable<string>>(() => this.routerService.leaf()?.params?.['foodId'] ?? null);
 
   ngOnInit() {
-    const foodId = this.foodId();
-    if (foodId && !this.foodStore.food()) {
-      this.fridgeService.loadFood(foodId);
+    const foodId_ = this.foodId();
+    const food_ = this.foodStore.food();
+    if (
+      foodId_ && 
+      (!food_ || food_.id !== foodId_)
+    ) {
+      this.fridgeService.loadFood(foodId_);
     }
   }
 

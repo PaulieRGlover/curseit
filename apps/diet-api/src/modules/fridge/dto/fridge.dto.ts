@@ -57,7 +57,6 @@ export const VariationUpdateSchema = VariationSchema.omit({ id: true }).partial(
 export class VariationUpdateDto extends createZodDto(VariationUpdateSchema) {}
 
 const portionId = z.string();
-const variationId = z.string();
 const portionDatesRefinement = (
   data: {
     dateAdded?: Nullable<string>;
@@ -78,32 +77,44 @@ const portionDatesRefinement = (
     });
   }
 };
-export const PortionSchemaRaw = z.object({
+export const PortionSchemaBase = z.object({
   id: portionId,
-  variationId,
+  variationId: z.string(),
+  foodId: z.string(),
   counter: z.string(),
   dateAdded: z.string().datetime(),
   dateExpiring: z.string().datetime().nullable(),
   sizeInGrams: z.number(),
   sizeDisplayUnit: FoodUnitSchema,
+  freshness: z.number().min(0).max(1).nullable(),
 });
-export const PortionSchema = PortionSchemaRaw.superRefine(portionDatesRefinement);
+export const PortionSchema = PortionSchemaBase.superRefine(portionDatesRefinement);
 export class PortionDto extends createZodDto(PortionSchema) {}
 
-export const PortionsSchema = z.array(PortionSchemaRaw).superRefine((data, context) => {
+export const PortionsSchema = z.array(PortionSchemaBase).superRefine((data, context) => {
   data.forEach((portion, index) => {
     portionDatesRefinement(portion, context, index);
-  })
+  });
 });
 export class PortionsDto extends createZodDto(PortionsSchema) {}
 
-export const PortionCreateSchema = PortionSchemaRaw.omit({ id: true, counter: true })
+export const PortionCreateSchema = PortionSchemaBase.omit({
+  id: true,
+  foodId: true,
+  counter: true,
+  freshness: true,
+})
   .partial()
   .required({ variationId: true })
   .superRefine(portionDatesRefinement);
 export class PortionCreateDto extends createZodDto(PortionCreateSchema) {}
 
-export const PortionUpdateSchema = PortionSchemaRaw.omit({ id: true, counter: true })
+export const PortionUpdateSchema = PortionSchemaBase.omit({
+  id: true,
+  foodId: true,
+  counter: true,
+  freshness: true,
+})
   .partial()
   .superRefine(portionDatesRefinement);
 export class PortionUpdateDto extends createZodDto(PortionUpdateSchema) {}
@@ -155,8 +166,16 @@ export class FoodDto extends createZodDto(FoodSchema) {}
 export const FoodInputSchema = FoodSchema.omit({ id: true }).partial();
 export class FoodInputDto extends createZodDto(FoodInputSchema) {}
 
+export const PortionSchemaAbridged = PortionSchemaBase.pick({
+  id: true,
+  variationId: true,
+  foodId: true,
+  counter: true,
+  freshness: true,
+});
+
 export const FoodWithPortionsSchema = FoodSchema.extend({
-  portions: z.array(PortionSchemaRaw),
+  portions: z.array(PortionSchemaAbridged),
 });
 export class FoodWithPortionsDto extends createZodDto(FoodWithPortionsSchema) {}
 

@@ -5,6 +5,7 @@ import {
   ViewEncapsulation,
   computed,
   forwardRef,
+  inject,
   input,
   viewChild,
 } from '@angular/core';
@@ -22,10 +23,8 @@ const dateToInputFormat = (date: Date): string => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
 
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  return `${year}-${month}-${day}`;
 };
 
 @Component({
@@ -44,6 +43,8 @@ const dateToInputFormat = (date: Date): string => {
   ],
 })
 export class CiuiDateInput extends CiuiBaseInput {
+  element = inject(ElementRef);
+
   type = input<HTMLInputTypeAttribute>('date');
   minSource = input<Nullable<Date>>(null, { alias: 'min' });
   maxSource = input<Nullable<Date>>(null, { alias: 'max' });
@@ -68,10 +69,29 @@ export class CiuiDateInput extends CiuiBaseInput {
   }
 
   override onBlur() {
+    this.onChange();
+    super.onBlur();
+  }
+
+  onChange() {
+    // This is required so that typing into the field doesn't trigger change with invalid dates
+    if (this._preventOnChangeOnce) {
+      this._preventOnChangeOnce = false;
+      return;
+    }
+
     this._resetAngryDelete();
     const newValue = this._inputRef().nativeElement.value;
-    this._onChange(new Date(newValue));
-    super.onBlur();
+    this._onChange(newValue ? new Date(newValue) : null);
+    this.element.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onChange();
+    } else {
+      this._preventOnChangeOnce = true;
+    }
   }
 
   applyWrite(value: any) {
@@ -81,5 +101,6 @@ export class CiuiDateInput extends CiuiBaseInput {
     }
   }
 
+  protected _preventOnChangeOnce = false;
   protected _inputRef = viewChild.required<ElementRef<HTMLTextAreaElement>>('input');
 }

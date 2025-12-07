@@ -9,7 +9,7 @@
   <input
     #input
     [id]="id()"
-    type="datetime-local"
+    type="date"
     [attr.name]="name()"
     [attr.placeholder]="placeholder()"
     [attr.min]="min()"
@@ -18,7 +18,7 @@
     [attr.title]="formControl().value"
     class="ciui-input__input"
     (blur)="onBlur()"
-    (change)="$event.stopPropagation()"
-    (input)="$event.stopPropagation()"
+    (change)="$event.stopPropagation(); onChange()"
+    (keydown)="handleKeyDown($event)"
   />
 </div>

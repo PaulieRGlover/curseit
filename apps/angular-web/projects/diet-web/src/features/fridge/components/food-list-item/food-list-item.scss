@@ -1,7 +1,7 @@
 .cid-food-list-item {
   flex: 0 0 260px;
   max-width: 260px;
-  height: 113px;
+  height: 130px;
   border-radius: 2rem 2rem 8rem 2rem;
   cursor: pointer;
 
@@ -12,5 +12,22 @@
 
   &__name.cid-food__name--absent {
     color: var(--text-gray-blue-faint);
+  }
+
+  &__portions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  &__portion-wrapper {
+    width: auto;
+    overflow: hidden;
+    padding-right: 2rem;
+
+    &:last-child {
+      flex-shrink: 0;
+      width: 9rem;
+    }
   }
 }

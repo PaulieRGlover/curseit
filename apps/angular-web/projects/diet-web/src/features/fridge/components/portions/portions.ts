@@ -25,6 +25,7 @@ import { RouterService } from '@/core/router/router.service';
 import { ROUTES } from '@/core/router/routes';
 
 import { FridgeService } from '../../fridge.service';
+import { FoodStore } from '../../store/food.store';
 import { PortionsStore } from '../../store/portions.store';
 import { VariationsStore } from '../../store/variations.store';
 import { Portion, Portions } from '../../types/external/portion.types';
@@ -54,6 +55,7 @@ const DEFAULT_PORTIONS_NUMBER = 1;
 export class CidPortions {
   routerService = inject(RouterService);
   fridgeService = inject(FridgeService);
+  foodStore = inject(FoodStore);
   portionsStore = inject(PortionsStore);
   variationsStore = inject(VariationsStore);
   validationService = inject(PortionsValidationService);
@@ -108,6 +110,7 @@ export class CidPortions {
   ngOnInit() {
     const foodId_ = this.foodId();
     if (foodId_ && (!this.portionsStore.portions() || !this.variationsStore.variations())) {
+      this.fridgeService.loadFood(foodId_);
       this.fridgeService.loadPortions(foodId_);
       this.fridgeService.loadVariations(foodId_);
     }
@@ -147,18 +150,24 @@ export class CidPortions {
     this.isAdding.set(true);
     this._contextMenuRef()?.toggle(false);
 
-    const foodId_ = this.foodId();
-    if (!foodId_) {
-      throw new Error('no food id');
-    }
-
     await this.fridgeService.addPortions(variation.id, this.createPortionsCount.value);
 
     this.createPortionsCount.setValue(DEFAULT_PORTIONS_NUMBER);
     this.isAdding.set(false);
   }
 
-  handleCopy() {}
+  async handleCopy() {
+    const selectedPortions_ = this.selectedPortions();
+    if (!selectedPortions_.length) {
+      return;
+    }
+
+    this.isAdding.set(true);
+
+    await this.fridgeService.createPortions(selectedPortions_);
+
+    this.isAdding.set(false);
+  }
 
   handleCook() {
     // TODO: waiting for kitchen module

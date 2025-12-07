@@ -27,7 +27,7 @@ import {
   PortionBulkDeleteDto,
   PortionCreateDto,
   PortionDto,
-  PortionSchemaRaw,
+  PortionSchemaBase,
   PortionUpdateDto,
   PortionsDto,
   PortionsSchema,
@@ -193,7 +193,7 @@ export class FridgeService {
     try {
       portions = await this.prismaService.foodPortion.findMany({
         where: { foodVariation: { food: { id: foodId, userId } } },
-        include: { foodVariation: { select: { id: true, counter: true } } },
+        include: { foodVariation: { select: { id: true, foodId: true, counter: true } } },
       });
     } catch {
       throw new InternalServerErrorException();
@@ -237,14 +237,14 @@ export class FridgeService {
           sizeDisplayUnit,
           ...dtoWithoutVariationId,
         },
-        include: { foodVariation: { select: { id: true, counter: true } } },
+        include: { foodVariation: { select: { id: true, foodId: true, counter: true } } },
       });
     } catch {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof PortionSchemaRaw>(
-      PortionSchemaRaw,
+    return this.validationService.validate<typeof PortionSchemaBase>(
+      PortionSchemaBase,
       portionToPortionDto(portion),
     );
   }
@@ -269,14 +269,14 @@ export class FridgeService {
           },
           ...update,
         },
-        include: { foodVariation: { select: { id: true, counter: true } } },
+        include: { foodVariation: { select: { id: true, foodId: true, counter: true } } },
       });
     } catch {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof PortionSchemaRaw>(
-      PortionSchemaRaw,
+    return this.validationService.validate<typeof PortionSchemaBase>(
+      PortionSchemaBase,
       portionToPortionDto(portion),
     );
   }
@@ -292,14 +292,14 @@ export class FridgeService {
           id: portionId,
           foodVariation: { food: { userId } },
         },
-        include: { foodVariation: { select: { id: true, counter: true } } },
+        include: { foodVariation: { select: { id: true, foodId: true, counter: true } } },
       });
     } catch {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof PortionSchemaRaw>(
-      PortionSchemaRaw,
+    return this.validationService.validate<typeof PortionSchemaBase>(
+      PortionSchemaBase,
       portionToPortionDto(portion),
     );
   }
@@ -346,7 +346,7 @@ export class FridgeService {
             ...portionWithoutVariationId,
           };
         }),
-        include: { foodVariation: { select: { id: true, counter: true } } },
+        include: { foodVariation: { select: { id: true, foodId: true, counter: true } } },
       });
     } catch {
       throw new InternalServerErrorException();
@@ -371,7 +371,7 @@ export class FridgeService {
       };
       portions = await this.prismaService.foodPortion.findMany({
         where,
-        include: { foodVariation: { select: { id: true, counter: true } } },
+        include: { foodVariation: { select: { id: true, foodId: true, counter: true } } },
       });
 
       await this.prismaService.foodPortion.deleteMany({ where });

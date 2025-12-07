@@ -118,6 +118,14 @@ export class CidPortion {
         }
       });
     });
+
+    effect(() => {
+      const selected_ = this.selected();
+
+      untracked(() => {
+        this.selectedControl.setValue(selected_);
+      });
+    });
   }
 
   async handleEmojiPick(counter: Portion['counter']) {

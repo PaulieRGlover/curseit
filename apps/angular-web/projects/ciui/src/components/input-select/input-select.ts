@@ -60,11 +60,6 @@ export class CiuiInputSelect<T extends string | SelectOption> extends CiuiBaseIn
     super();
   }
 
-  @HostBinding('class')
-  override get hostClasses() {
-    return [...super.hostClasses, 'ciui-input-select'];
-  }
-
   onInput() {
     this._resetAngryDelete();
     const inputValue = this._inputRef().nativeElement.value;
@@ -92,6 +87,11 @@ export class CiuiInputSelect<T extends string | SelectOption> extends CiuiBaseIn
     } else {
       this.selectValue.enable({ emitEvent: true });
     }
+  }
+
+  @HostBinding('class')
+  override get hostClasses() {
+    return [...super.hostClasses, 'ciui-input-select'];
   }
 
   protected _inputRef = viewChild.required<ElementRef<HTMLInputElement>>('input');

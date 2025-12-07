@@ -16,8 +16,10 @@ export const portionInputToPortionUpdate = (
     sizeDisplayUnit: portionSizeDisplayUnit,
   };
 
-  if (portionInput.dateExpiring) {
+  if (portionInput.dateExpiring instanceof Date && !isNaN(portionInput.dateExpiring.getTime())) {
     update.dateExpiring = portionInput.dateExpiring.toISOString();
+  } else if (portionInput.dateExpiring === null) {
+    update.dateExpiring = null;
   }
 
   return update;
