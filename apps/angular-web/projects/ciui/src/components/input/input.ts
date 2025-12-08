@@ -33,8 +33,9 @@ import { FormErrorService } from '../../shared/services/form-error.service';
 })
 export class CiuiInput extends CiuiBaseInput {
   type = input<HTMLInputTypeAttribute>('text');
-  min = input<number>();
-  max = input<number>();
+  min = input<string | number>();
+  max = input<string | number>();
+  step = input<string | number>();
   autocomplete = input<string>('off');
   showArrows = input<boolean, any>(false, { transform: booleanAttribute });
 

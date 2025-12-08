@@ -7,5 +7,7 @@ export const portionToPortionAbridged = (portion: Portion): PortionAbridged => {
     foodId: portion.foodId,
     counter: portion.counter,
     freshness: portion.freshness,
+    sizeInGrams: portion.sizeInGrams,
+    remainingInGrams: portion.remainingInGrams,
   };
 };

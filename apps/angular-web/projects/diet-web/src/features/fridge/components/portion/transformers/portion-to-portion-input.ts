@@ -20,5 +20,9 @@ export const portionToPortionInput = (
       convertFromGrams(portion.sizeDisplayUnit, portion.sizeInGrams),
       portion.sizeDisplayUnit,
     ],
+    remaining: [
+      convertFromGrams(portion.remainingDisplayUnit, portion.remainingInGrams),
+      portion.remainingDisplayUnit,
+    ],
   };
 };

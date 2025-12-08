@@ -65,6 +65,8 @@ export class FridgeService {
     } else {
       this.foodStore.failure.set(result.failure);
     }
+
+    this.foodStore.loading.set(false);
   }
 
   async loadFood(foodId: Food['id']) {
@@ -127,8 +129,22 @@ export class FridgeService {
     if (result.success) {
       this.foodStore.update(result.success);
       this.foodsStore.update(result.success.id, result.success);
+      this.foodsStore.removePortionsByFoodId(foodId);
     } else {
       this.foodStore.failure.set(result.failure);
+    }
+  }
+
+  async removeFood() {
+    const foodId = this.foodStore.food()?.id;
+    if (!foodId) {
+      throw new Error('no foodId');
+    }
+
+    const result = await this.foodResource.delete({ params: { foodId } });
+    if (result.success) {
+      this.foodsStore.remove(foodId);
+      this.resetFood();
     }
   }
 
@@ -200,7 +216,7 @@ export class FridgeService {
     return result.success ? variationToVariationAbridged(result.success) : null;
   }
 
-  async deleteVariation(variationId: Variation['id']) {
+  async removeVariation(variationId: Variation['id']) {
     if (this.variationStore.variation()?.id === variationId) {
       this.variationStore.loading.set(true);
     }
@@ -210,9 +226,11 @@ export class FridgeService {
       if (result.success.id === this.variationStore.variation()?.id) {
         this.variationNutrientsStore.variationNutrients.set(null);
         this.variationStore.variation.set(null);
+        this.portionsStore.removeByVariationId(variationId);
+        this.foodsStore.removePortionsByVariationId(variationId);
       }
 
-      this.variationsStore.delete(result.success.id);
+      this.variationsStore.remove(result.success.id);
     } else {
       this.variationStore.failure.set(result.failure);
     }
@@ -254,7 +272,7 @@ export class FridgeService {
     this.portionsStore.loading.set(false);
   }
 
-  async deletePortions(portionIds: Array<Portion['id']>) {
+  async removePortions(portionIds: Array<Portion['id']>) {
     this.portionsStore.loading.set(portionIds);
 
     const result = await this.portionResource.bulkDelete({ body: { ids: portionIds } });
@@ -320,7 +338,7 @@ export class FridgeService {
     return result.success;
   }
 
-  async deleteVariationNutrient(id: VariationNutrient['id']) {
+  async removeVariationNutrient(id: VariationNutrient['id']) {
     const variationId = this.variationStore.variation()?.id;
     if (!variationId) {
       throw new Error('no variationId');

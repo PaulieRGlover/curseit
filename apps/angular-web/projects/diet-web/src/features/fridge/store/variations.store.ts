@@ -25,7 +25,7 @@ export class VariationsStore {
     updateStoreCollectionItemById(this.variations, id, update);
   }
 
-  delete(id: Variation['id']) {
+  remove(id: Variation['id']) {
     this.variations.set(this.variations()?.filter(variation => variation.id !== id) ?? null);
   }
 }

@@ -1,9 +1,10 @@
 .cid-food-create-new {
   flex: 0 0 260px;
+  cursor: pointer;
   border-radius: 2rem 2rem 8rem 2rem;
   background-color: var(--background-white-dimmer);
-  height: 113px;
-  cursor: pointer;
+  padding: 0;
+  height: 130px;
 
   &__add-icon {
     width: 12rem;

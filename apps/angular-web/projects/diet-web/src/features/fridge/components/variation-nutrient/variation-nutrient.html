@@ -24,8 +24,9 @@
   labelInvisible
   name="amount"
   type="number"
-  [min]="0"
-  [max]="1000"
+  step="any"
+  min="0"
+  max="1000"
   row
   theme="white-semi-transparent"
   class="cid-variation-nutrient__amount"
@@ -42,6 +43,6 @@
     size="small"
     transparent
     [loading]="nutrientsStore.loading()"
-    (click)="fridgeService.deleteVariationNutrient(variationNutrient()!.id!)"
+    (click)="fridgeService.removeVariationNutrient(variationNutrient()!.id!)"
   ></button>
 }

@@ -43,8 +43,9 @@ export class CiuiInputSelect<T extends string | SelectOption> extends CiuiBaseIn
   options = input.required<Array<T>>();
 
   type = input<HTMLInputTypeAttribute>('text');
-  min = input<number>();
-  max = input<number>();
+  min = input<string | number>();
+  max = input<string | number>();
+  step = input<string | number>();
   autocomplete = input<string>('off');
   labelKey = input<string>('label');
   ariaLabelSelect = input<string>();

@@ -86,6 +86,8 @@ export const PortionSchemaBase = z.object({
   dateExpiring: z.string().datetime().nullable(),
   sizeInGrams: z.number(),
   sizeDisplayUnit: FoodUnitSchema,
+  remainingInGrams: z.number(),
+  remainingDisplayUnit: FoodUnitSchema,
   freshness: z.number().min(0).max(1).nullable(),
 });
 export const PortionSchema = PortionSchemaBase.superRefine(portionDatesRefinement);
@@ -172,6 +174,8 @@ export const PortionSchemaAbridged = PortionSchemaBase.pick({
   foodId: true,
   counter: true,
   freshness: true,
+  sizeInGrams: true,
+  remainingInGrams: true,
 });
 
 export const FoodWithPortionsSchema = FoodSchema.extend({

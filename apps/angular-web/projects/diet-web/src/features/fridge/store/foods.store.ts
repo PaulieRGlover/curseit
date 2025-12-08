@@ -6,6 +6,7 @@ import { Nullable } from '@curseit/types';
 import {
   addStoreCollectionItems,
   getStoreCollectionItemById,
+  removeStoreCollectionItemById,
   removeStoreCollectionItems,
   updateStoreCollectionItemById,
 } from '@/core/utils/store';
@@ -14,9 +15,8 @@ import { Food, FoodWithPortions, Foods, FoodsWithPortions } from '../types/exter
 import {
   PortionAbridged,
   PortionsAbridged,
-  portion,
-  portions,
 } from '../types/external/portion.types';
+import { Variation } from '../types/external/variation.types';
 
 type PortionAbridgedStoreProxy = PortionAbridged & { foodId: Food['id'] };
 type PortionsAbridgedStoreProxy = Array<PortionAbridgedStoreProxy>;
@@ -49,11 +49,15 @@ export class FoodsStore {
     }
   }
 
-  update(id: Food['id'], { portions, ...update }: Partial<FoodWithPortions>) {
-    updateStoreCollectionItemById(this._foods, id, update);
+  update(foodId: Food['id'], { portions, ...update }: Partial<FoodWithPortions>) {
+    updateStoreCollectionItemById(this._foods, foodId, update);
     if (portions) {
-      this._updatePortionsByFoodId(id, portions);
+      this._updatePortionsByFoodId(foodId, portions);
     }
+  }
+
+  remove(foodId: Food['id']) {
+    removeStoreCollectionItemById(this._foods, foodId);
   }
 
   addPortions(portions: PortionsAbridged) {
@@ -66,6 +70,20 @@ export class FoodsStore {
 
   removePortionsByIds(portionIds: Array<PortionAbridged['id']>) {
     removeStoreCollectionItems(this._portions, ({ id }) => portionIds.includes(id));
+  }
+
+  removePortionsByFoodId(foodId: Food['id']) {
+    removeStoreCollectionItems(
+      this._portions,
+      portion => portion.foodId === foodId,
+    );
+  }
+
+  removePortionsByVariationId(variationId: Variation['id']) {
+    removeStoreCollectionItems(
+      this._portions,
+      portion => portion.variationId === variationId,
+    );
   }
 
   private _updatePortionsByFoodId(foodId: Food['id'], portions: FoodWithPortions['portions']) {

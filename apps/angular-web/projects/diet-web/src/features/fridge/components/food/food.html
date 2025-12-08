@@ -11,6 +11,24 @@
   >Portions</a>
 </div>
 
+<div class="ciui-card__actions">
+  <button
+    ciui-button
+    icon="star"
+    size="medium"
+    priority="tertiary"
+    (click)="handleFavorite()"
+  ></button>
+
+  <button
+    ciui-button
+    icon="trashcan"
+    size="medium"
+    priority="tertiary"
+    (click)="handleRemove()"
+  ></button>
+</div>
+
 <div class="ciui-card__content">
   <router-outlet />
 </div>

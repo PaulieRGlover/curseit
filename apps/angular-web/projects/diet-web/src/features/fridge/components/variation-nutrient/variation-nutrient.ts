@@ -90,7 +90,7 @@ export class CidVariationNutrient {
   handleAngryDelete() {
     const variationNutrient = this.variationNutrient();
     if (variationNutrient.id) {
-      this.fridgeService.deleteVariationNutrient(variationNutrient.id);
+      this.fridgeService.removeVariationNutrient(variationNutrient.id);
     }
   }
 }

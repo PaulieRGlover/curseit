@@ -11,8 +11,14 @@ export class PortionValidationService {
     return zodValidateForFormControl(schema, control);
   }
 
+  // TODO: why portion depends on variation types? Should not be variation types then?
   public async portionSize(control: AbstractControl) {
     const schema = (await import('@/features/fridge/types/internal/variation.types')).portionSize;
+    return zodValidateForFormControl(schema, control);
+  }
+
+  public async remaining(control: AbstractControl) {
+    const schema = (await import('../types/portion.types')).remaining;
     return zodValidateForFormControl(schema, control);
   }
 

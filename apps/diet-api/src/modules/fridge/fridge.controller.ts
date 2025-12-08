@@ -60,6 +60,14 @@ export class FridgeController {
     return this.fridgeService.updateUserFood(userId, foodId, dto);
   }
 
+  @Delete('foods/:foodId')
+  deleteFood(
+    @GetUser('id') userId: UserDto['id'],
+    @Param('foodId') foodId: FoodDto['id'],
+  ) {
+    return this.fridgeService.deleteUserFood(userId, foodId);
+  }
+
   @Get('foods/:foodId/variations')
   getVariations(@GetUser('id') userId: UserDto['id'], @Param('foodId') foodId: FoodDto['id']) {
     return this.fridgeService.getUserFoodVariations(userId, foodId);

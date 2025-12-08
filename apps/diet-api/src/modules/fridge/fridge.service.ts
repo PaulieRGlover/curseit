@@ -152,6 +152,19 @@ export class FridgeService {
     return this.validationService.validate<typeof FoodSchema>(FoodSchema, food);
   }
 
+  async deleteUserFood(userId: UserDto['id'], foodId: FoodDto['id']): Promise<FoodDto> {
+    let food;
+    try {
+      food = await this.prismaService.food.delete({
+        where: { id: foodId, userId },
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+
+    return this.validationService.validate<typeof FoodSchema>(FoodSchema, food);
+  }
+
   async getUserFoodVariations(
     userId: UserDto['id'],
     foodId: FoodDto['id'],
@@ -205,10 +218,7 @@ export class FridgeService {
     );
   }
 
-  async createUserFoodPortion(
-    userId: UserDto['id'],
-    dto: PortionCreateDto,
-  ): Promise<PortionDto> {
+  async createUserFoodPortion(userId: UserDto['id'], dto: PortionCreateDto): Promise<PortionDto> {
     const { variationId, ...dtoWithoutVariationId } = dto;
     let variation;
     try {
@@ -225,6 +235,8 @@ export class FridgeService {
 
     const sizeInGrams = variation.portionSizeInGrams;
     const sizeDisplayUnit = variation.portionSizeDisplayUnit;
+    const remainingInGrams = sizeInGrams;
+    const remainingDisplayUnit = sizeDisplayUnit;
 
     let portion;
     try {
@@ -235,6 +247,8 @@ export class FridgeService {
           },
           sizeInGrams,
           sizeDisplayUnit,
+          remainingInGrams,
+          remainingDisplayUnit,
           ...dtoWithoutVariationId,
         },
         include: { foodVariation: { select: { id: true, foodId: true, counter: true } } },
@@ -329,20 +343,17 @@ export class FridgeService {
             throw new NotFoundException(FRIDGE_MESSAGES.NO_VARIATION);
           }
 
-          let sizeInGrams;
-          let sizeDisplayUnit;
-          if (portion.sizeInGrams && portion.sizeDisplayUnit) {
-            sizeInGrams = portion.sizeInGrams;
-            sizeDisplayUnit = portion.sizeDisplayUnit;
-          } else {
-            sizeInGrams = variation.portionSizeInGrams;
-            sizeDisplayUnit = variation.portionSizeDisplayUnit;
-          }
+          const sizeInGrams = variation.portionSizeInGrams;
+          const sizeDisplayUnit = variation.portionSizeDisplayUnit;
+          const remainingInGrams = sizeInGrams;
+          const remainingDisplayUnit = sizeDisplayUnit;
 
           return {
             foodVariationId: variationId,
             sizeInGrams,
             sizeDisplayUnit,
+            remainingInGrams,
+            remainingDisplayUnit,
             ...portionWithoutVariationId,
           };
         }),

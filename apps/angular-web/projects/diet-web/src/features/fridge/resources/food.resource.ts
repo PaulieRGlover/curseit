@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 
 import {
   ApiResult,
+  Delete,
   Failure,
   Get,
   Patch,
@@ -57,6 +58,14 @@ export class FoodResource extends DietResource {
   async update(payload: {
     body: FoodUpdate;
     params: { foodId: string };
+  }): Promise<ApiResult<Food, Failure>> {
+    return undefined!;
+  }
+
+  @Delete(':foodId')
+  @UseValidation('food.food')
+  async delete(payload: {
+    params: { foodId: string },
   }): Promise<ApiResult<Food, Failure>> {
     return undefined!;
   }

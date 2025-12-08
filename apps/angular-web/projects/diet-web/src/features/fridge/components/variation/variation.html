@@ -14,8 +14,9 @@
       row
       theme="white-semi-transparent"
       class="cid-food-variation__reference-size-input"
-      [min]="0"
-      [max]="1000"
+      min="0"
+      max="1000"
+      step="any"
       [options]="referenceSizeOptions"
       [formControl]="referenceSize"
       (change)="handleChange()"
@@ -96,8 +97,9 @@
         row
         theme="white-semi-transparent"
         class="cid-food-variation__portion-size"
-        [min]="0"
-        [max]="1000"
+        min="0"
+        max="1000"
+        step="any"
         [options]="portionSizeOptions"
         [formControl]="portionSize"
         (change)="handleChange()"

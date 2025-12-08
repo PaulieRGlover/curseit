@@ -56,7 +56,7 @@ export class CidVariations {
   async handleVariationRemove(payload: SelectRemoveOptionPayload<VariationAbridged>) {
     const { option, finished$ } = payload;
 
-    await this.fridgeService.deleteVariation(option.id);
+    await this.fridgeService.removeVariation(option.id);
 
     finished$.next();
   }

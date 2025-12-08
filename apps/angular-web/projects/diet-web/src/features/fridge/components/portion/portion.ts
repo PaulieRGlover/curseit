@@ -36,6 +36,7 @@ import { CidPortionBadge } from '../portion-badge/portion-badge';
 
 import { portionInputToPortionUpdate } from './transformers/portion-input-to-portion-update';
 import { portionToPortionInput } from './transformers/portion-to-portion-input';
+import { Remaining } from './types/portion.types';
 import { PortionValidationService } from './validation/portion-validation.service';
 
 @Component({
@@ -75,6 +76,10 @@ export class CidPortion {
       asyncValidators: this.validationService.portionSize,
       nonNullable: true,
     }),
+    remaining: new FormControl<Remaining>([100, UNITS.GRAM], {
+      asyncValidators: this.validationService.remaining,
+      nonNullable: true,
+    }),
   });
   counter = new FormControl<Nullable<Counter>>(null, {
     asyncValidators: this.validationService.counter,
@@ -83,10 +88,13 @@ export class CidPortion {
   // TODO: remove when `base-input` supports no form control
   selectedControl = new FormControl(false);
 
+  remainingInPercent = computed(() => {
+    return this.portion().remainingInGrams / this.portion().sizeInGrams * 100;
+  });
   isPortionLoading = computed(() => this.portionsStore.isPortionLoading(this.portion().id));
   errors = computed(() => this.portionsStore.getPortionErrors(this.portion().id));
 
-  readonly portionSizeOptions = FOOD_UNITS;
+  readonly foodSizeOptions = FOOD_UNITS;
 
   constructor() {
     effect(() => {
@@ -94,10 +102,8 @@ export class CidPortion {
       const variations_ = this.variationsStore.variations()!;
 
       untracked(() => {
-        const { variation, dateAdded, dateExpiring, portionSize } = portionToPortionInput(
-          portion_,
-          variations_,
-        );
+        const { variation, dateAdded, dateExpiring, portionSize, remaining } =
+          portionToPortionInput(portion_, variations_);
 
         this.counter.setValue(portion_.counter);
 
@@ -105,6 +111,7 @@ export class CidPortion {
         this.portionInput.controls.dateAdded.setValue(dateAdded);
         this.portionInput.controls.dateExpiring.setValue(dateExpiring);
         this.portionInput.controls.portionSize.setValue(portionSize);
+        this.portionInput.controls.remaining.setValue(remaining);
       });
     });
 

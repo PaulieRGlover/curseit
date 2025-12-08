@@ -26,7 +26,7 @@ export class CidPortionBadge {
   });
 
   meterStyle = computed(() => {
-    return { height: `${this.remaining()}%` };
+    return { height: `${Math.max(this.remaining(), 20)}%` };
   });
   freshness = computed<PortionFreshness>(() => {
     const freshnessSource_ = this.freshnessSource();

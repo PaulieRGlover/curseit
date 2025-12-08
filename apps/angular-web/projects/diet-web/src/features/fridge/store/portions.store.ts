@@ -46,6 +46,13 @@ export class PortionsStore {
     );
   }
 
+  removeByVariationId(variationId: Variation['id']) {
+    removeStoreCollectionItems(
+      this.portions,
+      portion => portion.variationId === variationId,
+    );
+  }
+
   remove(id: Portion['id']) {
     removeStoreCollectionItemById(this.portions, id);
   }

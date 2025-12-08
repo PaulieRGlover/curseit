@@ -109,9 +109,20 @@ export class CidPortions {
 
   ngOnInit() {
     const foodId_ = this.foodId();
-    if (foodId_ && (!this.portionsStore.portions() || !this.variationsStore.variations())) {
+    const food_ = this.foodStore.food();
+    if (!foodId_) {
+      return;
+    }
+
+    if (!food_ || foodId_ !== food_.id) {
       this.fridgeService.loadFood(foodId_);
+    }
+
+    if (!this.portionsStore.portions()) {
       this.fridgeService.loadPortions(foodId_);
+    }
+
+    if (!this.variationsStore.variations()) {
       this.fridgeService.loadVariations(foodId_);
     }
 
@@ -185,7 +196,7 @@ export class CidPortions {
 
     this.isRemoving.set(true);
 
-    await this.fridgeService.deletePortions(selectedPortions_.map(({ id }) => id));
+    await this.fridgeService.removePortions(selectedPortions_.map(({ id }) => id));
 
     this.selectedPortions.set([]);
     this.isRemoving.set(false);

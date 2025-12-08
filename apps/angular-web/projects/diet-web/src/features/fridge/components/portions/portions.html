@@ -3,7 +3,7 @@
 } @else {
   <div class="cid-portions__main">
     @if (!portionsStore.portions()?.length) {
-      Looks you run out of {{ foodStore.food()?.name }}
+      Looks you run out of {{ foodStore.food()?.name || 'Unnamed food' }}
     } @else {
       <div class="cid-portions__header">
         <div class="cid-portions__label">State</div>
@@ -11,6 +11,7 @@
         <div class="cid-portions__label">Added</div>
         <div class="cid-portions__label">Expiring</div>
         <div class="cid-portions__label">Size</div>
+        <div class="cid-portions__label">Remaining</div>
         <ciui-checkbox
           class="cid-portions__select-all"
           label="Select all portions"
@@ -85,8 +86,9 @@
             label="Number of portions to add"
             labelInvisible
             showArrows
-            [min]="1"
-            [max]="20"
+            min="1"
+            max="20"
+            step="1"
             [formControl]="createPortionsCount"
           />
         </div>

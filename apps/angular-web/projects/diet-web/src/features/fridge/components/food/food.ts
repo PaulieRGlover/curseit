@@ -1,7 +1,7 @@
 import { Component, HostBinding, ViewEncapsulation, computed, inject } from '@angular/core';
 import { RouterLinkWithHref, RouterOutlet } from '@angular/router';
 
-import { cardClasses } from '@curseit/ciui';
+import { CiuiButton, cardClasses } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
 import { NavigationService } from '@/core/router/navigation.service';
@@ -10,11 +10,11 @@ import { ROUTES, RouteId } from '@/core/router/routes';
 
 import { FridgeService } from '../../fridge.service';
 
-const { FOOD: FOOD_ROUTE } = ROUTES.FRIDGE.FOODS;
+const { ROOT: FOODS_ROUTE, FOOD: FOOD_ROUTE } = ROUTES.FRIDGE.FOODS;
 
 @Component({
   selector: 'cid-food',
-  imports: [RouterOutlet, RouterLinkWithHref],
+  imports: [RouterOutlet, RouterLinkWithHref, CiuiButton],
   templateUrl: './food.html',
   styleUrl: './food.scss',
   encapsulation: ViewEncapsulation.None,
@@ -38,6 +38,13 @@ export class CidFood {
 
   ngOnDestroy() {
     this.fridgeService.resetFood();
+  }
+
+  handleFavorite() {}
+
+  handleRemove() {
+    this.fridgeService.removeFood();
+    this.navigationService.goTo(FOODS_ROUTE);
   }
 
   @HostBinding('class')

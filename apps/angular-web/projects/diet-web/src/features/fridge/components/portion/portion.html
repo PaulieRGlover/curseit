@@ -5,6 +5,7 @@
   trigger="click"
   [freshness]="portion().freshness"
   [counter]="counter.value"
+  [remaining]="remainingInPercent()"
 />
 
 <ciui-context-menu
@@ -57,10 +58,26 @@
   type="number"
   row
   theme="white"
-  [min]="0"
-  [max]="1000"
-  [options]="portionSizeOptions"
+  min="0"
+  max="1000"
+  step="any"
+  [options]="foodSizeOptions"
   [formControl]="portionInput.controls.portionSize"
+  (change)="handleChange()"
+/>
+
+<ciui-input-select
+  label="Remaining"
+  labelInvisible
+  labelSelect="Remaining unit"
+  type="number"
+  row
+  theme="white"
+  min="0"
+  max="1000"
+  step="any"
+  [options]="foodSizeOptions"
+  [formControl]="portionInput.controls.remaining"
   (change)="handleChange()"
 />
 
