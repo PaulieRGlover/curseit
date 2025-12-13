@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { CidVariationNutrient } from '../variation-nutrient/variation-nutrient';
 
-import type { Nutrient, Nutrients } from './types/variation-nutrients.types';
+import type { NewNutrientModel } from './types/variation-nutrients.types';
 
 @Component({
   selector: 'cid-variation-nutrients',
@@ -18,14 +18,14 @@ import type { Nutrient, Nutrients } from './types/variation-nutrients.types';
 export class CidVariationNutrients {
   variationNutrientsStore = inject(VariationNutrientsStore);
 
-  nutrients = computed<Nutrients>(() => {
+  nutrients = computed(() => {
     return [...(this.variationNutrientsStore.variationNutrients() ?? []), this._getEmptyNutrient()];
   });
 
   @HostBinding('class')
   hostClass = 'cid-variation-nutrients';
 
-  private _getEmptyNutrient(): Nutrient {
+  private _getEmptyNutrient(): NewNutrientModel {
     return {
       id: uuidv4(),
       name: '',

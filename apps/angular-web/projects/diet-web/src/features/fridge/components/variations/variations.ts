@@ -42,7 +42,7 @@ export class CidVariations {
       return;
     }
 
-    this.fridgeService.getVariation(variationId);
+    this.fridgeService.loadVariation(variationId);
   }
 
   async handleVariationAdd(payload: SelectAddOptionPayload<VariationAbridged>) {

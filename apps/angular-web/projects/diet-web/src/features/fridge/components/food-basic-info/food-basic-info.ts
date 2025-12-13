@@ -9,11 +9,9 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CiuiCheckbox, CiuiInput, CiuiTextarea } from '@curseit/ciui';
-import { Nullable } from '@curseit/types';
 
 import { FridgeService } from '../../fridge.service';
 import { FoodStore } from '../../store/food.store';
-import { Food } from '../../types/external/food.types';
 import { FoodValidationService } from '../../validation/internal/food-validation.service';
 
 @Component({
@@ -28,7 +26,7 @@ export class CidFoodBasicInfo {
   foodValidationService = inject(FoodValidationService);
   foodStore = inject(FoodStore);
 
-  foodInput = new FormGroup({
+  foodForm = new FormGroup({
     name: new FormControl('', { asyncValidators: this.foodValidationService.name }),
     description: new FormControl(''),
     perishable: new FormControl(true),
@@ -36,32 +34,18 @@ export class CidFoodBasicInfo {
 
   constructor() {
     effect(() => {
-      const food = this.foodStore.food();
+      const food_ = this.foodStore.food();
 
       untracked(() => {
-        this.handleFoodUpdate(food);
+        if (food_) {
+          this.foodForm.setValue(food_);
+        }
       });
     });
   }
 
-  ngAfterViewInit() {
-    this.handleFoodUpdate(this.foodStore.food());
-  }
-
-  handleFoodUpdate(food: Nullable<Food>) {
-    if (!food) {
-      return;
-    }
-
-    this.foodInput.setValue({
-      name: food.name,
-      description: food.description,
-      perishable: food.perishable,
-    });
-  }
-
-  async handleFoodInputChange() {
-    const foodUpdate = await this.foodValidationService.food(this.foodInput.value);
+  async handleChange() {
+    const foodUpdate = await this.foodValidationService.food(this.foodForm.value);
     if (!foodUpdate) {
       return;
     }

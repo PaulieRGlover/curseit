@@ -9,7 +9,7 @@
   labelKey="name"
   [options]="nutrientsSearchStore.foundNutrients() ?? []"
   [optionsLoading]="nutrientsSearchStore.loading()"
-  [formControl]="nutrient.controls.core"
+  [formControl]="nutrientForm.controls.core"
   (searchedDebounced)="handleSearch($event)"
   (change)="handleChange()"
   (focus)="handleSearch()"
@@ -30,7 +30,7 @@
   row
   theme="white-semi-transparent"
   class="cid-variation-nutrient__amount"
-  [formControl]="nutrient.controls.amount"
+  [formControl]="nutrientForm.controls.amount"
   [options]="units"
   (change)="handleChange()"
 />

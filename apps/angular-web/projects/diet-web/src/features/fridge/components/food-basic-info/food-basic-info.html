@@ -4,8 +4,8 @@
   labelInvisible
   theme="white-semi-transparent"
   placeholder="Food name"
-  [formControl]="foodInput.controls.name"
-  (change)="handleFoodInputChange()"
+  [formControl]="foodForm.controls.name"
+  (change)="handleChange()"
 />
 
 <ciui-textarea
@@ -17,8 +17,8 @@
   transparent
   placeholder="Description"
   theme="white-semi-transparent"
-  [formControl]="foodInput.controls.description"
-  (change)="handleFoodInputChange()"
+  [formControl]="foodForm.controls.description"
+  (change)="handleChange()"
 />
 
 <ciui-checkbox
@@ -28,6 +28,6 @@
   transparent
   row
   theme="white-semi-transparent"
-  [formControl]="foodInput.controls.perishable"
-  (change)="handleFoodInputChange()"
+  [formControl]="foodForm.controls.perishable"
+  (change)="handleChange()"
 />

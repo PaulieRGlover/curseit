@@ -14,8 +14,8 @@ export const nutrientInput = z.extend(variationNutrient, {
 });
 export type NutrientInput = z.infer<typeof nutrientInput>;
 
-export const nutrient = z.object({
+export const nutrientModel = z.object({
   core: z.nullable(nutrientAbridged),
   amount,
 });
-export type Nutrient = z.infer<typeof nutrient>;
+export type NutrientModel = z.infer<typeof nutrientModel>;

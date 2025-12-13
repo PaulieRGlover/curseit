@@ -5,10 +5,7 @@ import {
   variationNutrientNutrientId,
 } from '@/features/fridge/types/external/variation.types';
 
-export const Nutrient = z.extend(variationNutrient, {
+export const newNutrientModel = z.extend(variationNutrient, {
   nutrientId: z.nullable(variationNutrientNutrientId),
 });
-export type Nutrient = z.infer<typeof Nutrient>;
-
-export const variationNutrientsNutrients = z.array(Nutrient);
-export type Nutrients = z.infer<typeof variationNutrientsNutrients>;
+export type NewNutrientModel = z.infer<typeof newNutrientModel>;

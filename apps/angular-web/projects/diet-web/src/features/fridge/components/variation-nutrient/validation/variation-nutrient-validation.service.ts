@@ -10,4 +10,9 @@ export class VariationNutrientValidationService {
     const schema = (await import('../types/variation-nutrient.types')).amount;
     return zodValidateForFormControl(schema, control);
   }
+
+  public async nutrientModel(input: unknown) {
+    const schema = (await import('../types/variation-nutrient.types')).nutrientModel;
+    return zodValidate(schema, input);
+  }
 }

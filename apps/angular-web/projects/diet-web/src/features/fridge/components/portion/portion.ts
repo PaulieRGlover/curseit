@@ -63,12 +63,12 @@ export class CidPortion {
   portionsStore = inject(PortionsStore);
   validationService = inject(PortionValidationService);
 
-  portion = input.required<Portion>();
+  portionInput = input.required<Portion>({ alias: 'portion' });
   selected = input(false);
 
   selectToggled = output();
 
-  portionInput = new FormGroup({
+  portionForm = new FormGroup({
     variation: new FormControl<Nullable<VariationAbridged>>(null),
     dateAdded: new FormControl<Date>(new Date(), { nonNullable: true }),
     dateExpiring: new FormControl<Nullable<Date>>(null),
@@ -89,16 +89,16 @@ export class CidPortion {
   selectedControl = new FormControl(false);
 
   remainingInPercent = computed(() => {
-    return this.portion().remainingInGrams / this.portion().sizeInGrams * 100;
+    return this.portionInput().remainingInGrams / this.portionInput().sizeInGrams * 100;
   });
-  isPortionLoading = computed(() => this.portionsStore.isPortionLoading(this.portion().id));
-  errors = computed(() => this.portionsStore.getPortionErrors(this.portion().id));
+  isPortionLoading = computed(() => this.portionsStore.isPortionLoading(this.portionInput().id));
+  errors = computed(() => this.portionsStore.getPortionErrors(this.portionInput().id));
 
   readonly foodSizeOptions = FOOD_UNITS;
 
   constructor() {
     effect(() => {
-      const portion_ = this.portion();
+      const portion_ = this.portionInput();
       const variations_ = this.variationsStore.variations()!;
 
       untracked(() => {
@@ -107,11 +107,11 @@ export class CidPortion {
 
         this.counter.setValue(portion_.counter);
 
-        this.portionInput.controls.variation.setValue(variation);
-        this.portionInput.controls.dateAdded.setValue(dateAdded);
-        this.portionInput.controls.dateExpiring.setValue(dateExpiring);
-        this.portionInput.controls.portionSize.setValue(portionSize);
-        this.portionInput.controls.remaining.setValue(remaining);
+        this.portionForm.controls.variation.setValue(variation);
+        this.portionForm.controls.dateAdded.setValue(dateAdded);
+        this.portionForm.controls.dateExpiring.setValue(dateExpiring);
+        this.portionForm.controls.portionSize.setValue(portionSize);
+        this.portionForm.controls.remaining.setValue(remaining);
       });
     });
 
@@ -120,8 +120,8 @@ export class CidPortion {
 
       untracked(() => {
         if (errors_) {
-          this.portionInput.controls.dateExpiring.setErrors(errors_.dateExpiring);
-          this.portionInput.controls.dateExpiring.markAsTouched();
+          this.portionForm.controls.dateExpiring.setErrors(errors_.dateExpiring);
+          this.portionForm.controls.dateExpiring.markAsTouched();
         }
       });
     });
@@ -142,15 +142,14 @@ export class CidPortion {
       counter: this.counter.value,
     });
 
-    this.fridgeService.updateVariation(variationUpdate, this.portion().variationId);
+    this.fridgeService.updateVariation(variationUpdate, this.portionInput().variationId);
   }
 
   async handleChange() {
-    const portionInput = await this.validationService.portionModel(this.portionInput.value);
+    const portionModel = await this.validationService.portionModel(this.portionForm.value);
+    const portionUpdate = portionModelToPortionUpdate(portionModel);
 
-    const update = portionModelToPortionUpdate(portionInput);
-
-    this.fridgeService.updatePortion(this.portion().id, update);
+    this.fridgeService.updatePortion(this.portionInput().id, portionUpdate);
   }
 
   @HostBinding('class')

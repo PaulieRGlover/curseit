@@ -12,8 +12,8 @@ import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { NutrientAbridged } from '../../types/external/nutrient.types';
 import { Unit } from '../../types/internal/variation.types';
 
-import { nutrientInputToNutrient } from './transformers/nutrient-input-to-nutrient';
-import { nutrientToVariationNutrientUpdate } from './transformers/nutrient-to-variation-nutrient-update';
+import { nutrientInputToNutrientModel } from './transformers/nutrient-input-to-nutrient-model';
+import { nutrientModelToVariationNutrientUpdate } from './transformers/nutrient-model-to-variation-nutrient-update';
 import { NutrientInput } from './types/variation-nutrient.types';
 import { VariationNutrientValidationService } from './validation/variation-nutrient-validation.service';
 
@@ -42,7 +42,7 @@ export class CidVariationNutrient {
 
   nutrientInput = input.required<NutrientInput>({ alias: 'nutrient' });
 
-  nutrient = new FormGroup({
+  nutrientForm = new FormGroup({
     core: new FormControl<Nullable<NutrientAbridged>>(null),
     amount: new FormControl<[number, Unit]>([0, UNITS.GRAM], {
       asyncValidators: this.validationService.amount,
@@ -58,25 +58,25 @@ export class CidVariationNutrient {
   readonly units = NUTRIENT_UNITS;
 
   ngOnInit() {
-    const { core, amount } = nutrientInputToNutrient(this.nutrientInput());
+    const { core, amount } = nutrientInputToNutrientModel(this.nutrientInput());
 
     if (core) {
-      this.nutrient.controls.core.setValue(core);
-      this.nutrient.controls.amount.setValue(amount);
+      this.nutrientForm.controls.core.setValue(core);
+      this.nutrientForm.controls.amount.setValue(amount);
     }
   }
 
   async handleChange() {
+    const nutrientModel = await this.validationService.nutrientModel(this.nutrientForm.value);
+    const variationNutrientUpdate = nutrientModelToVariationNutrientUpdate(nutrientModel);
+
     if (this.isNew()) {
       this.fridgeService.createVariationNutrient({
         id: this.nutrientInput().id,
-        ...nutrientToVariationNutrientUpdate(this.nutrient.getRawValue()),
+        ...variationNutrientUpdate,
       });
     } else {
-      this.fridgeService.updateVariationNutrient(
-        this.nutrientInput().id,
-        nutrientToVariationNutrientUpdate(this.nutrient.getRawValue()),
-      );
+      this.fridgeService.updateVariationNutrient(this.nutrientInput().id, variationNutrientUpdate);
     }
   }
 

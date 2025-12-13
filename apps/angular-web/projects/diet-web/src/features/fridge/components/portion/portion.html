@@ -3,7 +3,7 @@
 <cid-portion-badge
   ciui-context-menu-trigger
   trigger="click"
-  [freshness]="portion().freshness"
+  [freshness]="portionInput().freshness"
   [counter]="counter.value"
   [remaining]="remainingInPercent()"
 />
@@ -28,7 +28,7 @@
   labelKey="name"
   placeholder="Select food variation"
   [options]="variations_"
-  [formControl]="portionInput.controls.variation"
+  [formControl]="portionForm.controls.variation"
   (change)="handleChange()"
 />
 
@@ -37,7 +37,7 @@
   labelInvisible
   theme="white"
   type="date"
-  [formControl]="portionInput.controls.dateAdded"
+  [formControl]="portionForm.controls.dateAdded"
   (change)="handleChange()"
 />
 
@@ -46,8 +46,8 @@
   labelInvisible
   theme="white"
   type="date"
-  [formControl]="portionInput.controls.dateExpiring"
-  [min]="portionInput.controls.dateAdded.value"
+  [formControl]="portionForm.controls.dateExpiring"
+  [min]="portionForm.controls.dateAdded.value"
   (change)="handleChange()"
 />
 
@@ -62,7 +62,7 @@
   max="1000"
   step="any"
   [options]="foodSizeOptions"
-  [formControl]="portionInput.controls.portionSize"
+  [formControl]="portionForm.controls.portionSize"
   (change)="handleChange()"
 />
 
@@ -77,7 +77,7 @@
   max="1000"
   step="any"
   [options]="foodSizeOptions"
-  [formControl]="portionInput.controls.remaining"
+  [formControl]="portionForm.controls.remaining"
   (change)="handleChange()"
 />
 

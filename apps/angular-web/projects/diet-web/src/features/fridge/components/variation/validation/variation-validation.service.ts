@@ -22,12 +22,12 @@ export class VariationValidationService {
   }
 
   public async variationInput(input: unknown) {
-    const schema = (await import('../types/variation-model.types')).variationModel;
+    const schema = (await import('../types/variation.types')).variationModel;
     return zodValidate(schema, input);
   }
 
   public async variationModelUpdate(input: unknown) {
-    const schema = (await import('../types/variation-model.types')).variationModelUpdate;
+    const schema = (await import('../types/variation.types')).variationModelUpdate;
     return zodValidate(schema, input);
   }
 

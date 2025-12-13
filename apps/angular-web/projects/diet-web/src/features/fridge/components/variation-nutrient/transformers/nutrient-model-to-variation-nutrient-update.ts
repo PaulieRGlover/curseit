@@ -2,9 +2,11 @@ import { convertToGrams } from '@curseit/units';
 
 import { VariationNutrientUpdate } from '@/features/fridge/types/internal/variation.types';
 
-import { Nutrient } from '../types/variation-nutrient.types';
+import { NutrientModel } from '../types/variation-nutrient.types';
 
-export const nutrientToVariationNutrientUpdate = (nutrient: Nutrient): VariationNutrientUpdate => {
+export const nutrientModelToVariationNutrientUpdate = (
+  nutrient: NutrientModel,
+): VariationNutrientUpdate => {
   const [value, unit] = nutrient.amount;
 
   return {

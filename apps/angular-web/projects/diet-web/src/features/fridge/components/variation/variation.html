@@ -18,7 +18,7 @@
       max="1000"
       step="any"
       [options]="referenceSizeOptions"
-      [formControl]="referenceSize"
+      [formControl]="variationForm.controls.referenceSize"
       (change)="handleChange()"
     />
 
@@ -33,7 +33,7 @@
         class="cid-food-variation__energy-input"
         noSelectDisable
         [options]="energyOptions"
-        [formControl]="energy"
+        [formControl]="variationForm.controls.energy"
         (change)="handleChange()"
       />
 
@@ -45,7 +45,7 @@
         row
         theme="white-semi-transparent"
         class="cid-food-variation__energy-auto-input"
-        [formControl]="energyAuto"
+        [formControl]="variationForm.controls.energyAuto"
         (change)="handleChange(false)"
       />
 
@@ -69,7 +69,7 @@
           ciui-context-menu-trigger
           trigger="click"
           class="cid-food-variation__counter"
-          [counter]="counter.value"
+          [counter]="variationForm.controls.counter.value"
         />
 
         <ciui-context-menu
@@ -101,7 +101,7 @@
         max="1000"
         step="any"
         [options]="portionSizeOptions"
-        [formControl]="portionSize"
+        [formControl]="variationForm.controls.portionSize"
         (change)="handleChange()"
       />
     </div>

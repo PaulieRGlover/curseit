@@ -171,7 +171,7 @@ export class FridgeService {
     return result.success ? variationToVariationAbridged(result.success) : null;
   }
 
-  async getVariation(variationId: Variation['id']) {
+  async loadVariation(variationId: Variation['id']) {
     this.variationNutrientsStore.variationNutrients.set(null);
 
     this.variationStore.loading.set(true);

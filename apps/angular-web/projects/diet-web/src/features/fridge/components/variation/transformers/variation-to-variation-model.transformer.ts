@@ -3,7 +3,7 @@ import { convertFromGrams, convertToKj } from '@curseit/units';
 import { Variation } from '@/features/fridge/types/external/variation.types';
 import { EnergyUnit } from '@/features/fridge/types/internal/variation.types';
 
-import { VariationModel } from '../types/variation-model.types';
+import { VariationModel } from '../types/variation.types';
 
 const convertEnergy = (energyAmountInKcal: number, energyDisplayUnit: EnergyUnit) => {
   return energyDisplayUnit === 'kJ' ? convertToKj(energyAmountInKcal) : energyAmountInKcal;

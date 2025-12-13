@@ -1,10 +1,10 @@
 import { convertFromGrams } from '@curseit/units';
 
-import { Nutrient, NutrientInput } from '../types/variation-nutrient.types';
+import { NutrientModel, NutrientInput } from '../types/variation-nutrient.types';
 
-export const nutrientInputToNutrient = (
+export const nutrientInputToNutrientModel = (
   nutrientInput: NutrientInput,
-): Nutrient => {
+): NutrientModel => {
   return {
     core: nutrientInput.nutrientId ? {
       id: nutrientInput.nutrientId,

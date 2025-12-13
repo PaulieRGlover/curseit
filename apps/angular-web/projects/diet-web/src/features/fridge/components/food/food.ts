@@ -29,11 +29,8 @@ export class CidFood {
   });
 
   isInfoActive = computed(() => this.routerService.leafId() === FOOD_ROUTE.INFO.id);
-
   isPortionsActive = computed(() => this.routerService.leafId() === FOOD_ROUTE.PORTIONS.id);
-
   getInfoNavigation = computed(() => this._getFoodNavigation(FOOD_ROUTE.INFO));
-
   getPortionsNavigation = computed(() => this._getFoodNavigation(FOOD_ROUTE.PORTIONS));
 
   ngOnDestroy() {
