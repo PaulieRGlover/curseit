@@ -34,8 +34,8 @@ import { Counter, PortionSize } from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
 import { CidPortionBadge } from '../portion-badge/portion-badge';
 
-import { portionInputToPortionUpdate } from './transformers/portion-input-to-portion-update';
-import { portionToPortionInput } from './transformers/portion-to-portion-input';
+import { portionModelToPortionUpdate } from './transformers/portion-input-to-portion-update';
+import { portionToPortionModel } from './transformers/portion-to-portion-input';
 import { Remaining } from './types/portion.types';
 import { PortionValidationService } from './validation/portion-validation.service';
 
@@ -103,7 +103,7 @@ export class CidPortion {
 
       untracked(() => {
         const { variation, dateAdded, dateExpiring, portionSize, remaining } =
-          portionToPortionInput(portion_, variations_);
+          portionToPortionModel(portion_, variations_);
 
         this.counter.setValue(portion_.counter);
 
@@ -146,9 +146,9 @@ export class CidPortion {
   }
 
   async handleChange() {
-    const portionInput = await this.validationService.portionInput(this.portionInput.value);
+    const portionInput = await this.validationService.portionModel(this.portionInput.value);
 
-    const update = portionInputToPortionUpdate(portionInput);
+    const update = portionModelToPortionUpdate(portionInput);
 
     this.fridgeService.updatePortion(this.portion().id, update);
   }

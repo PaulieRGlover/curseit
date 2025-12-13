@@ -2,12 +2,12 @@ import { convertToGrams, convertToKcal } from '@curseit/units';
 
 import { VariationUpdate } from '@/features/fridge/types/internal/variation.types';
 
-import { VariationInputUpdate } from '../types/variation-input.types';
+import { VariationModelUpdate } from '../types/variation-model.types';
 
-export const variationInputUpdateToVariationUpdate = (
-  variationInputUpdate: VariationInputUpdate,
+export const variationModelUpdateToVariationUpdate = (
+  variationModelUpdate: VariationModelUpdate,
 ): VariationUpdate => {
-  const { referenceSize, energy, energyAuto, portionSize, counter } = variationInputUpdate;
+  const { referenceSize, energy, energyAuto, portionSize, counter } = variationModelUpdate;
 
   const update: VariationUpdate = {};
   if (referenceSize) {

@@ -485,7 +485,7 @@ export class FridgeService {
   ): Promise<VariationNutrientDto> {
     const variation = await this.getUserFoodVariation(userId, variationId);
     const existingNutrientIds = variation.nutrients.map(({ nutrientId }) => nutrientId);
-    if (existingNutrientIds.includes(dto.nutrientId)) {
+    if (dto.nutrientId && existingNutrientIds.includes(dto.nutrientId)) {
       throw new ConflictException(FRIDGE_MESSAGES.NUTRIENT_ALREADY_EXISTS);
     }
 
@@ -493,8 +493,9 @@ export class FridgeService {
     try {
       nutrient = await this.prismaService.nutrientInFoodVariation.create({
         data: {
+          id: dto.id,
           foodVariation: { connect: { id: variationId, food: { userId } } },
-          valueInGrams: dto.valueInGrams,
+          valueInGrams: dto.valueInGrams ?? 0,
           valueDisplayUnit: dto.valueDisplayUnit,
           nutrient: { connect: { id: dto.nutrientId } },
         },
@@ -513,14 +514,22 @@ export class FridgeService {
   async updateUserFoodVariationNutrient(
     userId: UserDto['id'],
     variationId: VariationDto['id'],
-    nutrientId: VariationNutrientDto['id'],
+    variationNutrientId: VariationNutrientDto['id'],
     dto: VariationNutrientUpdateDto,
   ): Promise<VariationNutrientDto> {
+    const variation = await this.getUserFoodVariation(userId, variationId);
+    const hasOtherNutrientWithSameNutrientId = Boolean(variation.nutrients.find(
+      ({ id, nutrientId }) => nutrientId === dto.nutrientId && id !== variationNutrientId,
+    ));
+    if (dto.nutrientId && hasOtherNutrientWithSameNutrientId) {
+      throw new ConflictException(FRIDGE_MESSAGES.NUTRIENT_ALREADY_EXISTS);
+    }
+
     let nutrient;
     try {
       nutrient = await this.prismaService.nutrientInFoodVariation.update({
         where: {
-          id: nutrientId,
+          id: variationNutrientId,
           foodVariation: { id: variationId, food: { userId } },
         },
         data: {

@@ -293,7 +293,9 @@ export class FridgeService {
       throw new Error('no variationId');
     }
 
-    this.variationNutrientsStore.loading.set(true);
+    if (nutrientCreate.id) {
+      this.variationNutrientsStore.addToLoading(nutrientCreate.id);
+    }
 
     const result = await this.variationResource.createNutrient({
       body: nutrientCreate,
@@ -305,27 +307,30 @@ export class FridgeService {
       this.variationNutrientsStore.failure.set(result.failure);
     }
 
-    this.variationNutrientsStore.loading.set(false);
-
-    return result.success ?? null;
+    if (nutrientCreate.id) {
+      this.variationNutrientsStore.removeFromLoading(nutrientCreate.id);
+    }
   }
 
-  async updateVariationNutrient(nutrientUpdate: VariationNutrientUpdate) {
+  async updateVariationNutrient(
+    variationNutrientId: VariationNutrient['id'],
+    update: VariationNutrientUpdate,
+  ) {
     const variationId = this.variationStore.variation()?.id;
     if (!variationId) {
       throw new Error('no variationId');
     }
 
-    if (this.variationNutrientsStore.compare(nutrientUpdate.id, nutrientUpdate)) {
+    if (this.variationNutrientsStore.compare(variationNutrientId, update)) {
       return;
     }
 
     this.nutrientsSearchStore.searchCache.set(null);
-    this.variationNutrientsStore.loading.set(true);
+    this.variationNutrientsStore.addToLoading(variationNutrientId);
 
     const result = await this.variationResource.updateNutrient({
-      body: nutrientUpdate,
-      params: { variationId, variationNutrientId: nutrientUpdate.id },
+      body: update,
+      params: { variationId, variationNutrientId },
     });
     if (result.success) {
       this.variationNutrientsStore.update(result.success.id, result.success);
@@ -333,9 +338,7 @@ export class FridgeService {
       this.variationNutrientsStore.failure.set(result.failure);
     }
 
-    this.variationNutrientsStore.loading.set(false);
-
-    return result.success;
+    this.variationNutrientsStore.removeFromLoading(variationNutrientId);
   }
 
   async removeVariationNutrient(id: VariationNutrient['id']) {
@@ -344,7 +347,7 @@ export class FridgeService {
       throw new Error('no variationId');
     }
 
-    this.variationNutrientsStore.loading.set(true);
+    this.variationNutrientsStore.addToLoading(id);
 
     const result = await this.variationResource.deleteNutrient({
       params: { variationId, variationNutrientId: id },
@@ -355,7 +358,7 @@ export class FridgeService {
       this.variationNutrientsStore.failure.set(result.failure);
     }
 
-    this.variationNutrientsStore.loading.set(false);
+    this.variationNutrientsStore.removeFromLoading(id);
   }
 
   async searchNutrients(search?: string) {

@@ -2,26 +2,26 @@ import { convertToGrams } from '@curseit/units';
 
 import { PortionUpdate } from '@/features/fridge/types/internal/portion.types';
 
-import { PortionInput } from '../types/portion.types';
+import { PortionModel } from '../types/portion.types';
 
-export const portionInputToPortionUpdate = (
-  portionInput: PortionInput,
+export const portionModelToPortionUpdate = (
+  portionModel: PortionModel,
 ): PortionUpdate => {
-  const [portionSize, portionSizeDisplayUnit] = portionInput.portionSize;
-  const [remainingSize, remainingDisplayUnit] = portionInput.remaining;
+  const [portionSize, portionSizeDisplayUnit] = portionModel.portionSize;
+  const [remainingSize, remainingDisplayUnit] = portionModel.remaining;
 
   const update: PortionUpdate = {
-    variationId: portionInput.variation.id,
-    dateAdded: portionInput.dateAdded.toISOString(),
+    variationId: portionModel.variation.id,
+    dateAdded: portionModel.dateAdded.toISOString(),
     sizeInGrams: convertToGrams(portionSizeDisplayUnit, portionSize),
     sizeDisplayUnit: portionSizeDisplayUnit,
     remainingInGrams: convertToGrams(remainingDisplayUnit, remainingSize),
     remainingDisplayUnit: remainingDisplayUnit,
   };
 
-  if (portionInput.dateExpiring instanceof Date && !isNaN(portionInput.dateExpiring.getTime())) {
-    update.dateExpiring = portionInput.dateExpiring.toISOString();
-  } else if (portionInput.dateExpiring === null) {
+  if (portionModel.dateExpiring instanceof Date && !isNaN(portionModel.dateExpiring.getTime())) {
+    update.dateExpiring = portionModel.dateExpiring.toISOString();
+  } else if (portionModel.dateExpiring === null) {
     update.dateExpiring = null;
   }
 

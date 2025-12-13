@@ -18,11 +18,12 @@ import {
 } from '@/core/utils/store';
 
 import { VariationNutrient } from '../types/external/variation.types';
+import { VariationNutrientUpdate } from '../types/internal/variation.types';
 
 @Injectable({ providedIn: 'root' })
 export class VariationNutrientsStore {
   variationNutrients = signal<Nullable<Array<VariationNutrient>>>(null);
-  loading = signal(false);
+  loading = signal<Array<VariationNutrient['id']> | boolean>(false);
   failure = signal<Nullable<Failure>>(null);
 
   energyCalculatedKcal = computed(() => {
@@ -44,7 +45,28 @@ export class VariationNutrientsStore {
     });
   });
 
-  compare(id: VariationNutrient['id'], update: VariationNutrient) {
+  getById(id: VariationNutrient['id']) {
+    return getStoreCollectionItemById(this.variationNutrients, id);
+  }
+  
+  isVariationNutrientLoading(id: VariationNutrient['id']) {
+    const loading_ = this.loading();
+    return typeof loading_ === 'boolean' ? loading_ : loading_?.includes(id);
+  }
+
+  addToLoading(id: VariationNutrient['id']) {
+    this.loading.update(loading => [...(Array.isArray(loading) ? loading : []), id]);
+  }
+
+  removeFromLoading(variationNutrientId: VariationNutrient['id']) {
+    this.loading.update(loading => {
+      return Array.isArray(loading)
+        ? loading.filter(id => id !== variationNutrientId)
+        : loading;
+    });
+  }
+
+  compare(id: VariationNutrient['id'], update: VariationNutrientUpdate) {
     const nutrient = getStoreCollectionItemById(this.variationNutrients, id);
     if (!nutrient) {
       throw new Error('nothing to compare');

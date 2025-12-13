@@ -27,12 +27,13 @@ export type VariationAbridged = z.infer<typeof variationAbridged>;
 export const variationsAbridged = z.array(variationAbridged);
 export type VariationsAbridged = z.infer<typeof variationsAbridged>;
 
+export const variationNutrientNutrientId = z.string();
 export const variationNutrient = z.object({
   id: z.string(),
   name: z.string(),
   valueInGrams: z.number(),
   valueDisplayUnit: nutrientUnit,
-  nutrientId: z.nullable(z.string()),
+  nutrientId: variationNutrientNutrientId,
 });
 export type VariationNutrient = z.infer<typeof variationNutrient>;
 

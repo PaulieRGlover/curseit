@@ -22,8 +22,8 @@ export class PortionValidationService {
     return zodValidateForFormControl(schema, control);
   }
 
-  public async portionInput(input: unknown) {
-    const schema = (await import('../types/portion.types')).portionInput;
+  public async portionModel(input: unknown) {
+    const schema = (await import('../types/portion.types')).portionModel;
     return zodValidate(schema, input);
   }
 

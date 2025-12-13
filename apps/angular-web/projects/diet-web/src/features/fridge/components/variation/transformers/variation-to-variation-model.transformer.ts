@@ -1,14 +1,15 @@
 import { convertFromGrams, convertToKj } from '@curseit/units';
 
 import { Variation } from '@/features/fridge/types/external/variation.types';
+import { EnergyUnit } from '@/features/fridge/types/internal/variation.types';
 
-import { EnergyUnit, VariationInput } from '../types/variation-input.types';
+import { VariationModel } from '../types/variation-model.types';
 
 const convertEnergy = (energyAmountInKcal: number, energyDisplayUnit: EnergyUnit) => {
   return energyDisplayUnit === 'kJ' ? convertToKj(energyAmountInKcal) : energyAmountInKcal;
 };
 
-export const variationToVariationInput = (variation: Variation): VariationInput => {
+export const variationToVariationModel = (variation: Variation): VariationModel => {
   const {
     referenceSizeDisplayUnit,
     referenceSizeInGrams,

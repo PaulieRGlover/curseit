@@ -142,11 +142,11 @@ export const VariationNutrientSchema = z.object({
 });
 export class VariationNutrientDto extends createZodDto(VariationNutrientSchema) {}
 
-export const VariationNutrientCreate = VariationNutrientSchema.omit({ id: true });
-export class VariationNutrientCreateDto extends createZodDto(VariationNutrientCreate) {}
+export const VariationNutrientCreateSchema = VariationNutrientSchema.partial();
+export class VariationNutrientCreateDto extends createZodDto(VariationNutrientCreateSchema) {}
 
-export const VariationNutrientUpdate = VariationNutrientSchema;
-export class VariationNutrientUpdateDto extends createZodDto(VariationNutrientUpdate) {}
+export const VariationNutrientUpdateSchema = VariationNutrientCreateSchema.omit({ id: true });
+export class VariationNutrientUpdateDto extends createZodDto(VariationNutrientUpdateSchema) {}
 
 export const VariationWithNutrientsSchema = VariationSchema.extend({
   nutrients: z.array(VariationNutrientSchema),

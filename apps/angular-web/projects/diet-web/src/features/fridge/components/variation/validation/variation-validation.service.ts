@@ -7,12 +7,12 @@ import { zodValidate } from '@/core/validation/zod-validate.util';
 @Injectable({ providedIn: 'root' })
 export class VariationValidationService {
   public async referenceSize(control: AbstractControl) {
-    const schema = (await import('../types/variation-input.types')).referenceSize;
+    const schema = (await import('@/features/fridge/types/internal/variation.types')).referenceSize;
     return zodValidateForFormControl(schema, control);
   }
 
   public async energy(control: AbstractControl) {
-    const schema = (await import('../types/variation-input.types')).energy;
+    const schema = (await import('@/features/fridge/types/internal/variation.types')).energy;
     return zodValidateForFormControl(schema, control);
   }
 
@@ -22,12 +22,12 @@ export class VariationValidationService {
   }
 
   public async variationInput(input: unknown) {
-    const schema = (await import('../types/variation-input.types')).variationInput;
+    const schema = (await import('../types/variation-model.types')).variationModel;
     return zodValidate(schema, input);
   }
 
-  public async variationInputUpdate(input: unknown) {
-    const schema = (await import('../types/variation-input.types')).variationInputUpdate;
+  public async variationModelUpdate(input: unknown) {
+    const schema = (await import('../types/variation-model.types')).variationModelUpdate;
     return zodValidate(schema, input);
   }
 

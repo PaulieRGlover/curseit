@@ -9,9 +9,9 @@
   labelKey="name"
   [options]="nutrientsSearchStore.foundNutrients() ?? []"
   [optionsLoading]="nutrientsSearchStore.loading()"
-  [formControl]="nutrient"
+  [formControl]="nutrient.controls.core"
   (searchedDebounced)="handleSearch($event)"
-  (change)="handleInputChange()"
+  (change)="handleChange()"
   (focus)="handleSearch()"
   (angryDelete)="handleAngryDelete()"
 />
@@ -30,19 +30,19 @@
   row
   theme="white-semi-transparent"
   class="cid-variation-nutrient__amount"
-  [formControl]="amount"
+  [formControl]="nutrient.controls.amount"
   [options]="units"
-  (change)="handleInputChange()"
+  (change)="handleChange()"
 />
 
-@if (!variationNutrient().isEmpty) {
+@if (!isNew()) {
   <button
     ciui-button
     class="cid-variation-nutrient__remove"
     icon="close"
     size="small"
     transparent
-    [loading]="nutrientsStore.loading()"
-    (click)="fridgeService.removeVariationNutrient(variationNutrient()!.id!)"
+    [loading]="isLoading()"
+    (click)="fridgeService.removeVariationNutrient(nutrientInput().id)"
   ></button>
 }

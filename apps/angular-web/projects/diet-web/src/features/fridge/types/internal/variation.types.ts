@@ -1,9 +1,13 @@
 import * as z from 'zod/v4-mini';
 
-import { UNITS } from '@curseit/units';
+import { ENERGY } from '@curseit/units';
 
+import { NUTRIENT_UNITS } from '../../constants/units';
 import { foodUnit } from '../external/unit.types';
-import { variation } from '../external/variation.types';
+import {
+  variation,
+  variationNutrient,
+} from '../external/variation.types';
 
 export const variationNutrientName = z
   .string()
@@ -31,17 +35,34 @@ export type PortionSize = z.infer<typeof portionSize>;
 export const counter = z.emoji();
 export type Counter = z.infer<typeof counter>;
 
-export const unit = z.enum([UNITS.GRAM, UNITS.MILLIGRAM, UNITS.MICROGRAM]);
+export const unit = z.enum(NUTRIENT_UNITS);
+export type Unit = z.infer<typeof unit>;
 
-export const variationNutrientCreate = z.object({
-  name: variationNutrientName,
-  valueInGrams: variationNutrientValue,
-  valueDisplayUnit: unit,
-  nutrientId: z.string(),
-});
+export const referenceSizeValue = z.number().check(z.minimum(0), z.maximum(1000));
+export type ReferenceSizeValue = z.infer<typeof referenceSizeValue>;
+
+export const referenceSizeUnit = foodUnit;
+export type ReferenceSizeUnit = z.infer<typeof referenceSizeUnit>;
+
+export const referenceSize = z.tuple([referenceSizeValue, referenceSizeUnit]);
+export type ReferenceSize = z.infer<typeof referenceSize>;
+
+export const energyAmount = z.number().check(z.minimum(0));
+export type EnergyAmount = z.infer<typeof energyAmount>;
+
+export const energyUnit = z.enum(ENERGY);
+export type EnergyUnit = z.infer<typeof energyUnit>;
+
+export const energy = z.tuple([energyAmount, energyUnit]);
+export type Energy = z.infer<typeof energy>;
+
+export const energyAuto = z.boolean();
+export type EnergyAuto = z.infer<typeof energyAuto>;
+
+export const variationNutrientCreate = z.partial(variationNutrient);
 export type VariationNutrientCreate = z.infer<typeof variationNutrientCreate>;
 
-export const variationNutrientUpdate = z.extend(variationNutrientCreate, { id: z.string() });
+export const variationNutrientUpdate = z.omit(variationNutrientCreate, { id: true });
 export type VariationNutrientUpdate = z.infer<typeof variationNutrientUpdate>;
 
 export const variationCreate = z.pick(variation, { name: true });

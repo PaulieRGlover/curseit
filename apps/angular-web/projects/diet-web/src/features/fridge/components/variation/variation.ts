@@ -25,14 +25,14 @@ import { FOOD_UNITS } from '../../constants/units';
 import { FridgeService } from '../../fridge.service';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { VariationStore } from '../../store/variation.store';
-import { PortionSize } from '../../types/internal/variation.types';
+import { Energy, PortionSize, ReferenceSize } from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
 import { CidPortionBadge } from '../portion-badge/portion-badge';
 import { CidVariationNutrients } from '../variation-nutrients/variation-nutrients';
 
-import { variationInputUpdateToVariationUpdate } from './transformers/variation-input-to-variation-update.transformer';
-import { variationToVariationInput } from './transformers/variation-to-variation-input.transformer';
-import { Energy, ReferenceSize, VariationInput } from './types/variation-input.types';
+import { variationModelUpdateToVariationUpdate } from './transformers/variation-model-update-to-variation-update.transformer';
+import { variationToVariationModel } from './transformers/variation-to-variation-model.transformer';
+import { VariationModel } from './types/variation-model.types';
 import { VariationValidationService } from './validation/variation-validation.service';
 
 @Component({
@@ -59,13 +59,13 @@ export class CidVariation {
   fridgeService = inject(FridgeService);
   validationService = inject(VariationValidationService);
 
-  variationInput = computed<Nullable<VariationInput>>(() => {
+  variationInput = computed<Nullable<VariationModel>>(() => {
     const variation = this.variationStore.variation();
     if (!variation) {
       return null;
     }
 
-    return variationToVariationInput(variation);
+    return variationToVariationModel(variation);
   });
 
   energyCalculated = computed<Nullable<Energy>>(() => {
@@ -145,7 +145,7 @@ export class CidVariation {
   }
 
   async handleChange(updateEnergy = true) {
-    const variationInput = await this.validationService.variationInputUpdate({
+    const variationInput = await this.validationService.variationModelUpdate({
       referenceSize: this.referenceSize.value,
       energy: updateEnergy ? this.energy.value : undefined,
       energyAuto: this.energyAuto.value,
@@ -153,7 +153,7 @@ export class CidVariation {
       counter: this.counter.value,
     });
 
-    this.fridgeService.updateVariation(variationInputUpdateToVariationUpdate(variationInput));
+    this.fridgeService.updateVariation(variationModelUpdateToVariationUpdate(variationInput));
   }
 
   @HostBinding('class')

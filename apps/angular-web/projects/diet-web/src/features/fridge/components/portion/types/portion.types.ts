@@ -13,7 +13,7 @@ export type RemainingUnit = z.infer<typeof remainingUnit>;
 export const remaining = z.tuple([remainingValue, remainingUnit]);
 export type Remaining = z.infer<typeof remaining>;
 
-export const portionInput = z.object({
+export const portionModel = z.object({
   variation: variationAbridged,
   dateAdded: z.date(),
   dateExpiring: z.nullable(z.date()),
@@ -21,4 +21,4 @@ export const portionInput = z.object({
   remaining,
 });
 
-export type PortionInput = z.infer<typeof portionInput>;
+export type PortionModel = z.infer<typeof portionModel>;

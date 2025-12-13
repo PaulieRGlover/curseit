@@ -1,12 +1,12 @@
 import { Portion } from '@/features/fridge/types/external/portion.types';
-import { PortionInput } from '../types/portion.types';
+import { PortionModel } from '../types/portion.types';
 import { VariationsAbridged } from '@/features/fridge/types/external/variation.types';
 import { convertFromGrams } from '@curseit/units';
 
-export const portionToPortionInput = (
+export const portionToPortionModel = (
   portion: Portion,
   variations: VariationsAbridged,
-): PortionInput => {
+): PortionModel => {
   const variation = variations.find(variation => variation.id === portion.variationId);
   if (!variation) {
     throw new Error(`could not find variation of a portion: ${portion.id}`);

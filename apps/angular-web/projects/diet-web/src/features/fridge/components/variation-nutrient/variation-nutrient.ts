@@ -1,22 +1,20 @@
-import { Component, ViewEncapsulation, forwardRef, inject, input, output } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { Component, ViewEncapsulation, computed, forwardRef, inject, input } from '@angular/core';
+import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 import { CiuiButton, CiuiInputSelect, CiuiSelect } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
-import { UNITS, Unit } from '@curseit/units';
+import { UNITS } from '@curseit/units';
 
 import { NUTRIENT_UNITS } from '../../constants/units';
 import { FridgeService } from '../../fridge.service';
 import { NutrientsSearchStore } from '../../store/nutrients-search.store';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { NutrientAbridged } from '../../types/external/nutrient.types';
-import {
-  VariationNutrientListItem,
-  VariationNutrientListItemUpdate,
-} from '../variation-nutrients/types/variation-nutrient-list-item.types';
+import { Unit } from '../../types/internal/variation.types';
 
-import { variationNutrientInputUpdateToVariationNutrientListItemUpdate } from './transformers/variation-nutrient-input-to-variation-nutrient-list-item-update.transformer';
-import { variationNutrientListItemToVariationNutrientInput } from './transformers/variation-nutrient-list-item-to-variation-nutrient-input.transformer';
+import { nutrientInputToNutrient } from './transformers/nutrient-input-to-nutrient';
+import { nutrientToVariationNutrientUpdate } from './transformers/nutrient-to-variation-nutrient-update';
+import { NutrientInput } from './types/variation-nutrient.types';
 import { VariationNutrientValidationService } from './validation/variation-nutrient-validation.service';
 
 @Component({
@@ -39,48 +37,47 @@ import { VariationNutrientValidationService } from './validation/variation-nutri
 export class CidVariationNutrient {
   fridgeService = inject(FridgeService);
   validationService = inject(VariationNutrientValidationService);
-  nutrientsStore = inject(VariationNutrientsStore);
+  variationNutrientsStore = inject(VariationNutrientsStore);
   nutrientsSearchStore = inject(NutrientsSearchStore);
 
-  variationNutrient = input.required<VariationNutrientListItem>();
+  nutrientInput = input.required<NutrientInput>({ alias: 'nutrient' });
 
-  update = output<VariationNutrientListItemUpdate>();
+  nutrient = new FormGroup({
+    core: new FormControl<Nullable<NutrientAbridged>>(null),
+    amount: new FormControl<[number, Unit]>([0, UNITS.GRAM], {
+      asyncValidators: this.validationService.amount,
+      nonNullable: true,
+    }),
+  });
 
-  nutrient = new FormControl<Nullable<NutrientAbridged>>(null);
-  amount = new FormControl<[number, Unit]>([0, UNITS.GRAM], {
-    asyncValidators: this.validationService.amount,
+  isNew = computed(() => !this.variationNutrientsStore.getById(this.nutrientInput().id));
+  isLoading = computed(() => {
+    return this.variationNutrientsStore.isVariationNutrientLoading(this.nutrientInput().id);
   });
 
   readonly units = NUTRIENT_UNITS;
 
   ngOnInit() {
-    const variationNutrientInput = variationNutrientListItemToVariationNutrientInput(
-      this.variationNutrient(),
-    );
-    if (variationNutrientInput.nutrientId) {
-      this.nutrient.setValue({
-        id: variationNutrientInput.nutrientId,
-        name: variationNutrientInput.name,
-      });
+    const { core, amount } = nutrientInputToNutrient(this.nutrientInput());
 
-      this.amount.setValue(variationNutrientInput.amount);
+    if (core) {
+      this.nutrient.controls.core.setValue(core);
+      this.nutrient.controls.amount.setValue(amount);
     }
   }
 
-  async handleInputChange() {
-    if (!this.nutrient.value?.id) {
-      return;
+  async handleChange() {
+    if (this.isNew()) {
+      this.fridgeService.createVariationNutrient({
+        id: this.nutrientInput().id,
+        ...nutrientToVariationNutrientUpdate(this.nutrient.getRawValue()),
+      });
+    } else {
+      this.fridgeService.updateVariationNutrient(
+        this.nutrientInput().id,
+        nutrientToVariationNutrientUpdate(this.nutrient.getRawValue()),
+      );
     }
-
-    const nutrientInputUpdate = await this.validationService.variationNutrientInputUpdate({
-      name: this.nutrient.value?.name,
-      amount: this.amount.value,
-      nutrientId: this.nutrient.value.id,
-    });
-
-    this.update.emit(
-      variationNutrientInputUpdateToVariationNutrientListItemUpdate(nutrientInputUpdate),
-    );
   }
 
   handleSearch(value?: string) {
@@ -88,7 +85,7 @@ export class CidVariationNutrient {
   }
 
   handleAngryDelete() {
-    const variationNutrient = this.variationNutrient();
+    const variationNutrient = this.nutrientInput();
     if (variationNutrient.id) {
       this.fridgeService.removeVariationNutrient(variationNutrient.id);
     }
