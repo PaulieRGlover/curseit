@@ -18,22 +18,27 @@
 
 <div class="cid-variation-nutrient__delimiter"></div>
 
-<ciui-input-select
-  label="Nutrient amount"
-  labelSelect="Nutrient unit"
-  labelInvisible
-  name="amount"
-  type="number"
-  step="any"
-  min="0"
-  max="1000"
-  row
-  theme="white-semi-transparent"
-  class="cid-variation-nutrient__amount"
-  [formControl]="nutrientForm.controls.amount"
-  [options]="units"
-  (change)="handleChange()"
-/>
+<div class="ciui-input-group">
+  <ciui-number-input
+    label="Nutrient amount"
+    labelInvisible
+    min="0"
+    max="1000"
+    step="any"
+    theme="white-semi-transparent"
+    [formControl]="nutrientForm.controls.amountValue"
+    (change)="handleChange()"
+  />
+
+  <ciui-select
+    label="Nutrient amount unit"
+    labelInvisible
+    theme="white-semi-transparent"
+    [formControl]="nutrientForm.controls.amountUnit"
+    [options]="units"
+    (change)="handleChange()"
+  />
+</div>
 
 @if (!isNew()) {
   <button

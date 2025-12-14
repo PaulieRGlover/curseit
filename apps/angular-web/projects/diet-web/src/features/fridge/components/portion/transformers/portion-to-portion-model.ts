@@ -16,13 +16,9 @@ export const portionToPortionModel = (
     variation,
     dateAdded: new Date(portion.dateAdded),
     dateExpiring: portion.dateExpiring ? new Date(portion.dateExpiring) : null,
-    portionSize: [
-      convertFromGrams(portion.sizeDisplayUnit, portion.sizeInGrams),
-      portion.sizeDisplayUnit,
-    ],
-    remaining: [
-      convertFromGrams(portion.remainingDisplayUnit, portion.remainingInGrams),
-      portion.remainingDisplayUnit,
-    ],
+    portionSizeValue: convertFromGrams(portion.sizeDisplayUnit, portion.sizeInGrams),
+    portionSizeUnit: portion.sizeDisplayUnit,
+    remainingValue: convertFromGrams(portion.remainingDisplayUnit, portion.remainingInGrams),
+    remainingUnit: portion.remainingDisplayUnit,
   };
 };

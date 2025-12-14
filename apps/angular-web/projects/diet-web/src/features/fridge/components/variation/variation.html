@@ -6,34 +6,50 @@
   <hr />
 
   <div class="cid-food-variation__main-inputs">
-    <ciui-input-select
-      label="Per"
-      ariaLabel="Per (reference size)"
-      labelSelect="Reference size unit"
-      type="number"
-      row
-      theme="white-semi-transparent"
-      class="cid-food-variation__reference-size-input"
-      min="0"
-      max="1000"
-      step="any"
-      [options]="referenceSizeOptions"
-      [formControl]="variationForm.controls.referenceSize"
-      (change)="handleChange()"
-    />
+    <div class="cid-food-variation__reference-size">
+      <ciui-number-input
+        label="Per"
+        ariaLabel="Per (reference size)"
+        theme="white-semi-transparent"
+        min="0"
+        max="1000"
+        step="any"
+        row
+        class="cid-food-variation__reference-size-value"
+        [formControl]="variationForm.controls.referenceSizeValue"
+        (change)="handleChange()"
+      />
+
+      <ciui-select
+        label="Reference size unit"
+        labelInvisible
+        theme="white-semi-transparent"
+        class="cid-food-variation__reference-size-unit"
+        [formControl]="variationForm.controls.referenceSizeUnit"
+        [options]="foodUnits"
+        (change)="handleChange()"
+      />
+    </div>
 
     <div class="cid-food-variation__energy">
-      <ciui-input-select
+      <ciui-number-input
         label="⚡"
         ariaLabel="Energy"
-        labelSelect="Energy unit"
-        type="number"
-        row
         theme="white-semi-transparent"
-        class="cid-food-variation__energy-input"
-        noSelectDisable
+        step="any"
+        row
+        class="cid-food-variation__energy-amount"
+        [formControl]="variationForm.controls.energyAmount"
+        (change)="handleChange()"
+      />
+
+      <ciui-select
+        label="Energy unit"
+        labelInvisible
+        theme="white-semi-transparent"
+        class="cid-food-variation__energy-unit"
+        [formControl]="variationForm.controls.energyUnit"
         [options]="energyOptions"
-        [formControl]="variationForm.controls.energy"
         (change)="handleChange()"
       />
 
@@ -88,20 +104,27 @@
         ≈
       </div>
 
-      <ciui-input-select
+      <ciui-number-input
         label="Portion size"
         labelInvisible
         ariaLabel="Typical portion size"
-        labelSelect="Portion size unit"
-        type="number"
-        row
         theme="white-semi-transparent"
-        class="cid-food-variation__portion-size"
         min="0"
         max="1000"
         step="any"
-        [options]="portionSizeOptions"
-        [formControl]="variationForm.controls.portionSize"
+        row
+        class="cid-food-variation__portion-size-value"
+        [formControl]="variationForm.controls.portionSizeValue"
+        (change)="handleChange()"
+      />
+
+      <ciui-select
+        label="Portion size unit"
+        labelInvisible
+        theme="white-semi-transparent"
+        class="cid-food-variation__portion-size-unit"
+        [formControl]="variationForm.controls.portionSizeUnit"
+        [options]="foodUnits"
         (change)="handleChange()"
       />
     </div>

@@ -161,8 +161,8 @@
 
     &.ciui-input--row {
       flex-direction: row;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
 
       .ciui-input__info {
         align-items: center;
@@ -191,5 +191,12 @@
         }
       }
     }
+  }
+
+  .ciui-input-group {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
   }
 }

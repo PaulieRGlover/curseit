@@ -15,9 +15,10 @@
     [attr.min]="min()"
     [attr.max]="max()"
     [attr.aria-label]="ariaLabel()"
-    [attr.title]="formControl().value"
+    [attr.title]="formControl()?.value ?? value()"
     class="ciui-input__input"
     (blur)="onBlur()"
+    (input)="$event.stopPropagation();"
     (change)="$event.stopPropagation(); onChange()"
     (keydown)="handleKeyDown($event)"
   />

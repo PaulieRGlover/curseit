@@ -7,12 +7,10 @@ import { NutrientModel } from '../types/variation-nutrient.types';
 export const nutrientModelToVariationNutrientUpdate = (
   nutrient: NutrientModel,
 ): VariationNutrientUpdate => {
-  const [value, unit] = nutrient.amount;
-
   return {
     name: nutrient.core?.name,
-    valueInGrams: convertToGrams(unit, value),
-    valueDisplayUnit: unit,
+    valueInGrams: convertToGrams(nutrient.amountUnit, nutrient.amountValue),
+    valueDisplayUnit: nutrient.amountUnit,
     nutrientId: nutrient.core?.id,
   };
 };

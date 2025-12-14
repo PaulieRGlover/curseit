@@ -15,8 +15,9 @@ import {
   CiuiContextMenu,
   CiuiContextMenuTrigger,
   CiuiIcon,
-  CiuiInputSelect,
   CiuiLoader,
+  CiuiNumberInput,
+  CiuiSelect,
 } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 import { ENERGY, ENERGY_ARRAY, UNITS, convertToKj } from '@curseit/units';
@@ -25,7 +26,14 @@ import { FOOD_UNITS } from '../../constants/units';
 import { FridgeService } from '../../fridge.service';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { VariationStore } from '../../store/variation.store';
-import { Energy, PortionSize, ReferenceSize } from '../../types/internal/variation.types';
+import {
+  EnergyAmount,
+  EnergyUnit,
+  PortionSizeUnit,
+  PortionSizeValue,
+  ReferenceSizeUnit,
+  ReferenceSizeValue,
+} from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
 import { CidPortionBadge } from '../portion-badge/portion-badge';
 import { CidVariationNutrients } from '../variation-nutrients/variation-nutrients';
@@ -40,11 +48,12 @@ import { VariationValidationService } from './validation/variation-validation.se
   imports: [
     ReactiveFormsModule,
     CiuiCheckbox,
-    CiuiInputSelect,
-    CiuiLoader,
-    CiuiIcon,
     CiuiContextMenu,
     CiuiContextMenuTrigger,
+    CiuiIcon,
+    CiuiLoader,
+    CiuiNumberInput,
+    CiuiSelect,
     CidVariationNutrients,
     CidPortionBadge,
     CidEmojiPicker,
@@ -60,15 +69,26 @@ export class CidVariation {
   validationService = inject(VariationValidationService);
 
   variationForm = new FormGroup({
-    referenceSize: new FormControl<ReferenceSize>([100, UNITS.GRAM], {
-      asyncValidators: this.validationService.referenceSize,
+    referenceSizeValue: new FormControl<ReferenceSizeValue>(100, {
+      asyncValidators: this.validationService.referenceSizeValue,
+      nonNullable: true,
     }),
-    energy: new FormControl<Energy>([100, ENERGY.KILOCALORIE], {
-      asyncValidators: this.validationService.energy,
+    referenceSizeUnit: new FormControl<ReferenceSizeUnit>(UNITS.GRAM, {
+      asyncValidators: this.validationService.referenceSizeUnit,
+      nonNullable: true,
+    }),
+    energyAmount: new FormControl<EnergyAmount>(0, {
+      asyncValidators: this.validationService.energyAmount,
+    }),
+    energyUnit: new FormControl<EnergyUnit>(ENERGY.KILOCALORIE, {
+      asyncValidators: this.validationService.energyUnit,
     }),
     energyAuto: new FormControl(true, { nonNullable: true }),
-    portionSize: new FormControl<PortionSize>([100, UNITS.GRAM], {
-      asyncValidators: this.validationService.portionSize,
+    portionSizeValue: new FormControl<PortionSizeValue>(100, {
+      asyncValidators: this.validationService.portionSizeValue,
+    }),
+    portionSizeUnit: new FormControl<PortionSizeUnit>(UNITS.GRAM, {
+      asyncValidators: this.validationService.portionSizeUnit,
     }),
     counter: new FormControl('🥫', { nonNullable: true }),
   });
@@ -81,23 +101,25 @@ export class CidVariation {
 
     return variationToVariationModel(variation);
   });
-  energyCalculated = computed<Nullable<Energy>>(() => {
-    const variation = this.variationStore.variation();
-    if (!variation) {
-      return null;
-    }
+  energyCalculated = computed<Nullable<{ energyAmount: EnergyAmount; energyUnit: EnergyUnit }>>(
+    () => {
+      const variation = this.variationStore.variation();
+      if (!variation) {
+        return null;
+      }
 
-    const energyCalculatedKcal = this.variationNutrientsStore.energyCalculatedKcal();
-    const { energyDisplayUnit } = variation;
-    return [
-      energyDisplayUnit === 'kJ' ? convertToKj(energyCalculatedKcal) : energyCalculatedKcal,
-      energyDisplayUnit,
-    ];
-  });
+      const energyCalculatedKcal = this.variationNutrientsStore.energyCalculatedKcal();
+      const { energyDisplayUnit } = variation;
+      return {
+        energyAmount:
+          energyDisplayUnit === 'kJ' ? convertToKj(energyCalculatedKcal) : energyCalculatedKcal,
+        energyUnit: energyDisplayUnit,
+      };
+    },
+  );
 
-  readonly referenceSizeOptions = FOOD_UNITS;
+  readonly foodUnits = FOOD_UNITS;
   readonly energyOptions = [...ENERGY_ARRAY];
-  readonly portionSizeOptions = FOOD_UNITS;
 
   constructor() {
     effect(() => {
@@ -109,16 +131,31 @@ export class CidVariation {
           return;
         }
 
-        const { referenceSize, energy, energyAuto, portionSize, counter } = variationModel_;
+        const {
+          referenceSizeValue,
+          referenceSizeUnit,
+          energyAmount,
+          energyUnit,
+          energyAuto,
+          portionSizeValue,
+          portionSizeUnit,
+          counter,
+        } = variationModel_;
 
-        this.variationForm.controls.referenceSize.setValue(referenceSize);
+        this.variationForm.controls.referenceSizeValue.setValue(referenceSizeValue);
+        this.variationForm.controls.referenceSizeUnit.setValue(referenceSizeUnit);
         if (energyAuto) {
-          this.variationForm.controls.energy.setValue(energyCalculated_);
+          this.variationForm.controls.energyAmount.setValue(energyCalculated_?.energyAmount ?? 0);
+          this.variationForm.controls.energyUnit.setValue(
+            energyCalculated_?.energyUnit ?? ENERGY.KILOCALORIE,
+          );
         } else {
-          this.variationForm.controls.energy.setValue(energy);
+          this.variationForm.controls.energyAmount.setValue(energyAmount);
+          this.variationForm.controls.energyUnit.setValue(energyUnit);
         }
         this.variationForm.controls.energyAuto.setValue(energyAuto);
-        this.variationForm.controls.portionSize.setValue(portionSize);
+        this.variationForm.controls.portionSizeValue.setValue(portionSizeValue);
+        this.variationForm.controls.portionSizeUnit.setValue(portionSizeUnit);
         this.variationForm.controls.counter.setValue(counter);
       });
     });
@@ -128,12 +165,17 @@ export class CidVariation {
 
       untracked(() => {
         if (energyAuto_ ?? true) {
-          this.variationForm.controls.energy.setValue(this.energyCalculated());
-          this.variationForm.controls.energy.disable({ emitEvent: true });
+          const { energyAmount = 0, energyUnit = ENERGY.KILOCALORIE } =
+            this.energyCalculated() ?? {};
+
+          this.variationForm.controls.energyAmount.setValue(energyAmount);
+          this.variationForm.controls.energyUnit.setValue(energyUnit);
+          this.variationForm.controls.energyAmount.disable({ emitEvent: true });
         } else {
-          const { energy = [0, ENERGY.KILOCALORIE] } = this.variationModel() ?? {};
-          this.variationForm.controls.energy.setValue(energy);
-          this.variationForm.controls.energy.enable({ emitEvent: true });
+          const { energyAmount = 0, energyUnit = ENERGY.KILOCALORIE } = this.variationModel() ?? {};
+          this.variationForm.controls.energyAmount.setValue(energyAmount);
+          this.variationForm.controls.energyUnit.setValue(energyUnit);
+          this.variationForm.controls.energyAmount.enable({ emitEvent: true });
         }
       });
     });

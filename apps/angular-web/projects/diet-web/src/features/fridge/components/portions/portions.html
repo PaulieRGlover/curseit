@@ -20,8 +20,8 @@
           transparent
           row
           theme="white"
-          [formControl]="allSelected"
-          (change)="handleAllSelectedChange()"
+          [value]="areAllSelected()"
+          (change)="handleAllSelectedChange($event)"
         />
       </div>
 
@@ -81,8 +81,7 @@
             }
           </ul>
 
-          <ciui-input
-            type="number"
+          <ciui-number-input
             label="Number of portions to add"
             labelInvisible
             showArrows

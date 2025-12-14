@@ -18,7 +18,8 @@
     [attr.autocomplete]="autocomplete()"
     [attr.aria-label]="ariaLabel()"
     class="ciui-input__input"
-    (input)="onInput($event)"
+    (input)="$event.stopPropagation(); onInput($event)"
+    (change)="$event.stopPropagation(); onChange($event)"
     (blur)="onBlur()"
   />
 </div>

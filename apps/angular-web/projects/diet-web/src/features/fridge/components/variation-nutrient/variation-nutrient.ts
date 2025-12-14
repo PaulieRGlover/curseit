@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, computed, forwardRef, inject, input } from '@angular/core';
 import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
-import { CiuiButton, CiuiInputSelect, CiuiSelect } from '@curseit/ciui';
+import { CiuiButton, CiuiNumberInput, CiuiSelect } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 import { UNITS } from '@curseit/units';
 
@@ -10,7 +10,7 @@ import { FridgeService } from '../../fridge.service';
 import { NutrientsSearchStore } from '../../store/nutrients-search.store';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { NutrientAbridged } from '../../types/external/nutrient.types';
-import { Unit } from '../../types/internal/variation.types';
+import { NutrientUnit, VariationNutrientValue } from '../../types/internal/variation.types';
 
 import { nutrientInputToNutrientModel } from './transformers/nutrient-input-to-nutrient-model';
 import { nutrientModelToVariationNutrientUpdate } from './transformers/nutrient-model-to-variation-nutrient-update';
@@ -19,7 +19,7 @@ import { VariationNutrientValidationService } from './validation/variation-nutri
 
 @Component({
   selector: 'cid-variation-nutrient',
-  imports: [ReactiveFormsModule, CiuiSelect, CiuiInputSelect, CiuiButton],
+  imports: [ReactiveFormsModule, CiuiButton, CiuiNumberInput, CiuiSelect],
   templateUrl: './variation-nutrient.html',
   styleUrl: './variation-nutrient.scss',
   providers: [
@@ -44,8 +44,12 @@ export class CidVariationNutrient {
 
   nutrientForm = new FormGroup({
     core: new FormControl<Nullable<NutrientAbridged>>(null),
-    amount: new FormControl<[number, Unit]>([0, UNITS.GRAM], {
-      asyncValidators: this.validationService.amount,
+    amountValue: new FormControl<VariationNutrientValue>(0, {
+      asyncValidators: this.validationService.amountValue,
+      nonNullable: true,
+    }),
+    amountUnit: new FormControl<NutrientUnit>(UNITS.GRAM, {
+      asyncValidators: this.validationService.amountUnit,
       nonNullable: true,
     }),
   });
@@ -58,11 +62,12 @@ export class CidVariationNutrient {
   readonly units = NUTRIENT_UNITS;
 
   ngOnInit() {
-    const { core, amount } = nutrientInputToNutrientModel(this.nutrientInput());
+    const { core, amountValue, amountUnit } = nutrientInputToNutrientModel(this.nutrientInput());
 
     if (core) {
       this.nutrientForm.controls.core.setValue(core);
-      this.nutrientForm.controls.amount.setValue(amount);
+      this.nutrientForm.controls.amountValue.setValue(amountValue);
+      this.nutrientForm.controls.amountUnit.setValue(amountUnit);
     }
   }
 

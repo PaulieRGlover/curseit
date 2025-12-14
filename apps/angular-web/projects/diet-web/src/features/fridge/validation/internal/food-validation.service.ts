@@ -26,8 +26,8 @@ export class FoodValidationService {
     return zodValidateForFormControl(schema, control);
   }
 
-  public async food(input: unknown) {
-    const schema = (await import('../../types/internal/food.types')).foodInputSchema;
+  public async foodUpdate(input: unknown) {
+    const schema = (await import('../../types/internal/food.types')).foodCreate;
     return zodValidate(schema, input, false);
   }
 }

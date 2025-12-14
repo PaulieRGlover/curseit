@@ -10,13 +10,16 @@ export const perishable = z.optional(z.boolean());
 
 export const favorite = z.optional(z.boolean());
 
-export const foodInputSchema = z.object({
+export const foodInput = z.object({
   name,
   description,
   perishable,
   favorite,
 });
-export type FoodInput = z.infer<typeof foodInputSchema>;
+export type FoodInput = z.infer<typeof foodInput>;
 
-export type FoodCreate = FoodInput;
-export type FoodUpdate = FoodInput;
+export const foodCreate = foodInput;
+export type FoodCreate = z.infer<typeof foodCreate>;
+
+export const foodUpdate = foodInput;
+export type FoodUpdate = z.infer<typeof foodUpdate>;

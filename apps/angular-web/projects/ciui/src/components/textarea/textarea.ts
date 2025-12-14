@@ -6,6 +6,7 @@ import {
   computed,
   forwardRef,
   input,
+  output,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -34,6 +35,8 @@ import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 export class CiuiTextarea extends CiuiBaseInput {
   type = input<HTMLInputTypeAttribute>('text');
 
+  override input = output<string>();
+
   activeElements = computed(() => [this._textareaRef().nativeElement]);
 
   constructor() {
@@ -49,6 +52,14 @@ export class CiuiTextarea extends CiuiBaseInput {
     this._resetAngryDelete();
     const newValue = (event.target as HTMLInputElement).value;
     this._onChange(newValue);
+
+    this.input.emit(newValue);
+  }
+
+  onChange(event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+
+    this.change.emit(newValue);
   }
 
   applyWrite(value: any) {

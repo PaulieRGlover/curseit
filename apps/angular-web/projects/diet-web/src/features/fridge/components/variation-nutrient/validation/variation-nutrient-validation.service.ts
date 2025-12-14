@@ -6,8 +6,15 @@ import { zodValidate } from '@/core/validation/zod-validate.util';
 
 @Injectable({ providedIn: 'root' })
 export class VariationNutrientValidationService {
-  public async amount(control: AbstractControl) {
-    const schema = (await import('../types/variation-nutrient.types')).amount;
+  public async amountValue(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types'))
+      .variationNutrientValue;
+    return zodValidateForFormControl(schema, control);
+  }
+
+  public async amountUnit(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types'))
+      .nutrientUnit;
     return zodValidateForFormControl(schema, control);
   }
 

@@ -51,35 +51,49 @@
   (change)="handleChange()"
 />
 
-<ciui-input-select
-  label="Size"
-  labelInvisible
-  labelSelect="Size unit"
-  type="number"
-  row
-  theme="white"
-  min="0"
-  max="1000"
-  step="any"
-  [options]="foodSizeOptions"
-  [formControl]="portionForm.controls.portionSize"
-  (change)="handleChange()"
-/>
+<div class="ciui-input-group">
+  <ciui-number-input
+    label="Size"
+    labelInvisible
+    theme="white"
+    min="0"
+    max="1000"
+    step="any"
+    [formControl]="portionForm.controls.portionSizeValue"
+    (change)="handleChange()"
+  />
 
-<ciui-input-select
-  label="Remaining"
-  labelInvisible
-  labelSelect="Remaining unit"
-  type="number"
-  row
-  theme="white"
-  min="0"
-  max="1000"
-  step="any"
-  [options]="foodSizeOptions"
-  [formControl]="portionForm.controls.remaining"
-  (change)="handleChange()"
-/>
+  <ciui-select
+    label="Size unit"
+    labelInvisible
+    theme="white"
+    [options]="foodSizeOptions"
+    [formControl]="portionForm.controls.portionSizeUnit"
+    (change)="handleChange()"
+  />
+</div>
+
+<div class="ciui-input-group">
+  <ciui-number-input
+    label="Remaining"
+    labelInvisible
+    theme="white"
+    min="0"
+    max="1000"
+    step="any"
+    [formControl]="portionForm.controls.remainingValue"
+    (change)="handleChange()"
+  />
+
+  <ciui-select
+    label="Remaining size unit"
+    labelInvisible
+    theme="white"
+    [options]="foodSizeOptions"
+    [formControl]="portionForm.controls.remainingUnit"
+    (change)="handleChange()"
+  />
+</div>
 
 @if (isPortionLoading()) {
   <div class="cid-portion__loader-wrapper">
@@ -93,7 +107,7 @@
     transparent
     row
     theme="white"
-    [formControl]="selectedControl"
+    [value]="selected()"
     (change)="selectToggled.emit()"
   />
 }

@@ -14,6 +14,8 @@ import { FridgeService } from '../../fridge.service';
 import { FoodStore } from '../../store/food.store';
 import { FoodValidationService } from '../../validation/internal/food-validation.service';
 
+import { foodToFoodBasicInfoModel } from './transformers/food-to-food-basic-info-model.transformer';
+
 @Component({
   selector: 'cid-food-basic-info',
   imports: [ReactiveFormsModule, CiuiInput, CiuiTextarea, CiuiCheckbox],
@@ -38,14 +40,14 @@ export class CidFoodBasicInfo {
 
       untracked(() => {
         if (food_) {
-          this.foodForm.setValue(food_);
+          this.foodForm.setValue(foodToFoodBasicInfoModel(food_));
         }
       });
     });
   }
 
   async handleChange() {
-    const foodUpdate = await this.foodValidationService.food(this.foodForm.value);
+    const foodUpdate = await this.foodValidationService.foodUpdate(this.foodForm.value);
     if (!foodUpdate) {
       return;
     }

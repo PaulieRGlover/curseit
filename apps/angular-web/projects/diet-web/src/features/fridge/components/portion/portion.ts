@@ -17,8 +17,8 @@ import {
   CiuiContextMenu,
   CiuiContextMenuTrigger,
   CiuiDateInput,
-  CiuiInputSelect,
   CiuiLoader,
+  CiuiNumberInput,
   CiuiSelect,
 } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
@@ -30,13 +30,13 @@ import { PortionsStore } from '../../store/portions.store';
 import { VariationsStore } from '../../store/variations.store';
 import { Portion } from '../../types/external/portion.types';
 import { VariationAbridged } from '../../types/external/variation.types';
-import { Counter, PortionSize } from '../../types/internal/variation.types';
+import { Counter, PortionSizeUnit, PortionSizeValue } from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
 import { CidPortionBadge } from '../portion-badge/portion-badge';
 
-import { portionModelToPortionUpdate } from './transformers/portion-input-to-portion-update';
-import { portionToPortionModel } from './transformers/portion-to-portion-input';
-import { Remaining } from './types/portion.types';
+import { portionModelToPortionUpdate } from './transformers/portion-model-to-portion-update';
+import { portionToPortionModel } from './transformers/portion-to-portion-model';
+import { RemainingUnit, RemainingValue } from './types/portion.types';
 import { PortionValidationService } from './validation/portion-validation.service';
 
 @Component({
@@ -47,8 +47,8 @@ import { PortionValidationService } from './validation/portion-validation.servic
     CiuiContextMenu,
     CiuiContextMenuTrigger,
     CiuiDateInput,
-    CiuiInputSelect,
     CiuiLoader,
+    CiuiNumberInput,
     CiuiSelect,
     CidPortionBadge,
     CidEmojiPicker,
@@ -72,12 +72,20 @@ export class CidPortion {
     variation: new FormControl<Nullable<VariationAbridged>>(null),
     dateAdded: new FormControl<Date>(new Date(), { nonNullable: true }),
     dateExpiring: new FormControl<Nullable<Date>>(null),
-    portionSize: new FormControl<PortionSize>([100, UNITS.GRAM], {
-      asyncValidators: this.validationService.portionSize,
+    portionSizeValue: new FormControl<PortionSizeValue>(100, {
+      asyncValidators: this.validationService.portionSizeValue,
       nonNullable: true,
     }),
-    remaining: new FormControl<Remaining>([100, UNITS.GRAM], {
-      asyncValidators: this.validationService.remaining,
+    portionSizeUnit: new FormControl<PortionSizeUnit>(UNITS.GRAM, {
+      asyncValidators: this.validationService.portionSizeUnit,
+      nonNullable: true,
+    }),
+    remainingValue: new FormControl<RemainingValue>(100, {
+      asyncValidators: this.validationService.remainingValue,
+      nonNullable: true,
+    }),
+    remainingUnit: new FormControl<RemainingUnit>(UNITS.GRAM, {
+      asyncValidators: this.validationService.remainingUnit,
       nonNullable: true,
     }),
   });
@@ -85,11 +93,8 @@ export class CidPortion {
     asyncValidators: this.validationService.counter,
   });
 
-  // TODO: remove when `base-input` supports no form control
-  selectedControl = new FormControl(false);
-
   remainingInPercent = computed(() => {
-    return this.portionInput().remainingInGrams / this.portionInput().sizeInGrams * 100;
+    return (this.portionInput().remainingInGrams / this.portionInput().sizeInGrams) * 100;
   });
   isPortionLoading = computed(() => this.portionsStore.isPortionLoading(this.portionInput().id));
   errors = computed(() => this.portionsStore.getPortionErrors(this.portionInput().id));
@@ -102,16 +107,25 @@ export class CidPortion {
       const variations_ = this.variationsStore.variations()!;
 
       untracked(() => {
-        const { variation, dateAdded, dateExpiring, portionSize, remaining } =
-          portionToPortionModel(portion_, variations_);
+        const {
+          variation,
+          dateAdded,
+          dateExpiring,
+          portionSizeValue,
+          portionSizeUnit,
+          remainingValue,
+          remainingUnit,
+        } = portionToPortionModel(portion_, variations_);
 
         this.counter.setValue(portion_.counter);
 
         this.portionForm.controls.variation.setValue(variation);
         this.portionForm.controls.dateAdded.setValue(dateAdded);
         this.portionForm.controls.dateExpiring.setValue(dateExpiring);
-        this.portionForm.controls.portionSize.setValue(portionSize);
-        this.portionForm.controls.remaining.setValue(remaining);
+        this.portionForm.controls.portionSizeValue.setValue(portionSizeValue);
+        this.portionForm.controls.portionSizeUnit.setValue(portionSizeUnit);
+        this.portionForm.controls.remainingValue.setValue(remainingValue);
+        this.portionForm.controls.remainingUnit.setValue(remainingUnit);
       });
     });
 
@@ -123,14 +137,6 @@ export class CidPortion {
           this.portionForm.controls.dateExpiring.setErrors(errors_.dateExpiring);
           this.portionForm.controls.dateExpiring.markAsTouched();
         }
-      });
-    });
-
-    effect(() => {
-      const selected_ = this.selected();
-
-      untracked(() => {
-        this.selectedControl.setValue(selected_);
       });
     });
   }

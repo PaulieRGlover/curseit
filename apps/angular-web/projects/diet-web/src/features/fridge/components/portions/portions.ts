@@ -16,8 +16,8 @@ import {
   CiuiCheckbox,
   CiuiContextMenu,
   CiuiContextMenuTrigger,
-  CiuiInput,
   CiuiLoader,
+  CiuiNumberInput,
 } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
@@ -44,8 +44,8 @@ const DEFAULT_PORTIONS_NUMBER = 1;
     CiuiCheckbox,
     CiuiContextMenu,
     CiuiContextMenuTrigger,
-    CiuiInput,
     CiuiLoader,
+    CiuiNumberInput,
     CidPortion,
   ],
   templateUrl: './portions.html',
@@ -60,7 +60,6 @@ export class CidPortions {
   variationsStore = inject(VariationsStore);
   validationService = inject(PortionsValidationService);
 
-  allSelected = new FormControl(false);
   createPortionsCount = new FormControl(DEFAULT_PORTIONS_NUMBER, {
     asyncValidators: this.validationService.createPortionsCount,
     nonNullable: true,
@@ -80,32 +79,11 @@ export class CidPortions {
   });
   areAllSelected = computed(() => {
     const portions_ = this.portionsStore.portions();
+    const selectedPortions_ = this.selectedPortions();
     return portions_
-      ? portions_.every(portion => this.selectedPortions().includes(portion))
+      ? portions_.every(portion => selectedPortions_.includes(portion))
       : false;
   });
-
-  constructor() {
-    effect(() => {
-      const isAllSelected_ = this.areAllSelected();
-
-      untracked(() => {
-        this.allSelected.setValue(isAllSelected_);
-      });
-    });
-
-    effect(() => {
-      const portions_ = this.portionsStore.portions();
-
-      untracked(() => {
-        if (portions_?.length) {
-          this.allSelected.enable();
-        } else {
-          this.allSelected.disable();
-        }
-      });
-    });
-  }
 
   ngOnInit() {
     const foodId_ = this.foodId();
@@ -129,13 +107,13 @@ export class CidPortions {
     this.isInitialized.set(true);
   }
 
-  handleAllSelectedChange() {
+  handleAllSelectedChange(value: boolean) {
     const portions_ = this.portionsStore.portions();
     if (!portions_) {
       return;
     }
 
-    if (this.allSelected.value) {
+    if (value) {
       this.selectedPortions.set(portions_);
     } else {
       this.selectedPortions.set([]);

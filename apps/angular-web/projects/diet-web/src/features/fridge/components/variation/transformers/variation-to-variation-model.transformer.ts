@@ -22,16 +22,13 @@ export const variationToVariationModel = (variation: Variation): VariationModel 
   } = variation;
 
   return {
-    referenceSize: [
-      convertFromGrams(referenceSizeDisplayUnit, referenceSizeInGrams),
-      referenceSizeDisplayUnit,
-    ],
-    energy: [convertEnergy(energyAmountInKcal ?? 0, energyDisplayUnit), energyDisplayUnit],
+    referenceSizeValue: convertFromGrams(referenceSizeDisplayUnit, referenceSizeInGrams),
+    referenceSizeUnit: referenceSizeDisplayUnit,
+    energyAmount: convertEnergy(energyAmountInKcal ?? 0, energyDisplayUnit),
+    energyUnit: energyDisplayUnit,
     energyAuto,
-    portionSize: [
-      convertFromGrams(portionSizeDisplayUnit, portionSizeInGrams),
-      portionSizeDisplayUnit,
-    ],
+    portionSizeValue: convertFromGrams(portionSizeDisplayUnit, portionSizeInGrams),
+    portionSizeUnit: portionSizeDisplayUnit,
     counter,
   };
 };

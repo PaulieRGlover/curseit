@@ -2,17 +2,23 @@ import * as z from 'zod/v4-mini';
 
 import {
   counter,
-  energy,
+  energyAmount,
   energyAuto,
-  portionSize,
-  referenceSize,
+  energyUnit,
+  portionSizeUnit,
+  portionSizeValue,
+  referenceSizeUnit,
+  referenceSizeValue,
 } from '@/features/fridge/types/internal/variation.types';
 
 export const variationModel = z.object({
-  referenceSize,
-  energy,
+  referenceSizeValue,
+  referenceSizeUnit,
+  energyAmount,
+  energyUnit,
   energyAuto,
-  portionSize,
+  portionSizeValue,
+  portionSizeUnit,
   counter,
 });
 export type VariationModel = z.infer<typeof variationModel>;

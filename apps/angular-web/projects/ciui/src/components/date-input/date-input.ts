@@ -7,6 +7,7 @@ import {
   forwardRef,
   inject,
   input,
+  output,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -49,6 +50,8 @@ export class CiuiDateInput extends CiuiBaseInput {
   minSource = input<Nullable<Date>>(null, { alias: 'min' });
   maxSource = input<Nullable<Date>>(null, { alias: 'max' });
 
+  override change = output<Nullable<Date>>();
+
   activeElements = computed(() => [this._inputRef().nativeElement]);
   min = computed(() => {
     const minSource_ = this.minSource();
@@ -81,15 +84,16 @@ export class CiuiDateInput extends CiuiBaseInput {
     }
 
     this._resetAngryDelete();
-    const newValue = this._inputRef().nativeElement.value;
-    this._onChange(newValue ? new Date(newValue) : null);
-    this.element.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
+    const elementValue = this._inputRef().nativeElement.value;
+    const newValue = elementValue ? new Date(elementValue) : null;
+    this._onChange(newValue);
+    this.change.emit(newValue);
   }
 
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       this.onChange();
-    } else {
+    } else if (event.key !== 'Tab') {
       this._preventOnChangeOnce = true;
     }
   }

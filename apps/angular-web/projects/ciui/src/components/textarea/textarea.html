@@ -13,7 +13,8 @@
     [attr.placeholder]="placeholder()"
     [attr.aria-label]="ariaLabel()"
     class="ciui-input__input"
-    (input)="onInput($event)"
+    (input)="$event.stopPropagation(); onInput($event)"
+    (change)="$event.stopPropagation(); onChange($event)"
     (blur)="onBlur()"
   ></textarea>
 </div>

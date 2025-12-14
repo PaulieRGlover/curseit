@@ -10,9 +10,7 @@ export const nutrientInputToNutrientModel = (
       id: nutrientInput.nutrientId,
       name: nutrientInput.name,
     } : null,
-    amount: [
-      convertFromGrams(nutrientInput.valueDisplayUnit, nutrientInput.valueInGrams),
-      nutrientInput.valueDisplayUnit,
-    ],
+    amountValue: convertFromGrams(nutrientInput.valueDisplayUnit, nutrientInput.valueInGrams),
+    amountUnit: nutrientInput.valueDisplayUnit,
   };
 };

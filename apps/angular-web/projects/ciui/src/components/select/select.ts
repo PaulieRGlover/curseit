@@ -11,11 +11,13 @@ import {
   booleanAttribute,
   computed,
   contentChild,
+  effect,
   forwardRef,
   inject,
   input,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { outputFromObservable, toSignal } from '@angular/core/rxjs-interop';
@@ -104,6 +106,7 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
   editInputAriaLabel = input<string>('Enter item name');
   editItemAriaLabel = input<string>('Edit item');
 
+  override change = output<Nullable<T>>();
   searched = output<string>();
   searchedDebounced = outputFromObservable(debounceOutput(this.searched, this.searchDebounce()));
   focus = output();
@@ -209,17 +212,32 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
 
   constructor() {
     super();
+
+    effect(() => {
+      const value_ = this.value();
+      const formControl_ = this.formControl();
+
+      untracked(() => {
+        if (!formControl_) {
+          this._selectedValueSignal.set(value_);
+
+          if (this._formControlValueSubscription) {
+            this._formControlValueSubscription.unsubscribe();
+          }
+        } else {
+          this._selectedValueSignal.set(formControl_.value);
+          this._formControlValueSubscription = formControl_.valueChanges.subscribe(value => {
+            this._selectedValueSignal.set(value);
+          });
+        }
+      });
+    });
   }
 
   override ngOnInit() {
     super.ngOnInit();
 
     this.selectService.register(this);
-
-    this._selectedValueSignal.set(this.formControl().value);
-    this._formControlValueSubscription = this.formControl().valueChanges.subscribe(value => {
-      this._selectedValueSignal.set(value);
-    });
   }
 
   ngOnDestroy() {
@@ -254,8 +272,8 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
     this._onChange(originalOption);
     this._renderer.setProperty(this._searchRef().nativeElement, 'value', option[this.labelKey()]);
     this.isValueSelected.set(true);
-    this.formControl().markAsTouched();
-    this.element.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
+    this.formControl()?.markAsTouched();
+    this.change.emit(originalOption);
   }
 
   moveFocus(increment: number) {
@@ -432,7 +450,7 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
     this.editingLoading.set(false);
 
     if (option.id === this.selectedOption()?.id) {
-      this.formControl().setValue(editedOption);
+      this.formControl()?.setValue(editedOption);
     }
 
     this.resetEditing();
@@ -453,7 +471,7 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
     await firstValueFrom(finished$);
 
     if (option.id === this.selectedOption()?.id) {
-      this.formControl().setValue(null);
+      this.formControl()?.setValue(null);
     }
 
     this.removingLoading.set(false);

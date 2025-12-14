@@ -23,7 +23,7 @@
     [attr.aria-label]="ariaLabel()"
     class="ciui-input__input"
     [formControl]="searchControl"
-    (input)="handleSearchInput()"
+    (input)="$event.stopPropagation(); handleSearchInput()"
     (change)="$event.stopPropagation()"
   >
 
@@ -89,6 +89,7 @@
                     class="ciui-input__input ciui-select__edit-input"
                     autocomplete="off"
                     [formControl]="editOptionName"
+                    (input)="$event.stopPropagation()"
                     (change)="$event.stopPropagation()"
                   />
                 }
@@ -165,6 +166,7 @@
                       class="ciui-input__input"
                       autocomplete="off"
                       [formControl]="newOptionName"
+                      (input)="$event.stopPropagation()"
                       (change)="$event.stopPropagation()"
                     />
 

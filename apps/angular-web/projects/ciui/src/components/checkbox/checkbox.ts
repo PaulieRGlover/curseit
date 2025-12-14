@@ -5,7 +5,8 @@ import {
   ViewEncapsulation,
   computed,
   forwardRef,
-  input,
+  inject,
+  output,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -30,6 +31,10 @@ import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
   ],
 })
 export class CiuiCheckbox extends CiuiBaseInput {
+  element = inject(ElementRef);
+
+  override change = output<boolean>();
+
   constructor() {
     super();
   }
@@ -43,6 +48,8 @@ export class CiuiCheckbox extends CiuiBaseInput {
     this._resetAngryDelete();
     const newValue = (event.target as HTMLInputElement).checked;
     this._onChange(newValue);
+    this.input.emit(newValue);
+    this.change.emit(newValue);
   }
 
   applyWrite(value: boolean) {

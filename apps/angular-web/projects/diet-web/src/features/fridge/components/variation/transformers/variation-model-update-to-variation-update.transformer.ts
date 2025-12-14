@@ -8,22 +8,31 @@ export const variationModelUpdateToVariationUpdate = (
   variationModelUpdate: VariationModelUpdate,
   includeEnergy = true,
 ): VariationUpdate => {
-  const { referenceSize, energy, energyAuto, portionSize, counter } = variationModelUpdate;
+  const {
+    referenceSizeValue,
+    referenceSizeUnit,
+    energyAmount,
+    energyUnit,
+    energyAuto,
+    portionSizeValue,
+    portionSizeUnit,
+    counter,
+  } = variationModelUpdate;
 
   const update: VariationUpdate = {};
-  if (referenceSize) {
-    const [referenceSizeValue, referenceSizeUnit] = referenceSize;
-
+  if (referenceSizeValue && referenceSizeUnit) {
     update.referenceSizeInGrams = convertToGrams(referenceSizeUnit, referenceSizeValue);
+  }
+
+  if (referenceSizeUnit) {
     update.referenceSizeDisplayUnit = referenceSizeUnit;
   }
 
-  if (energy && !energyAuto && includeEnergy) {
-    const [energyAmountValue, energyUnit] = energy;
+  if (energyAmount && energyUnit && !energyAuto && includeEnergy) {
+    update.energyAmountInKcal = energyUnit === 'kJ' ? convertToKcal(energyAmount) : energyAmount;
+  }
 
-    update.energyAmountInKcal =
-      energyUnit === 'kJ' ? convertToKcal(energyAmountValue) : energyAmountValue;
-
+  if (energyUnit) {
     update.energyDisplayUnit = energyUnit;
   }
 
@@ -31,10 +40,11 @@ export const variationModelUpdateToVariationUpdate = (
     update.energyAuto = energyAuto;
   }
 
-  if (portionSize) {
-    const [portionSizeValue, portionSizeUnit] = portionSize;
-
+  if (portionSizeValue && portionSizeUnit) {
     update.portionSizeInGrams = convertToGrams(portionSizeUnit, portionSizeValue);
+  }
+  
+  if (portionSizeUnit) {
     update.portionSizeDisplayUnit = portionSizeUnit;
   }
 

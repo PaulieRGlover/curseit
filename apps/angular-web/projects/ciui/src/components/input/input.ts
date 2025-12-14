@@ -1,12 +1,11 @@
 import {
   Component,
   ElementRef,
-  HostBinding,
   ViewEncapsulation,
-  booleanAttribute,
   computed,
   forwardRef,
   input,
+  output,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -37,7 +36,8 @@ export class CiuiInput extends CiuiBaseInput {
   max = input<string | number>();
   step = input<string | number>();
   autocomplete = input<string>('off');
-  showArrows = input<boolean, any>(false, { transform: booleanAttribute });
+
+  override input = output<string>();
 
   activeElements = computed(() => [this._inputRef().nativeElement]);
 
@@ -49,19 +49,17 @@ export class CiuiInput extends CiuiBaseInput {
     this._resetAngryDelete();
     const newValue = (event.target as HTMLInputElement).value;
 
-    this._onChange(this.type() === 'number' ? parseFloat(newValue) || 0 : newValue);
+    this._onChange(newValue);
+    this.input.emit(newValue);
+  }
+
+  onChange(event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    this.change.emit(newValue);
   }
 
   applyWrite(value: any) {
     this._renderer.setProperty(this._inputRef().nativeElement, 'value', value);
-  }
-
-  @HostBinding('class')
-  override get hostClasses() {
-    return [
-      this.showArrows() && this.type() === 'number' ? 'ciui-input--show-arrows' : '',
-      ...super.hostClasses
-    ];
   }
 
   protected _inputRef = viewChild.required<ElementRef<HTMLInputElement>>('input');

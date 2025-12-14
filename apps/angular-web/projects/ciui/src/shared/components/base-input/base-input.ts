@@ -6,10 +6,12 @@ import {
   Signal,
   ViewEncapsulation,
   booleanAttribute,
+  effect,
   inject,
   input,
   output,
   signal,
+  untracked,
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor } from '@angular/forms';
 
@@ -31,9 +33,10 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
 
   abstract activeElements: Signal<Array<HTMLElement>>;
 
-  formControl = input.required<AbstractControl>();
   label = input.required<string>();
 
+  formControl = input<AbstractControl>();
+  value = input<any>();
   name = input<string>('');
   theme = input<Theme>('white');
   size = input<Size>('medium');
@@ -42,13 +45,33 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
   labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
   ariaLabel = input<string>();
 
+  input = output<any>();
+  change = output<any>();
   angryDelete = output();
 
   id = signal('');
 
+  constructor() {
+    effect(() => {
+      const value_ = this.value();
+      const formControl_ = this.formControl();
+
+      untracked(() => {
+        if (!formControl_) {
+          this.writeValue(value_);
+        }
+      });
+    });
+  }
+
   ngOnInit() {
     this.id.set(this._computeId());
-    this.formErrorService.initialize(this.formControl());
+
+    const formControl_ = this.formControl();
+    if (formControl_) {
+      this.formErrorService.initialize(formControl_);
+    }
+
     this._angryDeleteService.register(this);
   }
 
@@ -85,7 +108,7 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
   }
 
   onBlur() {
-    this.formControl().markAsTouched();
+    this.formControl()?.markAsTouched();
   }
 
   setDisabledState(isDisabled: boolean) {
@@ -112,7 +135,7 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
       'ciui-input',
       `ciui-input--theme-${this.theme()}`,
       `ciui-input--size-${this.size()}`,
-      this.formControl().disabled ? 'ciui-input--disabled' : '',
+      this.formControl()?.disabled ? 'ciui-input--disabled' : '',
       this.formErrorService.hasErrors() ? 'ciui-input--errored' : '',
       this.formErrorService.hasOneError() ? 'ciui-input--one-error' : '',
       this.row() ? 'ciui-input--row' : '',

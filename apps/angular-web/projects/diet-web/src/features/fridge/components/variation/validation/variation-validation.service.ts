@@ -6,18 +6,37 @@ import { zodValidate } from '@/core/validation/zod-validate.util';
 
 @Injectable({ providedIn: 'root' })
 export class VariationValidationService {
-  public async referenceSize(control: AbstractControl) {
-    const schema = (await import('@/features/fridge/types/internal/variation.types')).referenceSize;
+  public async referenceSizeValue(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types'))
+      .referenceSizeValue;
     return zodValidateForFormControl(schema, control);
   }
 
-  public async energy(control: AbstractControl) {
-    const schema = (await import('@/features/fridge/types/internal/variation.types')).energy;
+  public async referenceSizeUnit(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types'))
+      .referenceSizeUnit;
     return zodValidateForFormControl(schema, control);
   }
 
-  public async portionSize(control: AbstractControl) {
-    const schema = (await import('@/features/fridge/types/internal/variation.types')).portionSize;
+  public async energyAmount(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types')).energyAmount;
+    return zodValidateForFormControl(schema, control);
+  }
+
+  public async energyUnit(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types')).energyUnit;
+    return zodValidateForFormControl(schema, control);
+  }
+
+  public async portionSizeValue(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types'))
+      .portionSizeValue;
+    return zodValidateForFormControl(schema, control);
+  }
+
+  public async portionSizeUnit(control: AbstractControl) {
+    const schema = (await import('@/features/fridge/types/internal/variation.types'))
+      .portionSizeUnit;
     return zodValidateForFormControl(schema, control);
   }
 
