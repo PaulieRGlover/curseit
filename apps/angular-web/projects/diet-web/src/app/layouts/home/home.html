@@ -4,7 +4,18 @@
 
 <div class="cid-home-page">
   <aside class="cid-home-aside">
-
+    <a
+      class="cid-home-aside__link"
+      [routerLink]="getDashboardNavigation()"
+    >Dashboard</a>
+    <a
+      class="cid-home-aside__link"
+      [routerLink]="getFridgeNavigation()"
+    >Fridge</a>
+    <a
+      class="cid-home-aside__link"
+      [routerLink]="getKitchenNavigation()"
+    >Kitchen</a>
   </aside>
 
   <main class="cid-home-main">

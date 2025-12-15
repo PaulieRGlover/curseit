@@ -31,6 +31,21 @@
   justify-content: flex-start;
   align-items: stretch;
   padding-top: 10rem;
+
+  &__link {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 4rem;
+    height: 12rem;
+    font-weight: 400;
+    font-size: 5rem;
+
+    &:hover {
+      background: var(--background-gradient-main);
+      color: var(--text-white);
+    }
+  }
 }
 
 .cid-home-main {

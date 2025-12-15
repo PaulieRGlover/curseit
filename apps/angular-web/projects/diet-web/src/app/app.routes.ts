@@ -5,6 +5,7 @@ import { authRoutes } from '@/features/auth/auth.routes';
 import { authenticated } from '@/features/auth/guards/authenticated.guard';
 import { notAuthenticated } from '@/features/auth/guards/not-authenticated.guard';
 import { fridgeRoutes } from '@/features/fridge/fridge.routes';
+import { kitchenRoutes } from '@/features/kitchen/kitchen.routes';
 
 export const LAYOUTS = {
   HOME: 'home',
@@ -30,6 +31,13 @@ export const routes: Routes = [
     path: ROUTES.FRIDGE.ROOT.declare(),
     loadComponent: async () => (await import('../features/fridge/fridge')).CidFridge,
     children: fridgeRoutes,
+    data: { layout: LAYOUTS.HOME },
+    canActivate: [authenticated],
+  },
+  {
+    path: ROUTES.KITCHEN.ROOT.declare(),
+    loadComponent: async () => (await import('../features/kitchen/kitchen')).CidKitchen,
+    children: kitchenRoutes,
     data: { layout: LAYOUTS.HOME },
     canActivate: [authenticated],
   },

@@ -23,4 +23,14 @@ export const ROUTES = {
       },
     },
   },
+  KITCHEN: {
+    ROOT: r`kitchen`,
+    RECIPES: {
+      ROOT: r`recipes`,
+      RECIPE: {
+        ROOT: r`:recipeId`,
+        INFO: r``,
+      }
+    },
+  }
 } as const;

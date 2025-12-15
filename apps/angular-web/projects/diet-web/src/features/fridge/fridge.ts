@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -7,4 +7,7 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './fridge.html',
   styleUrl: './fridge.scss',
 })
-export class CidFridge {}
+export class CidFridge {
+  @HostBinding('class')
+  hostClass = 'cid-fridge';
+}
