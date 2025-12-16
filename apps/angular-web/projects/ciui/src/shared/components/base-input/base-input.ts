@@ -6,6 +6,7 @@ import {
   Signal,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   effect,
   inject,
   input,
@@ -13,9 +14,12 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { AbstractControl, ControlValueAccessor } from '@angular/forms';
+import { ControlValueAccessor, FormControl } from '@angular/forms';
 
+import { Subscription } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+
+import { Nullable } from '@curseit/types';
 
 import { Size, Theme } from '../../constants';
 import { AngryDeleteService } from '../../services/angry-delete.service';
@@ -26,7 +30,7 @@ import { FormErrorService } from '../../services/form-error.service';
   template: '<div>ABSTRACT COMPONENT</div>',
   encapsulation: ViewEncapsulation.None,
 })
-export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
+export abstract class CiuiBaseInput<T> implements OnInit, ControlValueAccessor {
   formErrorService = inject(FormErrorService);
   protected _renderer = inject(Renderer2);
   private _angryDeleteService = inject(AngryDeleteService);
@@ -35,8 +39,8 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
 
   label = input.required<string>();
 
-  formControl = input<AbstractControl>();
-  value = input<any>();
+  formControl = input<FormControl<Nullable<T>>>();
+  valueSource = input<Nullable<T>>(null, { alias: 'value' });
   name = input<string>('');
   theme = input<Theme>('white');
   size = input<Size>('medium');
@@ -45,15 +49,24 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
   labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
   ariaLabel = input<string>();
 
-  input = output<any>();
-  change = output<any>();
+  input = output<Nullable<T>>();
+  change = output<Nullable<T>>();
   angryDelete = output();
 
   id = signal('');
 
+  value = computed<Nullable<T>>(() => {
+    const formControl_ = this.formControl();
+    if (formControl_) {
+      return this._formControlValueSignal();
+    } else {
+      return this.valueSource();
+    }
+  });
+
   constructor() {
     effect(() => {
-      const value_ = this.value();
+      const value_ = this.valueSource();
       const formControl_ = this.formControl();
 
       untracked(() => {
@@ -70,6 +83,9 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
     const formControl_ = this.formControl();
     if (formControl_) {
       this.formErrorService.initialize(formControl_);
+      this._formControlValueSubscription = formControl_.valueChanges.subscribe(value => {
+        this._formControlValueSignal.set(value);
+      });
     }
 
     this._angryDeleteService.register(this);
@@ -77,7 +93,7 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
 
   ngAfterViewInit() {
     this._isViewInitialized = true;
-      
+
     if (this._pendingWrite !== undefined) {
       this.applyWrite(this._pendingWrite);
       this._pendingWrite = undefined;
@@ -86,6 +102,12 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
     if (this._pendingFocus) {
       this.setFocus();
       this._pendingFocus = false;
+    }
+  }
+
+  ngOnDestroy() {
+    if (this._formControlValueSubscription) {
+      this._formControlValueSubscription.unsubscribe();
     }
   }
 
@@ -157,4 +179,6 @@ export abstract class CiuiBaseInput implements OnInit, ControlValueAccessor {
   private _isViewInitialized = false;
   private _pendingWrite: any = undefined;
   private _pendingFocus = false;
+  private _formControlValueSubscription: Nullable<Subscription> = null;
+  private _formControlValueSignal = signal<Nullable<T>>(null);
 }

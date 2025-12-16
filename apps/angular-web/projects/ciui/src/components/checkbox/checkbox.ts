@@ -6,14 +6,15 @@ import {
   computed,
   forwardRef,
   inject,
+  input,
   output,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
+import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
 import { FormErrorService } from '../../shared/services/form-error.service';
-import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 
 @Component({
   selector: 'ciui-checkbox',
@@ -30,7 +31,7 @@ import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
     FormErrorService,
   ],
 })
-export class CiuiCheckbox extends CiuiBaseInput {
+export class CiuiCheckbox extends CiuiBaseInput<boolean> {
   element = inject(ElementRef);
 
   override change = output<boolean>();

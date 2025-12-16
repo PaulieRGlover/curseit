@@ -43,14 +43,12 @@ const dateToInputFormat = (date: Date): string => {
     FormErrorService,
   ],
 })
-export class CiuiDateInput extends CiuiBaseInput {
+export class CiuiDateInput extends CiuiBaseInput<Date> {
   element = inject(ElementRef);
 
   type = input<HTMLInputTypeAttribute>('date');
   minSource = input<Nullable<Date>>(null, { alias: 'min' });
   maxSource = input<Nullable<Date>>(null, { alias: 'max' });
-
-  override change = output<Nullable<Date>>();
 
   activeElements = computed(() => [this._inputRef().nativeElement]);
   min = computed(() => {

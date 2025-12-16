@@ -32,15 +32,13 @@ import { FormErrorService } from '../../shared/services/form-error.service';
     FormErrorService,
   ],
 })
-export class CiuiNumberInput extends CiuiBaseInput {
+export class CiuiNumberInput extends CiuiBaseInput<number> {
   type = input<HTMLInputTypeAttribute>('text');
   min = input<string | number>();
   max = input<string | number>();
   step = input<string | number>();
   autocomplete = input<string>('off');
   showArrows = input<boolean, any>(false, { transform: booleanAttribute });
-
-  override input = output<number>();
 
   activeElements = computed(() => [this._inputRef().nativeElement]);
 

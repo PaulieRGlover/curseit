@@ -32,10 +32,8 @@ import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
     FormErrorService,
   ],
 })
-export class CiuiTextarea extends CiuiBaseInput {
+export class CiuiTextarea extends CiuiBaseInput<string> {
   type = input<HTMLInputTypeAttribute>('text');
-
-  override input = output<string>();
 
   activeElements = computed(() => [this._textareaRef().nativeElement]);
 

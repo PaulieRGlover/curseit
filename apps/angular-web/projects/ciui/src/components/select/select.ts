@@ -87,7 +87,7 @@ export type SelectRemoveOptionPayload<T> = {
     FormErrorService,
   ],
 })
-export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
+export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput<T> {
   private _injector = inject(Injector);
   selectService = inject(SelectService);
   element = inject(ElementRef);
@@ -106,7 +106,6 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
   editInputAriaLabel = input<string>('Enter item name');
   editItemAriaLabel = input<string>('Edit item');
 
-  override change = output<Nullable<T>>();
   searched = output<string>();
   searchedDebounced = outputFromObservable(debounceOutput(this.searched, this.searchDebounce()));
   focus = output();
@@ -136,8 +135,8 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
     return this.selectService.focusedSelect() === this;
   });
   selectedOption = computed(() => {
-    const selectedValue = this._selectedValueSignal();
-    return selectedValue ? this._normalizeOption(selectedValue) : null;
+    const value = this.value();
+    return value ? this._normalizeOption(value) : null;
   });
   normalizedOptions = computed(() => {
     const selectedOption = this.selectedOption();
@@ -212,26 +211,6 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
 
   constructor() {
     super();
-
-    effect(() => {
-      const value_ = this.value();
-      const formControl_ = this.formControl();
-
-      untracked(() => {
-        if (!formControl_) {
-          this._selectedValueSignal.set(value_);
-
-          if (this._formControlValueSubscription) {
-            this._formControlValueSubscription.unsubscribe();
-          }
-        } else {
-          this._selectedValueSignal.set(formControl_.value);
-          this._formControlValueSubscription = formControl_.valueChanges.subscribe(value => {
-            this._selectedValueSignal.set(value);
-          });
-        }
-      });
-    });
   }
 
   override ngOnInit() {
@@ -240,12 +219,10 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
     this.selectService.register(this);
   }
 
-  ngOnDestroy() {
-    this.selectService.unregister(this);
+  override ngOnDestroy() {
+    super.ngOnDestroy();
 
-    if (this._formControlValueSubscription) {
-      this._formControlValueSubscription.unsubscribe();
-    }
+    this.selectService.unregister(this);
   }
 
   selectFocusedOption(force = false) {
@@ -573,9 +550,7 @@ export class CiuiSelect<T extends string | SelectOption> extends CiuiBaseInput {
   private _searchSignal = toSignal(this.searchControl.valueChanges, {
     initialValue: this.searchControl.value,
   });
-  private _selectedValueSignal = signal<Nullable<string | SelectOption>>(null);
   private _searchDebounceTimeout: Nullable<number> = null;
-  private _formControlValueSubscription: Nullable<Subscription> = null;
 
   private _getOriginalOption(option: SelectOption) {
     return this.optionsSource().find(originalOption => {
