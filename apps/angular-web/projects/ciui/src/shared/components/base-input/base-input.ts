@@ -165,7 +165,7 @@ export abstract class CiuiBaseInput<T> implements OnInit, ControlValueAccessor {
     ];
   }
 
-  protected _onChange = (value: any) => {};
+  protected _onChange = (value: Nullable<T>) => {};
   protected _onTouched = () => {};
   protected _resetAngryDelete() {
     this._angryDeleteService.resetAngryDelete();

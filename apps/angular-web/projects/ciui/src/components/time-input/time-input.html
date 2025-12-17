@@ -1,0 +1,22 @@
+<ciui-input-info
+  [id]="id()"
+  [label]="label()"
+  [labelInvisible]="labelInvisible()"
+  [row]="row()"
+/>
+
+<div class="ciui-input__wrapper">
+  <input
+    #input
+    [id]="id()"
+    type="text"
+    [attr.name]="name()"
+    [attr.placeholder]="placeholder()"
+    [attr.autocomplete]="autocomplete()"
+    [attr.aria-label]="ariaLabel()"
+    class="ciui-input__input"
+    (input)="$event.stopPropagation(); onInput($event)"
+    (change)="$event.stopPropagation(); onChange($event)"
+    (blur)="onBlur()"
+  />
+</div>
