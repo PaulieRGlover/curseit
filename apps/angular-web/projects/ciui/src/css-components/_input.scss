@@ -71,14 +71,6 @@
       }
     }
 
-    &:not(.ciui-input--show-arrows) {
-      .ciui-input__input[type='number']::-webkit-outer-spin-button,
-      .ciui-input__input[type='number']::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-    }
-
     &.ciui-input--theme-white,
     &.ciui-input--theme-white-semi-transparent,
     &.ciui-input--theme-white-transparent {

@@ -1,0 +1,32 @@
+.ciui-number-input {
+  &__out-of {
+    position: absolute;
+    right: 2rem;
+
+    .ciui-input--size-medium & {
+      font-size: 3.5rem;
+    }
+
+    .ciui-input--size-small & {
+      font-size: 2.5rem;
+    }
+
+    .ciui-input--theme-white & {
+      color: var(--text-gray-blue-faint);
+    }
+  }
+  
+  &:not(.ciui-number-input--show-arrows) {
+    .ciui-input__input::-webkit-outer-spin-button,
+    .ciui-input__input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &.ciui-number-input--has-out-of {
+    .ciui-input__input {
+      padding-right: 12rem;
+    }
+  }
+}

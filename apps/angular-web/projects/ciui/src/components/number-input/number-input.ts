@@ -14,6 +14,8 @@ import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 import type { HTMLInputTypeAttribute } from 'react';
 
+import { Nullable } from '@curseit/types';
+
 import { CiuiBaseInput } from '../../shared/components/base-input/base-input';
 import { CiuiInputInfo } from '../../shared/components/input-info/input-info';
 import { FormErrorService } from '../../shared/services/form-error.service';
@@ -22,6 +24,7 @@ import { FormErrorService } from '../../shared/services/form-error.service';
   selector: 'ciui-number-input',
   imports: [ReactiveFormsModule, CiuiInputInfo],
   templateUrl: './number-input.html',
+  styleUrl: './number-input.scss',
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -39,8 +42,10 @@ export class CiuiNumberInput extends CiuiBaseInput<number> {
   step = input<string | number>();
   autocomplete = input<string>('off');
   showArrows = input<boolean, any>(false, { transform: booleanAttribute });
+  outOf = input<Nullable<number>>(null);
 
   activeElements = computed(() => [this._inputRef().nativeElement]);
+  hasOutOf = computed(() => this.outOf() !== null);
 
   constructor() {
     super();
@@ -66,8 +71,10 @@ export class CiuiNumberInput extends CiuiBaseInput<number> {
   @HostBinding('class')
   override get hostClasses() {
     return [
-      this.showArrows() ? 'ciui-input--show-arrows' : '',
-      ...super.hostClasses
+      ...super.hostClasses,
+      'ciui-number-input',
+      this.showArrows() ? 'ciui-number-input--show-arrows' : '',
+      this.hasOutOf() ? 'ciui-number-input--has-out-of' : '',
     ];
   }
 
