@@ -1,0 +1,31 @@
+<div ciui-context-menu-trigger class="cid-nutrients-bar__wrapper">
+  @let macroNutrientViews_ = macroNutrientViews();
+  @for (nutrientView of macroNutrientViews_; track nutrientView.name) {
+    <div
+      trigger="manual"
+      [class]="`cid-nutrients-bar__${nutrientView.name}`"
+      [style.flex]="`0 1 ${nutrientView.proportion * 100}%`"
+    ></div>
+  }
+</div>
+
+<ciui-context-menu>
+  <div class="ciui-context-menu__content">
+    <table class="cid-nutrients-bar__nutrients-info">
+      <thead>
+        <tr><td>Nutrient</td><td>Amount</td><td>Proportion</td></tr>
+      </thead>
+      <tbody>
+        @for (nutrientView of macroNutrientViews_; track nutrientView.name) {
+          <tr>
+            <td [class]="`cid-nutrients-bar__${nutrientView.name}-title`">
+              <b>{{ nutrientView.name }}</b>
+            </td>
+            <td>{{ nutrientView.amount }}</td>
+            <td>{{ nutrientView.proportion | percent }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</ciui-context-menu>

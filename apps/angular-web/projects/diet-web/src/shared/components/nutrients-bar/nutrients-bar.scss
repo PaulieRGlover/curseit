@@ -1,0 +1,60 @@
+.cid-nutrients-bar {
+  display: flex;
+
+  &__wrapper {
+    display: flex;
+    border: var(--border-gray);
+    border-radius: 1rem;
+    width: 100%;
+    height: 4rem;
+    overflow: hidden;
+  }
+
+  &__protein {
+    border-right: var(--border-gray);
+    background-color: var(--background-red);
+  }
+
+  &__protein-title,
+  &__carbs-title,
+  &__fats-title,
+  &__alcohol-title {
+    text-shadow: var(--text-shadow-small);
+  }
+
+  &__protein-title {
+    color: var(--text-red);
+  }
+
+  &__carbs {
+    border-right: var(--border-gray);
+    background-color: var(--background-yellow);
+  }
+
+  &__carbs-title {
+    color: var(--text-yellow);
+  }
+
+  &__fats {
+    border-right: var(--border-gray);
+    background-color: var(--background-blue);
+  }
+
+  &__fats-title {
+    color: var(--text-blue);
+  }
+
+  &__alcohol {
+    background-color: var(--background-gray);
+  }
+
+  &__alcohol-title {
+    color: var(--text-gray);
+  }
+
+  &__nutrients-info {
+    td {
+      padding: 0.5rem 1rem;
+    }
+  }
+}
