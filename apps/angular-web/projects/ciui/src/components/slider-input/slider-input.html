@@ -1,0 +1,20 @@
+<ciui-input-info [id]="id()" [label]="label()" [labelInvisible]="labelInvisible()" [row]="row()" />
+
+<div class="ciui-input__wrapper">
+  <input
+    #input
+    [id]="id()"
+    type="range"
+    [attr.name]="name()"
+    [attr.placeholder]="placeholder()"
+    [attr.min]="min()"
+    [attr.max]="max()"
+    [attr.step]="step()"
+    [attr.aria-label]="ariaLabel()"
+    [attr.title]="value()"
+    class="ciui-input__input"
+    (input)="$event.stopPropagation(); onInput($event)"
+    (change)="$event.stopPropagation(); onChange($event)"
+    (blur)="onBlur()"
+  />
+</div>

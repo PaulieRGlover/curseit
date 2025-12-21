@@ -1,4 +1,4 @@
-import { Injectable, output, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 
 import { v4 as uuidv4 } from 'uuid';
 

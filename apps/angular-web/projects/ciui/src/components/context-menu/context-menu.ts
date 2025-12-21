@@ -102,7 +102,6 @@ export class CiuiContextMenu {
     };
 
     if (this.width()) {
-      style.minWidth = `${dimensions.width}px`;
       style.width = this.width();
     } else {
       style.width = `${dimensions.width}px`;

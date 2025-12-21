@@ -1,0 +1,98 @@
+@mixin track {
+  .ciui-input__input {
+    &::-webkit-slider-runnable-track {
+      @content;
+    }
+    &::-moz-range-track {
+      @content;
+    }
+    &::-ms-track {
+      @content;
+    }
+  }
+}
+
+@mixin thumb {
+  .ciui-input__input {
+    &::-webkit-slider-thumb {
+      @content;
+    }
+    &::-moz-range-thumb {
+      @content;
+    }
+    &::-ms-thumb {
+      @content;
+    }
+  }
+}
+
+.ciui-slider-input {
+  .ciui-input__input {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  &.ciui-slider-input--horizontal {
+    .ciui-input__input {
+      width: 100%;
+      height: 4rem;
+      
+      &::-webkit-slider-thumb {
+        margin-top: -0.5px;
+      }
+    }
+
+    @include track {
+      height: 4rem;
+    }
+
+    @include thumb {
+      width: 3.5rem;
+      height: 4rem;
+    }
+  }
+
+  &.ciui-slider-input--vertical {
+    .ciui-input__wrapper {
+      height: 100%;
+    }
+
+    .ciui-input__input {
+      transform: rotate(180deg);
+      width: 4rem;
+      height: 100%;
+      writing-mode: vertical-lr;
+      
+      &::-webkit-slider-thumb {
+        margin-left: -0.5px;
+      }
+    }
+
+    @include track {
+      width: 4rem;
+    }
+
+    @include thumb {
+      width: 4rem;
+      height: 3.5rem;
+    }
+  }
+
+  @include track {
+    box-sizing: border-box;
+    border: var(--border-gray);
+    border-radius: 4px;
+    background: var(--ciui-slider-input-track-gradient);
+  }
+
+  @include thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    border: var(--border-gray);
+    border-radius: 1rem;
+    background-color: var(--background-white);
+  }
+}
