@@ -238,7 +238,10 @@ export class FridgeService {
         const portionIds = portions.map(({ id }) => id);
         this.foodsStore.removePortionsByIds(portionIds);
 
-        this.eventStore.emit('fridge/discardPortionsFromCooking', portionIds);
+        this.eventStore.emit(
+          'fridge/discardPortionsFromCooking',
+          { portionIds, arePortionsRemoved: true },
+        );
       }
 
       this.variationsStore.remove(result.success.id);
@@ -292,7 +295,10 @@ export class FridgeService {
       this.portionsStore.removePortionErrorsByIds(portionIds);
       this.foodsStore.removePortionsByIds(portionIds);
 
-      this.eventStore.emit('fridge/discardPortionsFromCooking', portionIds);
+      this.eventStore.emit(
+        'fridge/discardPortionsFromCooking',
+        { portionIds, arePortionsRemoved: true },
+      );
     } else {
       this.portionsStore.failure.set(result.failure);
     }
@@ -328,7 +334,7 @@ export class FridgeService {
 
     this.eventStore.emit(
       'fridge/discardPortionsFromCooking',
-      portionIds,
+      { portionIds },
     );
 
     // TODO: organize better; maybe use portionsStore.failure?

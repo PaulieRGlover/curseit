@@ -10,6 +10,7 @@ import { RecipeProjectStore } from './store/recipe-project.store';
 import { Ingredients } from './types/external/recipe-project-ingredient.types';
 import { IngredientsCreate } from './types/internal/recipe-project-ingredient.types';
 import { RecipeProjectWithIngredientsCreate } from './types/internal/recipe-project.types';
+import { DiscardPortionsFromCooking } from '@/core/events';
 
 @Injectable({ providedIn: 'root' })
 export class KitchenService {
@@ -25,8 +26,8 @@ export class KitchenService {
       this._createOrUpdateRecipeProjectFromPortions(portions);
     });
 
-    this.eventStore.on('fridge/discardPortionsFromCooking').subscribe(portionIds => {
-      this._discardPortionsFromCooking(portionIds);
+    this.eventStore.on('fridge/discardPortionsFromCooking').subscribe(payload => {
+      this._discardPortionsFromCooking(payload);
     });
   }
 
@@ -85,12 +86,11 @@ export class KitchenService {
   }
 
   async removeIngredients(ingredients: Ingredients) {
-    const ingredientIds = ingredients.map(({ id }) => id);
     const result = await this.recipeProjectIngredientResource.bulkDelete({
-      body: { ids: ingredientIds },
+      body: { ids: ingredients.map(({ id }) => id) },
     });
     if (result.success) {
-      this.recipeProjectIngredientsStore.remove(ingredientIds);
+      this.recipeProjectIngredientsStore.remove(result.success.map(({ id }) => id));
 
       this.portionsUsedInRecipeProjectStore.remove(
         result.success.map(({ foodPortionId }) => foodPortionId),
@@ -112,12 +112,21 @@ export class KitchenService {
     this.eventStore.emit('kitchen/portionsAssignedForCooking');
   }
 
-  private async _discardPortionsFromCooking(portionIds: Array<string>) {
+  private async _discardPortionsFromCooking(payload: DiscardPortionsFromCooking) {
+    const { portionIds, arePortionsRemoved } = payload;
     const ingredients = this.recipeProjectIngredientsStore.getByPortionIds(portionIds);
-    if (ingredients?.length) {
-      await this.removeIngredients(ingredients);
-    }
+    if (arePortionsRemoved) {
+      this.recipeProjectIngredientsStore.remove(ingredients.map(({ id }) => id));
 
-    this.eventStore.emit('kitchen/portionsDiscardedFromCooking');
+      this.portionsUsedInRecipeProjectStore.remove(
+        ingredients.map(({ foodPortionId }) => foodPortionId),
+      );
+    } else {
+      if (ingredients?.length) {
+        await this.removeIngredients(ingredients);
+      }
+
+      this.eventStore.emit('kitchen/portionsDiscardedFromCooking');
+    }
   }
 }

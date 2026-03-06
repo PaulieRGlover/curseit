@@ -8,4 +8,7 @@ export type CookPortions = Array<{
   maximumSizeInGrams?: number;
 }>;
 
-export type DiscardPortionsFromCooking = Array<string>;
+export type DiscardPortionsFromCooking = {
+  portionIds: Array<string>,
+  arePortionsRemoved?: boolean,
+};
