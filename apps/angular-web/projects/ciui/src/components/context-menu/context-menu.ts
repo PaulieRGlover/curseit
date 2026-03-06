@@ -15,7 +15,6 @@ import { Nullable } from '@curseit/types';
 
 import { CONTEXT_MENU_ERRORS, Size, Theme } from '../../shared/constants';
 import { cardClasses } from '../card/card.utils';
-import { DialogService } from '../dialog/dialog.service';
 import { CiuiIcon } from '../icon/icon';
 
 import { CiuiContextMenuService, ContextMenuWrapper } from './context-menu.service';
@@ -29,7 +28,6 @@ import { CiuiContextMenuService, ContextMenuWrapper } from './context-menu.servi
 export class CiuiContextMenu {
   element = inject(ElementRef);
   contextMenuService = inject(CiuiContextMenuService);
-  dialogService = inject(DialogService);
 
   menuId = input<string>();
 

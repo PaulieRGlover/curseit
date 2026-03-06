@@ -22,6 +22,11 @@
       justify-content: center;
       padding: 0;
 
+      &.ciui-button--size-tiny {
+        width: 4.5rem;
+        height: 4.5rem;
+      }
+
       &.ciui-button--size-small {
         width: 6rem;
         height: 6rem;
@@ -37,8 +42,8 @@
         height: 12rem;
       }
 
-      .ciui-button {
-        flex-shrink: 0;
+      &.ciui-button--round {
+        border-radius: 50%;
       }
     }
 
@@ -111,17 +116,29 @@
       height: 9rem;
       font-size: 4rem;
       letter-spacing: 0.5px;
+
+      &.ciui-button--round {
+        border-radius: 4.5rem;
+      }
     }
 
     &.ciui-button--size-big:not(.ciui-button--icon) {
       height: 12rem;
       font-size: 5rem;
       letter-spacing: 1px;
+
+      &.ciui-button--round {
+        border-radius: 6rem;
+      }
     }
 
     &.ciui-button--size-small:not(.ciui-button--icon) {
       height: 6rem;
       font-size: 3rem;
+
+      &.ciui-button--round {
+        border-radius: 3rem;
+      }
     }
   }
 

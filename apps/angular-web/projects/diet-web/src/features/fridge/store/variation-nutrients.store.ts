@@ -5,17 +5,17 @@ import { Nullable } from '@curseit/types';
 import { calculateAtwaterKcal } from '@curseit/units';
 
 import {
-  ALCOHOL_NAME,
-  CARBOHYDRATES_NAME,
-  FATS_NAME,
-  PROTEIN_NAME,
-} from '@/core/constants/nutrients.constants';
-import {
   addStoreCollectionItems,
   getStoreCollectionItemById,
   removeStoreCollectionItemById,
   updateStoreCollectionItemById,
 } from '@/core/utils/store';
+import {
+  ALCOHOL_NAME,
+  CARBOHYDRATES_NAME,
+  FATS_NAME,
+  PROTEIN_NAME,
+} from '@/shared/constants/nutrients.constants';
 
 import { VariationNutrient } from '../types/external/variation.types';
 import { VariationNutrientUpdate } from '../types/internal/variation.types';
@@ -48,7 +48,7 @@ export class VariationNutrientsStore {
   getById(id: VariationNutrient['id']) {
     return getStoreCollectionItemById(this.variationNutrients, id);
   }
-  
+
   isVariationNutrientLoading(id: VariationNutrient['id']) {
     const loading_ = this.loading();
     return typeof loading_ === 'boolean' ? loading_ : loading_?.includes(id);
@@ -60,9 +60,7 @@ export class VariationNutrientsStore {
 
   removeFromLoading(variationNutrientId: VariationNutrient['id']) {
     this.loading.update(loading => {
-      return Array.isArray(loading)
-        ? loading.filter(id => id !== variationNutrientId)
-        : loading;
+      return Array.isArray(loading) ? loading.filter(id => id !== variationNutrientId) : loading;
     });
   }
 
@@ -87,5 +85,11 @@ export class VariationNutrientsStore {
 
   remove(id: VariationNutrient['id']) {
     removeStoreCollectionItemById(this.variationNutrients, id);
+  }
+
+  reset() {
+    this.variationNutrients.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
   }
 }

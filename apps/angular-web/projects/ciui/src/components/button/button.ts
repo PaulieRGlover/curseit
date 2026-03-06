@@ -29,6 +29,7 @@ export class CiuiButton {
   theme = input<Theme>('white');
   priority = input<Priority>('primary');
   transparent = input<boolean, any>(false, { transform: booleanAttribute });
+  round = input<boolean, any>(false, { transform: booleanAttribute });
   size = input<Size>('medium');
   icon = input<Nullable<Icon>>(null);
   iconSize = input<Size>('medium');
@@ -55,6 +56,7 @@ export class CiuiButton {
       ${this.disabledSource() ? 'ciui-button--disabled' : ''}
       ${this.loading() ? 'ciui-button--loading' : ''}
       ${this.transparent() ? 'ciui-button--transparent' : ''}
+      ${this.round() ? 'ciui-button--round' : ''}
       ${this.error() ? 'ciui-button--error' : ''}
       ${this.icon() ? 'ciui-button--icon' : ''}
       ciui-button--priority-${this.priority()}

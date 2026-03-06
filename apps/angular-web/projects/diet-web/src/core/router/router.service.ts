@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { ActivatedRouteSnapshot, ActivationEnd, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, ActivationEnd, ActivationStart, Router } from '@angular/router';
 
 import { filter, map } from 'rxjs';
 
@@ -28,8 +28,8 @@ export class RouterService {
   private handleRouterEvents() {
     this.router.events
       .pipe(
-        filter(event => event instanceof ActivationEnd),
-        map((event: ActivationEnd) => event.snapshot),
+        filter(event => event instanceof ActivationStart),
+        map((event: ActivationStart) => event.snapshot),
       )
       .subscribe(snapshot => {
         if (!snapshot.firstChild) {

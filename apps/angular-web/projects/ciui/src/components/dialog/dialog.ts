@@ -9,43 +9,36 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { DialogService } from './dialog.service';
+import { CiuiButton } from '../button/button';
 
 @Component({
   selector: 'ciui-dialog',
+  imports: [CiuiButton],
   templateUrl: './dialog.html',
   encapsulation: ViewEncapsulation.None,
 })
 export class CiuiDialog {
   element = inject(ElementRef);
-  dialogService = inject(DialogService);
 
   dialogRef = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
 
   isOpened = signal(false);
+  modal = signal(true);
 
   toggled = output<boolean>();
 
-  ngOnInit() {
-    this.dialogService.registerDialog(this, this.element);
-  }
-
-  ngOnDestroy() {
-    this.dialogService.unregisterDialog(this);
-  }
-
-  toggle(state = !this.isOpened, emit = false) {
+  toggle(state = !this.isOpened, { emit = false, modal = true } = {}) {
     this.isOpened.set(state);
+    this.modal.set(modal);
+
     if (state) {
-      this.dialogRef().nativeElement.showModal();
-      if (emit) {
-        this.toggled.emit(state);
-      }
+      this.dialogRef().nativeElement[modal ? 'showModal' : 'show']();
     } else {
       this.dialogRef().nativeElement.close();
-      if (emit) {
-        this.toggled.emit(state);
-      }
+    }
+
+    if (emit) {
+      this.toggled.emit(state);
     }
   }
 
@@ -54,7 +47,7 @@ export class CiuiDialog {
     this._clickStartedInside = false;
 
     if (event.target === event.currentTarget && !clickStartedInside) {
-      this.dialogService.toggleDialog(this, false, true);
+      this.toggle(false, { emit: true });
     }
   }
 

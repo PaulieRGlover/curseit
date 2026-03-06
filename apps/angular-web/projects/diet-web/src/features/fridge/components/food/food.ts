@@ -33,10 +33,6 @@ export class CidFood {
   getInfoNavigation = computed(() => this._getFoodNavigation(FOOD_ROUTE.INFO));
   getPortionsNavigation = computed(() => this._getFoodNavigation(FOOD_ROUTE.PORTIONS));
 
-  ngOnDestroy() {
-    this.fridgeService.resetFood();
-  }
-
   handleFavorite() {}
 
   handleRemove() {

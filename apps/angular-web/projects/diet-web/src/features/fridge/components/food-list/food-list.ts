@@ -11,7 +11,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { CiuiDialog, DialogService } from '@curseit/ciui';
+import { CiuiDialog } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 
 import { NavigationService } from '@/core/router/navigation.service';
@@ -26,7 +26,7 @@ import { CidFoodListItem } from '../food-list-item/food-list-item';
 
 @Component({
   selector: 'cid-food-list',
-  imports: [RouterOutlet, RouterLink, CidFoodListItem, CidFoodCreateNew, CiuiDialog],
+  imports: [RouterOutlet, RouterLink, CiuiDialog, CidFoodCreateNew, CidFoodListItem],
   templateUrl: './food-list.html',
   styleUrl: './food-list.scss',
   encapsulation: ViewEncapsulation.None,
@@ -37,7 +37,6 @@ export class CidFoodList {
   foodStore = inject(FoodStore);
   routerService = inject(RouterService);
   navigationService = inject(NavigationService);
-  dialogService = inject(DialogService);
   dialogRef = viewChild.required(CiuiDialog);
 
   constructor() {
@@ -92,9 +91,9 @@ export class CidFoodList {
         .includes(leafId) &&
       !this.dialogRef().isOpened()
     ) {
-      this.dialogService.toggleDialog(this.dialogRef(), true);
+      this._dialog().toggle(true, { modal: false });
     } else if (leafId === ROUTES.FRIDGE.FOODS.ROOT.id && this.dialogRef().isOpened()) {
-      this.dialogService.toggleDialog(this.dialogRef(), false);
+      this._dialog().toggle(false, { modal: false });
     }
   }
 
@@ -102,4 +101,5 @@ export class CidFoodList {
   hostClass = 'cid-food-list';
 
   private _leafSubscription: Nullable<Subscription> = null;
+  private _dialog = viewChild.required<CiuiDialog>('dialog');
 }

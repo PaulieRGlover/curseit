@@ -1,6 +1,6 @@
 import * as z from 'zod/v4-mini';
 
-import { foodUnit } from '@/features/fridge/types/external/unit.types';
+import { foodUnit } from '@/shared/types/unit.types';
 import { variationAbridged } from '@/features/fridge/types/external/variation.types';
 import {
   portionSizeUnit,

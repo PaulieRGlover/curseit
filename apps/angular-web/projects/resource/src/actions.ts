@@ -101,8 +101,7 @@ export const createAction = (method: Method) => {
           params?: Record<string, string | number>;
           authToken?: string;
         },
-      ): ApiResult<any, any> {
-        let processedPath = path;
+      ): ApiResult<any, any> {        
         if (!this.http) {
           reportError(ERRORS.NO_HTTP_CLIENT);
 
@@ -110,7 +109,12 @@ export const createAction = (method: Method) => {
         }
 
         const base = Reflect.getMetadata(PATH, target.constructor) ?? '/';
-        const paramsFromPath = path.match(/:\w+/g)?.map(paramKey => paramKey.replace(/^:/, ''));
+
+        let processedPath = `${base}/${path}`;
+
+        const paramsFromPath = processedPath.match(/:\w+/g)?.map(
+          paramKey => paramKey.replace(/^:/, ''),
+        );
         if (paramsFromPath?.length && payload?.params) {
           const missingParams = paramsFromPath.filter(paramKey => {
             return (
@@ -131,7 +135,7 @@ export const createAction = (method: Method) => {
           });
         }
 
-        let fullPath = `${base}/${processedPath}`.replace(/\/$/, '');
+        let fullPath = processedPath.replace(/\/$/, '');
 
         const query = Object.keys(payload?.query ?? {})
           .filter(key => payload!.query![key] !== undefined)

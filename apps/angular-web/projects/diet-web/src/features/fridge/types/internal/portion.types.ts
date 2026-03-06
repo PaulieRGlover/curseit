@@ -1,7 +1,6 @@
 import * as z from 'zod/v4-mini';
 
 import { portion } from '../external/portion.types';
-import { PORTION_FRESHNESS } from '../../constants/freshness';
 
 export const portionCreate = z.partial(
   z.omit(portion, { id: true, counter: true, freshness: true }),
@@ -17,6 +16,3 @@ export const portionUpdate = z.omit(z.partial(portion), {
   freshness: true,
 });
 export type PortionUpdate = z.infer<typeof portionUpdate>;
-
-export const portionFreshness = z.enum(PORTION_FRESHNESS);
-export type PortionFreshness = z.infer<typeof portionFreshness>;

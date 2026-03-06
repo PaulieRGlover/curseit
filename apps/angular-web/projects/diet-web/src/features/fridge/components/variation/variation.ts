@@ -22,7 +22,9 @@ import {
 import { Nullable } from '@curseit/types';
 import { ENERGY, ENERGY_ARRAY, UNITS, convertToKj } from '@curseit/units';
 
-import { FOOD_UNITS } from '../../constants/units';
+import { CidPortionBadge } from '@/shared/components/portion-badge/portion-badge';
+
+import { FOOD_UNITS } from '../../../../shared/constants/units';
 import { FridgeService } from '../../fridge.service';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';
 import { VariationStore } from '../../store/variation.store';
@@ -35,7 +37,6 @@ import {
   ReferenceSizeValue,
 } from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
-import { CidPortionBadge } from '../portion-badge/portion-badge';
 import { CidVariationNutrients } from '../variation-nutrients/variation-nutrients';
 
 import { variationModelUpdateToVariationUpdate } from './transformers/variation-model-update-to-variation-update.transformer';

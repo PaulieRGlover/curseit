@@ -21,8 +21,9 @@ model User {
   lastName     String? @map("last_name")
   passwordHash String  @map("password_hash")
 
-  foods     Food[]
-  nutrients UsersNutrient[]
+  foods          Food[]
+  nutrients      UsersNutrient[]
+  recipeProjects RecipeProject[]
 
   @@map("users")
 }
@@ -122,10 +123,37 @@ model FoodPortion {
   remainingInGrams     Float     @map("remaining_in_grams")
   remainingDisplayUnit FoodUnit  @default(g) @map("remaining_display_unit")
 
-  foodVariation   FoodVariation @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
-  foodVariationId String        @map("food_variation_id")
+  foodVariation            FoodVariation             @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
+  foodVariationId          String                    @map("food_variation_id")
+  recipeProjectIngredients RecipeProjectIngredient[]
 
   @@map("food_portions")
+}
+
+model RecipeProject {
+  id            String   @id @default(uuid())
+  dateAdded     DateTime @default(now()) @map("date_added")
+  dateModified  DateTime @default(now()) @map("date_modified")
+  spendPortions Boolean  @default(true) @map("spend_portions")
+
+  user        User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String                    @map("user_id")
+  ingredients RecipeProjectIngredient[]
+
+  @@map("recipe_projects")
+}
+
+model RecipeProjectIngredient {
+  id              String   @id @default(uuid())
+  sizeInGrams     Float    @map("size_in_grams")
+  sizeDisplayUnit FoodUnit @default(g) @map("size_display_unit")
+
+  foodPortion     FoodPortion   @relation(fields: [foodPortionId], references: [id], onDelete: Cascade)
+  foodPortionId   String        @map("food_portion_id")
+  recipeProject   RecipeProject @relation(fields: [recipeProjectId], references: [id], onDelete: Cascade)
+  recipeProjectId String        @map("recipe_project_id")
+
+  @@map("recipe_project_ingredients")
 }
 
 enum NutrientUnit {

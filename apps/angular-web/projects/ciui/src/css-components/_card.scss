@@ -26,14 +26,22 @@
       gap: 2rem;
     }
 
-    &__actions {
+    &__actions-left,
+    &__actions-right {
       display: flex;
       position: absolute;
       top: 2rem;
-      left: 2rem;
       justify-content: flex-start;
       align-items: flex-start;
       gap: 2rem;
+    }
+
+    &__actions-left {
+      left: 2rem;
+    }
+
+    &__actions-right {
+      right: 2rem;
     }
 
     &__tab {

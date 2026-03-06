@@ -34,6 +34,8 @@ import { FormErrorService } from '../../shared/services/form-error.service';
 export class CiuiCheckbox extends CiuiBaseInput<boolean> {
   element = inject(ElementRef);
 
+  mark = input<string>('✔');
+
   override change = output<boolean>();
 
   constructor() {
@@ -43,6 +45,11 @@ export class CiuiCheckbox extends CiuiBaseInput<boolean> {
   @HostBinding('class')
   override get hostClasses() {
     return [...super.hostClasses, 'ciui-checkbox'];
+  }
+
+  @HostBinding('style.--ciui-checked-mark')
+  get checkedMark() {
+    return `'${this.mark()}'`;
   }
 
   onInput(event: Event) {

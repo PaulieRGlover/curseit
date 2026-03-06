@@ -1,13 +1,24 @@
 @layer ciui {
-  .ciui-dialog dialog {
-    padding: 0;
-    border: none;
-    outline: none;
-    background-color: transparent;
-    overflow: visible;
+  .ciui-dialog {
+    dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      outline: none;
+      border: none;
+      background-color: transparent;
+      padding: 0;
+      overflow: visible;
 
-    &::backdrop {
-      cursor: pointer;
+      &::backdrop {
+        cursor: pointer;
+      }
+    }
+
+    &__drag,
+    &__drag .ciui-icon {
+      cursor: grab;
     }
   }
 }

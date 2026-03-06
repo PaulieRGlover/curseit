@@ -3,7 +3,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import { Failure } from '@curseit/resource';
 import { Nullable } from '@curseit/types';
 
-import { ERROR_STATUS_CODES } from '@/core/constants/api.constants';
+import { ERROR_STATUS_CODES } from '@/shared/constants/api.constants';
 
 import { Food } from '../types/external/food.types';
 
@@ -19,5 +19,11 @@ export class FoodStore {
     this.food.update(food => {
       return food ? { ...food, ...update } : null;
     });
+  }
+
+  reset() {
+    this.food.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
   }
 }

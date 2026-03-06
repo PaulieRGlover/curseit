@@ -11,4 +11,11 @@ export class NutrientsSearchStore {
   loading = signal(false);
   failure = signal<Nullable<Failure>>(null);
   searchCache = signal<Nullable<string>>(null);
+
+  reset() {
+    this.foundNutrients.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
+    this.searchCache.set(null);
+  }
 }

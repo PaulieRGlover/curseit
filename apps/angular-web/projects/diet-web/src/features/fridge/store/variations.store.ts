@@ -28,4 +28,10 @@ export class VariationsStore {
   remove(id: Variation['id']) {
     this.variations.set(this.variations()?.filter(variation => variation.id !== id) ?? null);
   }
+
+  reset() {
+    this.variations.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
+  }
 }

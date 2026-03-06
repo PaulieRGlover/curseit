@@ -5,7 +5,7 @@
   trigger="click"
   [freshness]="portionInput().freshness"
   [counter]="counter.value"
-  [remaining]="remainingInPercent()"
+  [remaining]="remaining()"
 />
 
 <ciui-context-menu
@@ -112,3 +112,22 @@
   />
 }
 
+@if (isCooking()) {
+  @if (isPortionLoading()) {
+    <div class="cid-portion__loader-wrapper">
+      <ciui-loader />
+    </div>
+  } @else {
+    <ciui-checkbox
+      label="Select portion for cooking"
+      labelInvisible
+      name="portion-selected-for-cooking"
+      transparent
+      row
+      theme="white"
+      mark="🍳"
+      [value]="selectedForCooking()"
+      (change)="selectForCookingToggled.emit()"
+    />
+  }
+}

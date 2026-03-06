@@ -1,9 +1,9 @@
-import { PortionDto } from '../dto/fridge.dto';
+import { Nullable } from '@curseit/types';
 
 export const portionCalculateFreshness = (
   dateAdded: Date,
   dateExpiring: Date | null,
-): PortionDto['freshness'] => {
+): Nullable<number> => {
   if (!dateExpiring) {
     return null;
   }

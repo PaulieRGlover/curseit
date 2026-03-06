@@ -3,12 +3,12 @@
   position: relative;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   border-width: 1px;
   border-style: solid;
   border-radius: 1rem;
-  overflow: hidden;
+  overflow: visible;
   user-select: none;
-  cursor: pointer;
 
   &__remaining-meter {
     position: absolute;
@@ -16,6 +16,11 @@
     left: 0;
     width: 100%;
     overflow: hidden;
+    border-radius: 1rem;
+
+    &.cid-portion-badge__remaining-meter--not-full {
+      border-radius: 0 0 1rem 1rem;
+    }
   }
 
   &__indicator {
@@ -30,34 +35,34 @@
   }
 
   &--freshness-fresh {
-    border-color: #258e70;
+    border-color: var(--border-color-green);
 
     .cid-portion-badge__remaining-meter {
-      background-color: #34c79d;
+      background-color: var(--background-green);
     }
   }
 
   &--freshness-still-good {
-    border-color: #c9c31c;
+    border-color: var(--border-color-yellow);
 
     .cid-portion-badge__remaining-meter {
-      background-color: #e4df40;
+      background-color: var(--background-yellow);
     }
   }
 
   &--freshness-almost-spoiled {
-    border-color: #c91c42;
+    border-color: var(--border-color-red);
 
     .cid-portion-badge__remaining-meter {
-      background-color: #e44063;
+      background-color: var(--background-red);
     }
   }
 
   &--freshness-spoiled {
-    border-color: #333031;
+    border-color: var(--border-color-black);
 
     .cid-portion-badge__remaining-meter {
-      background-color: #333031;
+      background-color: var(--background-black);
     }
   }
 
@@ -86,6 +91,21 @@
     .cid-portion-badge__indicator {
       bottom: 2.5rem;
       left: 2.5rem;
+    }
+  }
+
+  &__remove {
+    position: absolute;
+    top: -2rem;
+    right: -2rem;
+    z-index: 1;
+    opacity: 0;
+    box-shadow: var(--ambient-shadow-small);
+  }
+
+  &:hover {
+    .cid-portion-badge__remove {
+      opacity: 1;
     }
   }
 }

@@ -2,9 +2,10 @@ import { Component, HostBinding, ViewEncapsulation, computed, inject, input } fr
 
 import { cardClasses } from '@curseit/ciui';
 
-import { Food } from '../../types/external/food.types';
-import { CidPortionBadge } from '../portion-badge/portion-badge';
+import { CidPortionBadge } from '@/shared/components/portion-badge/portion-badge';
+
 import { FoodsStore } from '../../store/foods.store';
+import { Food } from '../../types/external/food.types';
 
 @Component({
   selector: 'cid-food-list-item, [cid-food-list-item]',

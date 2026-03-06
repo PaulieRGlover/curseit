@@ -9,8 +9,6 @@ export * from './button/button';
 export * from './context-menu/context-menu';
 export * from './context-menu/context-menu-trigger.directive';
 export * from './dialog/dialog';
-export * from './dialog/dialog.directive';
-export * from './dialog/dialog.service';
 export * from './textarea/textarea';
 export * from './checkbox/checkbox';
 export * from './select/select';

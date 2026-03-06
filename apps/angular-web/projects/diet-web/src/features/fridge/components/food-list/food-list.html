@@ -4,6 +4,6 @@
 
 <cid-food-create-new (click)="handleNewFoodClick()" />
 
-<ciui-dialog (toggled)="handleDialogToggled($event)">
+<ciui-dialog #dialog (toggled)="handleDialogToggled($event)">
   <router-outlet></router-outlet>
 </ciui-dialog>

@@ -5,4 +5,24 @@
   (mousedown)="handleDialogMousedown($event)"
 >
   <ng-content />
+
+  @if (!modal()) {
+    <div class="ciui-card__actions-right">
+      <button
+        ciui-button
+        icon="drag"
+        size="medium"
+        priority="tertiary"
+        class="ciui-dialog__drag"
+      ></button>
+
+      <button
+        ciui-button
+        icon="close"
+        size="medium"
+        priority="tertiary"
+        (click)="toggle(false, { emit: true })"
+      ></button>
+    </div>
+  }
 </dialog>

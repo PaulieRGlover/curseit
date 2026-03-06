@@ -1,6 +1,6 @@
 import * as z from 'zod/v4-mini';
 
-import { foodUnit } from './unit.types';
+import { foodUnit } from '../../../../shared/types/unit.types';
 
 export const portion = z.object({
   id: z.string(),

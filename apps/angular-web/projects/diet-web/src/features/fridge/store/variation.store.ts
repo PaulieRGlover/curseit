@@ -19,4 +19,10 @@ export class VariationStore {
       return variation ? { ...variation, ...update } : null;
     });
   }
+
+  reset() {
+    this.variation.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
+  }
 }

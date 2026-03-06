@@ -16,7 +16,7 @@
       }
 
       &:checked::before {
-        content: '✔';
+        content: var(--ciui-checked-mark);
       }
     }
 

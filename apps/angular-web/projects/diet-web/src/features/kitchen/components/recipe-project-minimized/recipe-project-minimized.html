@@ -1,0 +1,12 @@
+<div class="ciui-card cid-recipe-project-minimized__wrapper">
+  <div class="cid-recipe-project-minimized__ingredients">
+    @for (ingredient of recipeProjectIngredientsStore.ingredients(); track ingredient.id) {
+      <cid-portion-badge
+        removable
+        [counter]="ingredient.counter"
+        [freshness]="ingredient.freshness"
+        [remaining]="ingredient.sizeInGrams / ingredient.maximumSizeInGrams"
+      />
+    }
+  </div>
+</div>

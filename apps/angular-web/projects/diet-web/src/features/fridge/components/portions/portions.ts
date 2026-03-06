@@ -19,10 +19,6 @@ import {
   CiuiLoader,
   CiuiNumberInput,
 } from '@curseit/ciui';
-import { Nullable } from '@curseit/types';
-
-import { RouterService } from '@/core/router/router.service';
-import { ROUTES } from '@/core/router/routes';
 
 import { FridgeService } from '../../fridge.service';
 import { FoodStore } from '../../store/food.store';
@@ -33,6 +29,7 @@ import { VariationAbridged } from '../../types/external/variation.types';
 import { CidPortion } from '../portion/portion';
 
 import { PortionsValidationService } from './validation/portions-validation.service';
+import { PortionsUsedInRecipeProjectStore } from '@/shared/store/portions-used-in-recipe-project.store';
 
 const DEFAULT_PORTIONS_NUMBER = 1;
 
@@ -53,58 +50,43 @@ const DEFAULT_PORTIONS_NUMBER = 1;
   encapsulation: ViewEncapsulation.None,
 })
 export class CidPortions {
-  routerService = inject(RouterService);
   fridgeService = inject(FridgeService);
   foodStore = inject(FoodStore);
   portionsStore = inject(PortionsStore);
   variationsStore = inject(VariationsStore);
   validationService = inject(PortionsValidationService);
+  portionsUsedInRecipeProjectStore = inject(PortionsUsedInRecipeProjectStore);
 
   createPortionsCount = new FormControl(DEFAULT_PORTIONS_NUMBER, {
     asyncValidators: this.validationService.createPortionsCount,
     nonNullable: true,
   });
 
-  isInitialized = signal(false);
   selectedPortions = signal<Portions>([]);
   isAdding = signal(false);
   isRemoving = signal(false);
+  isAddingToCooking = signal(false);
 
-  foodId = computed<Nullable<string>>(() => {
-    const { FOOD } = ROUTES.FRIDGE.FOODS;
-    return this.routerService.findInTreeById(FOOD.ROOT.id)?.params?.['foodId'] ?? null;
-  });
   loading = computed(() => {
-    return this.portionsStore.loading() || this.variationsStore.loading() || !this.isInitialized();
+    return this.portionsStore.loading() || this.variationsStore.loading();
   });
   areAllSelected = computed(() => {
     const portions_ = this.portionsStore.portions();
     const selectedPortions_ = this.selectedPortions();
-    return portions_
-      ? portions_.every(portion => selectedPortions_.includes(portion))
-      : false;
+    return portions_ ? portions_.every(portion => selectedPortions_.includes(portion)) : false;
+  });
+  isCooking = computed(() => {
+    return Boolean(this.portionsUsedInRecipeProjectStore.portionIds()?.length);
+  });
+  areAllSelectedForCooking = computed(() => {
+    const portionIds = this.portionsStore.portions()?.map(({ id }) => id);
+    const selectedPortionIds_ = this.portionsUsedInRecipeProjectStore.portionIds();
+
+    return portionIds?.every(id => selectedPortionIds_?.includes(id) ?? true) ?? false;
   });
 
-  ngOnInit() {
-    const foodId_ = this.foodId();
-    const food_ = this.foodStore.food();
-    if (!foodId_) {
-      return;
-    }
-
-    if (!food_ || foodId_ !== food_.id) {
-      this.fridgeService.loadFood(foodId_);
-    }
-
-    if (!this.portionsStore.portions()) {
-      this.fridgeService.loadPortions(foodId_);
-    }
-
-    if (!this.variationsStore.variations()) {
-      this.fridgeService.loadVariations(foodId_);
-    }
-
-    this.isInitialized.set(true);
+  isPortionSelectedForCooking(id: Portion['id']) {
+    return Boolean(this.portionsUsedInRecipeProjectStore.portionIds()?.includes(id));
   }
 
   handleAllSelectedChange(value: boolean) {
@@ -120,6 +102,28 @@ export class CidPortions {
     }
   }
 
+  handleAllSelectedForCookingChange(value: boolean) {
+    const portions_ = this.portionsStore.portions();
+    const portionUsedIds_ = this.portionsUsedInRecipeProjectStore.portionIds();
+    if (!portions_ || !portionUsedIds_) {
+      return;
+    }
+
+    if (value) {
+      const portionsNotSelected = this.portionsStore.getPortionsExcludingIds(portionUsedIds_);
+
+      if (portionsNotSelected.length) {
+        this.fridgeService.assignPortionsForCooking(portionsNotSelected);
+      }
+    } else {
+      const portionsSelected = this.portionsStore.getPortionsByIds(portionUsedIds_);
+
+      if (portionsSelected.length) {
+        this.fridgeService.discardPortionsFromCooking(portionsSelected);
+      }
+    }
+  }
+
   toggleSelect(portion: Portion) {
     const selectedPortions_ = this.selectedPortions();
     if (selectedPortions_.includes(portion)) {
@@ -128,6 +132,14 @@ export class CidPortions {
       );
     } else {
       this.selectedPortions.set([...selectedPortions_, portion]);
+    }
+  }
+
+  toggleSelectForCooking(portion: Portion) {
+    if (this.portionsUsedInRecipeProjectStore.portionIds()?.includes(portion.id)) {
+      this.fridgeService.discardPortionsFromCooking([portion]);
+    } else {
+      this.fridgeService.assignPortionsForCooking([portion]);
     }
   }
 
@@ -158,8 +170,18 @@ export class CidPortions {
     this.isAdding.set(false);
   }
 
-  handleCook() {
-    // TODO: waiting for kitchen module
+  async handleCook() {
+    const selectedPortions_ = this.selectedPortions();
+    if (!selectedPortions_.length) {
+      return;
+    }
+
+    this.isAddingToCooking.set(true);
+
+    await this.fridgeService.assignPortionsForCooking(this.selectedPortions());
+
+    this.selectedPortions.set([]);
+    this.isAddingToCooking.set(false);
   }
 
   handleEat() {
@@ -181,7 +203,9 @@ export class CidPortions {
   }
 
   @HostBinding('class')
-  hostClass = 'cid-portions';
+  get hostClasses() {
+    return `cid-portions ${this.isCooking() ? 'cid-portions--cooking': ''}`;
+  }
 
   private _contextMenuRef = viewChild<CiuiContextMenu>('contextMenu');
 }

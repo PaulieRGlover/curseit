@@ -13,7 +13,6 @@
         <div class="cid-portions__label">Size</div>
         <div class="cid-portions__label">Remaining</div>
         <ciui-checkbox
-          class="cid-portions__select-all"
           label="Select all portions"
           labelInvisible
           name="all-portions-selected"
@@ -23,6 +22,19 @@
           [value]="areAllSelected()"
           (change)="handleAllSelectedChange($event)"
         />
+        @if (isCooking()) {
+          <ciui-checkbox
+            label="Select all for cooking"
+            labelInvisible
+            name="all-portions-selected-for-cooking"
+            transparent
+            row
+            theme="white"
+            mark="🍳"
+            [value]="areAllSelectedForCooking()"
+            (change)="handleAllSelectedForCookingChange($event)"
+          />
+        }
       </div>
 
       <div class="cid-portions__list">
@@ -31,7 +43,10 @@
             class="cid-portions__portion"
             [portion]="portion"
             [selected]="selectedPortions().includes(portion)"
+            [selectedForCooking]="isPortionSelectedForCooking(portion.id)"
+            [isCooking]="isCooking()"
             (selectToggled)="toggleSelect(portion)"
+            (selectForCookingToggled)="toggleSelectForCooking(portion)"
           />
         }
       </div>
@@ -99,7 +114,8 @@
       icon="cook"
       size="medium"
       priority="tertiary"
-      [disabled]="!selectedPortions().length"
+      [loading]="isAddingToCooking()"
+      [disabled]="isAddingToCooking() || !selectedPortions().length"
       (click)="handleCook()"
     ></button>
 

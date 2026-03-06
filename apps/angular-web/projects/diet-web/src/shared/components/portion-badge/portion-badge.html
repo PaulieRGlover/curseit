@@ -1,0 +1,21 @@
+<div
+  class="cid-portion-badge__remaining-meter"
+  [class.cid-portion-badge__remaining-meter--not-full]="remaining() < 0.9"
+  [style]="meterStyle()"
+></div>
+
+<span class="cid-portion-badge__indicator">{{ counter() }}</span>
+
+@if (removable()) {
+  <button
+    ciui-button
+    icon="delete"
+    size="tiny"
+    round
+    aria-label="Remove item"
+    class="cid-portion-badge__remove"
+    priority="tertiary"
+    [loading]="isRemoving()"
+    (click)="remove.emit()"
+  ></button>
+}

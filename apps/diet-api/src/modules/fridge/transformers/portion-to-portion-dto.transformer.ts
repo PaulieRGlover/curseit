@@ -1,6 +1,6 @@
 import { Prisma } from '@curseit/diet-orm';
 import { PortionDto } from '../dto/fridge.dto';
-import { portionCalculateFreshness } from '../utils/portion-calculate-freshness';
+import { portionCalculateFreshness } from '../../../utils/portion-calculate-freshness';
 
 export const portionToPortionDto = (
   portion: Prisma.FoodPortionGetPayload<{

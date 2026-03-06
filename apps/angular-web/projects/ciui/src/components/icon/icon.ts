@@ -33,7 +33,8 @@ export type Icon =
   | 'cook'
   | 'eat'
   | 'trashcan'
-  | 'copy';
+  | 'copy'
+  | 'drag';
 const SvgMap: Record<Icon, string | (() => Promise<{ default: string }>)> = {
   info: () => import('./svg/info.svg'),
   close: () => import('./svg/close.svg'),
@@ -54,6 +55,7 @@ const SvgMap: Record<Icon, string | (() => Promise<{ default: string }>)> = {
   eat: '🍽️',
   trashcan: '🗑️',
   copy: '👯‍♀️',
+  drag: '🤚🏻',
 };
 
 @Component({

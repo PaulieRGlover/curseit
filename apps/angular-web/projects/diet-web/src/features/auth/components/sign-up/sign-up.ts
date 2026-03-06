@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 
 import { CiuiForm, CiuiInput } from '@curseit/ciui';
 
-import { ERROR_STATUS_CODES } from '@/core/constants/api.constants';
+import { ERROR_STATUS_CODES } from '@/shared/constants/api.constants';
 import { NavigationService } from '@/core/router/navigation.service';
 import { ROUTES } from '@/core/router/routes';
 import { AuthInternalValidationService } from '@/features/auth/validation/auth-internal-validation.service';

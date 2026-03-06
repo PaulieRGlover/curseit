@@ -6,6 +6,7 @@ import { Nullable } from '@curseit/types';
 import {
   addStoreCollectionItems,
   getStoreCollectionItemById,
+  getStoreCollectionItems,
   removeStoreCollectionItemById,
   removeStoreCollectionItems,
   updateStoreCollectionItemById,
@@ -42,6 +43,10 @@ export class FoodsStore {
     return this._portions()?.filter(portion => portion.foodId === foodId) ?? null;
   }
 
+  getPortionsByVariationId(variationId: Variation['id']) {
+    return getStoreCollectionItems(this._portions, portion => portion.variationId === variationId);
+  }
+
   add({ portions, ...food }: FoodWithPortions) {
     addStoreCollectionItems(this._foods, [food]);
     if (portions) {
@@ -76,13 +81,6 @@ export class FoodsStore {
     removeStoreCollectionItems(
       this._portions,
       portion => portion.foodId === foodId,
-    );
-  }
-
-  removePortionsByVariationId(variationId: Variation['id']) {
-    removeStoreCollectionItems(
-      this._portions,
-      portion => portion.variationId === variationId,
     );
   }
 

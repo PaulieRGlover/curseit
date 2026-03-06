@@ -27,10 +27,16 @@
       font-size: 4.5rem;
     }
 
-    &.ciui-icon--size-extra-small {
+    &.ciui-icon--size-tiny {
       width: 3rem;
       height: 3rem;
       font-size: 3rem;
+    }
+
+    &.ciui-icon--size-microscopic {
+      width: 2rem;
+      height: 2rem;
+      font-size: 2rem;
     }
 
     &--disabled {

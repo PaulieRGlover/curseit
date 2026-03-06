@@ -5,7 +5,7 @@ import { CiuiButton, CiuiNumberInput, CiuiSelect } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
 import { UNITS } from '@curseit/units';
 
-import { NUTRIENT_UNITS } from '../../constants/units';
+import { NUTRIENT_UNITS } from '../../../../shared/constants/units';
 import { FridgeService } from '../../fridge.service';
 import { NutrientsSearchStore } from '../../store/nutrients-search.store';
 import { VariationNutrientsStore } from '../../store/variation-nutrients.store';

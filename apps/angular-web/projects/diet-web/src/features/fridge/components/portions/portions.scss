@@ -41,6 +41,10 @@
     grid-template-columns: 9rem minmax(100px, 150px) 125px 125px 100px 100px 7rem;
     gap: 2rem;
     width: 100%;
+
+    .cid-portions.cid-portions--cooking & {
+      grid-template-columns: 9rem minmax(100px, 150px) 125px 125px 100px 100px 7rem 7rem;
+    }
   }
 
   &__actions {

@@ -5,7 +5,7 @@ import { Nullable } from '@curseit/types';
 
 import { CookieService } from '@/core/browser/cookie.service';
 import { JwtService } from '@/core/jwt/jwt.service';
-import { GENERAL_MESSAGES } from '@/core/messages/general.messages';
+import { GENERAL_MESSAGES } from '@/shared/messages/general.messages';
 import { environment } from '@/environments/environment';
 
 import { AuthApiResult, AuthResource } from './auth.resource';

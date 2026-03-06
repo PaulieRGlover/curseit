@@ -1,4 +1,12 @@
-import { Component, HostBinding, ViewEncapsulation, computed, inject } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  ViewEncapsulation,
+  computed,
+  effect,
+  inject,
+  untracked,
+} from '@angular/core';
 
 import { CiuiLoader } from '@curseit/ciui';
 import { Nullable } from '@curseit/types';
@@ -18,22 +26,7 @@ import { CidVariations } from '../variations/variations';
   encapsulation: ViewEncapsulation.None,
 })
 export class CidFoodInfo {
-  routerService = inject(RouterService);
-  fridgeService = inject(FridgeService);
   foodStore = inject(FoodStore);
-
-  foodId = computed<Nullable<string>>(() => this.routerService.leaf()?.params?.['foodId'] ?? null);
-
-  ngOnInit() {
-    const foodId_ = this.foodId();
-    const food_ = this.foodStore.food();
-    if (
-      foodId_ && 
-      (!food_ || food_.id !== foodId_)
-    ) {
-      this.fridgeService.loadFood(foodId_);
-    }
-  }
 
   @HostBinding('class')
   hostClass = 'cid-food-info';

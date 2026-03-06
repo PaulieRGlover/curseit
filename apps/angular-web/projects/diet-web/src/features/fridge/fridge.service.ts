@@ -1,5 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 
+import { TimeoutError, firstValueFrom, timeout } from 'rxjs';
+
+import { EventStore } from '@/core/stores/event.store';
+
 import { FoodResource } from './resources/food.resource';
 import { NutrientResource } from './resources/nutrient.resource';
 import { PortionResource } from './resources/portion.resource';
@@ -13,6 +17,7 @@ import { VariationStore } from './store/variation.store';
 import { VariationsStore } from './store/variations.store';
 import { failureToPortionErrors } from './transformers/failure-to-portion-errors';
 import { portionToPortionAbridged } from './transformers/portion-to-portion-abridged';
+import { portionsToCreateRecipeProjectFromPortions } from './transformers/portions-to-create-recipe-project-from-portions.transformer';
 import { variationToVariationAbridged } from './transformers/variation-to-variation-abridged.transformer';
 import { Food } from './types/external/food.types';
 import { Portion } from './types/external/portion.types';
@@ -28,6 +33,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class FridgeService {
+  private eventStore = inject(EventStore);
   private foodResource = inject(FoodResource);
   private variationResource = inject(VariationResource);
   private portionResource = inject(PortionResource);
@@ -112,11 +118,12 @@ export class FridgeService {
     this.portionsStore.loading.set(false);
   }
 
-  async resetFood() {
-    this.foodStore.food.set(null);
-    this.variationsStore.variations.set(null);
-    this.portionsStore.portions.set(null);
-    this.variationNutrientsStore.variationNutrients.set(null);
+  reset() {
+    this.foodStore.reset();
+    this.variationsStore.reset();
+    this.variationStore.reset();
+    this.portionsStore.reset();
+    this.variationNutrientsStore.reset();
   }
 
   async updateFood(update: FoodUpdate) {
@@ -144,7 +151,7 @@ export class FridgeService {
     const result = await this.foodResource.delete({ params: { foodId } });
     if (result.success) {
       this.foodsStore.remove(foodId);
-      this.resetFood();
+      this.reset();
     }
   }
 
@@ -226,8 +233,12 @@ export class FridgeService {
       if (result.success.id === this.variationStore.variation()?.id) {
         this.variationNutrientsStore.variationNutrients.set(null);
         this.variationStore.variation.set(null);
-        this.portionsStore.removeByVariationId(variationId);
-        this.foodsStore.removePortionsByVariationId(variationId);
+
+        const portions = this.portionsStore.getPortionsByVariationId(variationId);
+        const portionIds = portions.map(({ id }) => id);
+        this.foodsStore.removePortionsByIds(portionIds);
+
+        this.eventStore.emit('fridge/discardPortionsFromCooking', portionIds);
       }
 
       this.variationsStore.remove(result.success.id);
@@ -280,11 +291,58 @@ export class FridgeService {
       this.portionsStore.removeByIds(portionIds);
       this.portionsStore.removePortionErrorsByIds(portionIds);
       this.foodsStore.removePortionsByIds(portionIds);
+
+      this.eventStore.emit('fridge/discardPortionsFromCooking', portionIds);
     } else {
       this.portionsStore.failure.set(result.failure);
     }
 
     this.portionsStore.loading.set(false);
+  }
+
+  async assignPortionsForCooking(portions: Array<Portion>) {
+    this.portionsStore.loading.set(portions.map(({ id }) => id));
+
+    this.eventStore.emit(
+      'fridge/cookPortions',
+      portionsToCreateRecipeProjectFromPortions(portions),
+    );
+
+    // TODO: organize better; maybe use portionsStore.failure?
+    try {
+      await firstValueFrom(
+        this.eventStore.on('kitchen/portionsAssignedForCooking').pipe(timeout(5000)),
+      );
+    } catch (error) {
+      if (error instanceof TimeoutError) {
+        throw new Error('Recipe creation timed out');
+      }
+    } finally {
+      this.portionsStore.loading.set(false);
+    }
+  }
+
+  async discardPortionsFromCooking(portions: Array<Portion>) {
+    const portionIds = portions.map(({ id }) => id);
+    this.portionsStore.loading.set(portionIds);
+
+    this.eventStore.emit(
+      'fridge/discardPortionsFromCooking',
+      portionIds,
+    );
+
+    // TODO: organize better; maybe use portionsStore.failure?
+    try {
+      await firstValueFrom(
+        this.eventStore.on('kitchen/portionsDiscardedFromCooking').pipe(timeout(5000)),
+      );
+    } catch (error) {
+      if (error instanceof TimeoutError) {
+        throw new Error('Portion discarding timed out');
+      }
+    } finally {
+      this.portionsStore.loading.set(false);
+    }
   }
 
   async createVariationNutrient(nutrientCreate: VariationNutrientCreate) {

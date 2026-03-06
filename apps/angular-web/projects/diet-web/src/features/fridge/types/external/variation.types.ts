@@ -2,7 +2,7 @@ import * as z from 'zod/v4-mini';
 
 import { ENERGY } from '@curseit/units';
 
-import { foodUnit, nutrientUnit } from './unit.types';
+import { foodUnit, nutrientUnit } from '../../../../shared/types/unit.types';
 
 export const variation = z.object({
   id: z.string(),

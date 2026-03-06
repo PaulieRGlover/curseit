@@ -24,7 +24,9 @@ import {
 import { Nullable } from '@curseit/types';
 import { UNITS } from '@curseit/units';
 
-import { FOOD_UNITS } from '../../constants/units';
+import { CidPortionBadge } from '@/shared/components/portion-badge/portion-badge';
+
+import { FOOD_UNITS } from '../../../../shared/constants/units';
 import { FridgeService } from '../../fridge.service';
 import { PortionsStore } from '../../store/portions.store';
 import { VariationsStore } from '../../store/variations.store';
@@ -32,7 +34,6 @@ import { Portion } from '../../types/external/portion.types';
 import { VariationAbridged } from '../../types/external/variation.types';
 import { Counter, PortionSizeUnit, PortionSizeValue } from '../../types/internal/variation.types';
 import { CidEmojiPicker } from '../emoji-picker/emoji-picker';
-import { CidPortionBadge } from '../portion-badge/portion-badge';
 
 import { portionModelToPortionUpdate } from './transformers/portion-model-to-portion-update';
 import { portionToPortionModel } from './transformers/portion-to-portion-model';
@@ -65,8 +66,11 @@ export class CidPortion {
 
   portionInput = input.required<Portion>({ alias: 'portion' });
   selected = input(false);
+  isCooking = input(false);
+  selectedForCooking = input(false);
 
   selectToggled = output();
+  selectForCookingToggled = output();
 
   portionForm = new FormGroup({
     variation: new FormControl<Nullable<VariationAbridged>>(null),
@@ -93,8 +97,8 @@ export class CidPortion {
     asyncValidators: this.validationService.counter,
   });
 
-  remainingInPercent = computed(() => {
-    return (this.portionInput().remainingInGrams / this.portionInput().sizeInGrams) * 100;
+  remaining = computed(() => {
+    return this.portionInput().remainingInGrams / this.portionInput().sizeInGrams;
   });
   isPortionLoading = computed(() => this.portionsStore.isPortionLoading(this.portionInput().id));
   errors = computed(() => this.portionsStore.getPortionErrors(this.portionInput().id));

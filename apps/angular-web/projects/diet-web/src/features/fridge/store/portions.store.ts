@@ -5,6 +5,9 @@ import { Nullable } from '@curseit/types';
 
 import {
   addStoreCollectionItems,
+  getStoreCollectionItemById,
+  getStoreCollectionItems,
+  getStoreCollectionItemsByIds,
   removeStoreCollectionItemById,
   removeStoreCollectionItems,
   updateStoreCollectionItemById,
@@ -27,7 +30,19 @@ export class PortionsStore {
   }
 
   getPortionErrors(portionId: Portion['id']) {
-    return this.erroredPortions().find(({ id }) => id === portionId);
+    return getStoreCollectionItemById(this.erroredPortions, portionId);
+  }
+
+  getPortionsByIds(portionIds: Array<Portion['id']>) {
+    return getStoreCollectionItemsByIds(this.portions, portionIds);
+  }
+
+  getPortionsByVariationId(variationId: Variation['id']) {
+    return getStoreCollectionItems(this.portions, portion => portion.variationId === variationId);
+  }
+
+  getPortionsExcludingIds(portionIds: Array<Portion['id']>) {
+    return getStoreCollectionItems(this.portions, ({ id }) => !portionIds.includes(id));
   }
 
   add(portions: Portions) {
@@ -46,13 +61,6 @@ export class PortionsStore {
     );
   }
 
-  removeByVariationId(variationId: Variation['id']) {
-    removeStoreCollectionItems(
-      this.portions,
-      portion => portion.variationId === variationId,
-    );
-  }
-
   remove(id: Portion['id']) {
     removeStoreCollectionItemById(this.portions, id);
   }
@@ -67,5 +75,12 @@ export class PortionsStore {
 
   removePortionErrorsByIds(ids: Array<PortionErrors['id']>) {
     removeStoreCollectionItems(this.erroredPortions, ({ id }) => ids.includes(id));
+  }
+
+  reset() {
+    this.portions.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
+    this.erroredPortions.set([]);
   }
 }

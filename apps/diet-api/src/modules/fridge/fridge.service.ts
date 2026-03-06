@@ -322,11 +322,11 @@ export class FridgeService {
     userId: UserDto['id'],
     dto: PortionBulkCreateDto,
   ): Promise<PortionsDto> {
-    const variationsIds = dto.map(({ variationId }) => variationId);
+    const variationIds = dto.map(({ variationId }) => variationId);
     let variations;
     try {
       variations = await this.prismaService.foodVariation.findMany({
-        where: { id: { in: variationsIds }, food: { user: { id: userId } } },
+        where: { id: { in: variationIds }, food: { user: { id: userId } } },
       });
     } catch {
       throw new InternalServerErrorException();

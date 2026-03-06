@@ -12,7 +12,7 @@ export const getStoreCollectionItems = <T>(
   collection: WritableSignal<Nullable<Array<T>>>,
   comparator: (item: T) => boolean,
 ) => {
-  return collection()?.filter(item => comparator(item));
+  return collection()?.filter(item => comparator(item)) ?? [];
 };
 
 export const getStoreCollectionItemById = <T extends { id: unknown }>(
@@ -20,6 +20,13 @@ export const getStoreCollectionItemById = <T extends { id: unknown }>(
   id: T['id'],
 ) => {
   return getStoreCollectionItems(collection, item => item.id === id)?.[0];
+};
+
+export const getStoreCollectionItemsByIds = <T extends { id: unknown }>(
+  collection: WritableSignal<Nullable<Array<T>>>,
+  ids: Array<T['id']>,
+) => {
+  return getStoreCollectionItems(collection, item => ids.includes(item.id));
 };
 
 export const updateStoreCollectionItems = <T>(
@@ -53,3 +60,10 @@ export const removeStoreCollectionItemById = <T extends { id: unknown }>(
 ) => {
   removeStoreCollectionItems(collection, item => item.id === id);
 };
+
+export const removeStoreCollectionItemsByIds = <T extends { id: unknown }>(
+  collection: WritableSignal<Nullable<Array<T>>>,
+  ids: Array<T['id']>,
+) => {
+  removeStoreCollectionItems(collection, item => ids.includes(item.id));
+}

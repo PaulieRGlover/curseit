@@ -2,8 +2,8 @@ import * as z from 'zod/v4-mini';
 
 import { ENERGY } from '@curseit/units';
 
-import { NUTRIENT_UNITS } from '../../constants/units';
-import { foodUnit } from '../external/unit.types';
+import { NUTRIENT_UNITS } from '../../../../shared/constants/units';
+import { foodUnit } from '../../../../shared/types/unit.types';
 import {
   variation,
   variationNutrient,
