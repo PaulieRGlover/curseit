@@ -1,10 +1,15 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common';
 
 import { GetUser } from '@/decorators';
 import { UserDto } from '@/dto';
 import { AccessJwtGuard } from '@/guards';
 
-import { RecipeProjectIngredientBulkDeleteDto, RecipeProjectIngredientsCreateDto, RecipeProjectWithIngredientsCreateDto } from './dto/kitchen.dto';
+import {
+  RecipeProjectIngredientBulkDeleteDto,
+  RecipeProjectIngredientsCreateDto,
+  RecipeProjectUpdateDto,
+  RecipeProjectWithIngredientsCreateDto,
+} from './dto/kitchen.dto';
 import { KitchenService } from './kitchen.service';
 
 @UseGuards(AccessJwtGuard)
@@ -23,6 +28,11 @@ export class KitchenController {
     @Body() dto: RecipeProjectWithIngredientsCreateDto,
   ) {
     return this.kitchenService.createRecipeProject(userId, dto);
+  }
+
+  @Patch('project')
+  updateProject(@GetUser('id') userId: UserDto['id'], @Body() dto: RecipeProjectUpdateDto) {
+    return this.kitchenService.updateRecipeProject(userId, dto);
   }
 
   @Delete('project')

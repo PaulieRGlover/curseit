@@ -11,23 +11,8 @@ export class FoodValidationService {
     return zodValidateForFormControl(schema, control);
   }
 
-  public async description(control: AbstractControl) {
-    const schema = (await import('../../types/internal/food.types')).description;
-    return zodValidateForFormControl(schema, control);
-  }
-
-  public async perishable(control: AbstractControl) {
-    const schema = (await import('../../types/internal/food.types')).perishable;
-    return zodValidateForFormControl(schema, control);
-  }
-
-  public async favorite(control: AbstractControl) {
-    const schema = (await import('../../types/internal/food.types')).favorite;
-    return zodValidateForFormControl(schema, control);
-  }
-
   public async foodUpdate(input: unknown) {
-    const schema = (await import('../../types/internal/food.types')).foodCreate;
+    const schema = (await import('../../types/internal/food.types')).foodUpdate;
     return zodValidate(schema, input, false);
   }
 }

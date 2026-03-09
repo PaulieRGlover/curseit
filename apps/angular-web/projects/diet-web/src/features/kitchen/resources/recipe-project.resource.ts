@@ -5,6 +5,7 @@ import {
   Delete,
   Failure,
   Get,
+  Patch,
   Post,
   Resource,
   UseAuthorization,
@@ -14,9 +15,9 @@ import { Nullable } from '@curseit/types';
 
 import { DietResource } from '@/core/diet.resource';
 
-import { RecipeProjectWithIngredients } from '../types/external/recipe-project.types';
+import { RecipeProject, RecipeProjectWithIngredients } from '../types/external/recipe-project.types';
 import { RecipeProjectValidationService } from '../validation/external/recipe-project-validation.service';
-import { RecipeProjectWithIngredientsCreate } from '../types/internal/recipe-project.types';
+import { RecipeProjectUpdate, RecipeProjectWithIngredientsCreate } from '../types/internal/recipe-project.types';
 
 @Injectable({ providedIn: 'root' })
 @Resource('kitchen/project')
@@ -38,9 +39,17 @@ export class RecipeProjectResource extends DietResource {
     return undefined!;
   }
 
+  @Patch()
+  @UseValidation('recipeProject')
+  async update(payload: {
+    body: RecipeProjectUpdate,
+  }): Promise<ApiResult<RecipeProject, Failure>> {
+    return undefined!;
+  }
+
   @Delete()
-  @UseValidation('recipeProjectWithIngredients')
-  async delete(): Promise<ApiResult<RecipeProjectWithIngredients, Failure>> {
+  @UseValidation('recipeProject')
+  async delete(): Promise<ApiResult<RecipeProject, Failure>> {
     return undefined!;
   }
 }

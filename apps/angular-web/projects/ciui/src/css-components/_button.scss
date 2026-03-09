@@ -9,6 +9,7 @@
     border: none;
     border-radius: 1rem;
     text-transform: uppercase;
+    text-wrap: nowrap;
 
     &:not(.ciui-button--icon) {
       padding: 0 4rem;
@@ -79,6 +80,7 @@
       &.ciui-button--priority-secondary:not(.ciui-button--transparent) {
         background: var(--background-white-less-dim);
         color: var(--text-blue-accented);
+        border: var(--border-blue-accented);
 
         &.ciui-button--disabled {
           background: var(--background-white-disabled);

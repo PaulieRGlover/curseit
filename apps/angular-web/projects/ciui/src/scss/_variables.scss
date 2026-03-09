@@ -49,6 +49,7 @@
     --border-color-yellow: #c9c31c;
     --border-color-red: #c91c42;
     --border-color-blue: #5555f6;
+    --border-color-blue-accented: #8080FF;
     --border-color-black: #1a1919;
     --border-color-gray: #8484ae;
 
@@ -57,6 +58,7 @@
     --border-gray: 1px solid var(--border-color-gray);
     --border-gray-contrast: 1px solid var(--border-color-gray-contrast);
     --border-delimiter: 1px dashed var(--border-color-gray-contrast);
+    --border-blue-accented: 1px solid var(--border-color-blue-accented);
 
     // box shadows
     --ambient-shadow:

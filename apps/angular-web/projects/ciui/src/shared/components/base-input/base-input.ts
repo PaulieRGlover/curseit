@@ -48,6 +48,7 @@ export abstract class CiuiBaseInput<T> implements OnInit, ControlValueAccessor {
   placeholder = input<string>();
   labelInvisible = input<boolean, any>(false, { transform: booleanAttribute });
   ariaLabel = input<string>();
+  width = input<string>('100%');
 
   input = output<Nullable<T>>();
   change = output<Nullable<T>>();
@@ -164,6 +165,12 @@ export abstract class CiuiBaseInput<T> implements OnInit, ControlValueAccessor {
       this.labelInvisible() ? 'ciui-input--label-invisible' : '',
     ];
   }
+
+  @HostBinding('style.--ciui-input-width')
+  get inputWidth() {
+    return this.width();
+  }
+
 
   protected _onChange = (value: Nullable<T>) => {};
   protected _onTouched = () => {};

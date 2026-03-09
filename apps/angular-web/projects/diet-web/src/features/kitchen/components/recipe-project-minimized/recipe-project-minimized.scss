@@ -6,6 +6,9 @@
   width: calc(100dvw - 20rem);
 
   &__wrapper {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
     border-radius: 1rem 1rem 1rem 2rem;
     background-color: var(--background-white);
     width: 100%;
@@ -14,8 +17,9 @@
 
   &__ingredients {
     display: flex;
-    align-items: center;
     justify-content: flex-start;
+    align-items: center;
     gap: 1rem;
+    margin-right: auto;
   }
 }

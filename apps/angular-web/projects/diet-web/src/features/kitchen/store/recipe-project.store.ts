@@ -16,4 +16,10 @@ export class RecipeProjectStore {
       return recipeProject ? { ...recipeProject, ...update } : null;
     });
   }
+
+  reset() {
+    this.recipeProject.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
+  }
 }

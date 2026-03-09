@@ -12,6 +12,9 @@ export class RecipeProjectDto extends createZodDto(RecipeProjectSchema) {}
 
 export const RecipeProjectCreateSchema = RecipeProjectSchema.partial();
 
+export const RecipeProjectUpdateSchema = RecipeProjectSchema.omit({ id: true }).partial();
+export class RecipeProjectUpdateDto extends createZodDto(RecipeProjectUpdateSchema) {}
+
 const recipeProjectIngredientId = z.string();
 
 export const RecipeProjectIngredientSchema = z.object({
@@ -59,7 +62,7 @@ export class RecipeProjectIngredientsCreateDto extends createZodDto(
 ) {}
 
 export const RecipeProjectWithIngredientsCreateSchema = RecipeProjectCreateSchema.extend({
-  portions: z.array(RecipeProjectIngredientCreateSchema),
+  ingredients: z.array(RecipeProjectIngredientCreateSchema),
 });
 export class RecipeProjectWithIngredientsCreateDto extends createZodDto(
   RecipeProjectWithIngredientsCreateSchema,

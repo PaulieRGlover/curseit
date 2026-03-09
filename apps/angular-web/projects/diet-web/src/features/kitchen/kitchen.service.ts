@@ -9,7 +9,7 @@ import { RecipeProjectIngredientsStore } from './store/recipe-project-ingredient
 import { RecipeProjectStore } from './store/recipe-project.store';
 import { Ingredients } from './types/external/recipe-project-ingredient.types';
 import { IngredientsCreate } from './types/internal/recipe-project-ingredient.types';
-import { RecipeProjectWithIngredientsCreate } from './types/internal/recipe-project.types';
+import { RecipeProjectUpdate, RecipeProjectWithIngredientsCreate } from './types/internal/recipe-project.types';
 import { DiscardPortionsFromCooking } from '@/core/events';
 
 @Injectable({ providedIn: 'root' })
@@ -70,6 +70,30 @@ export class KitchenService {
 
     this.recipeProjectStore.loading.set(false);
     this.recipeProjectIngredientsStore.loading.set(false);
+  }
+
+  async updateRecipeProject(recipeProject: RecipeProjectUpdate) {
+    this.recipeProjectStore.loading.set(true);
+
+    const result = await this.recipeProjectResource.update({ body: recipeProject });
+    if (result.success) {
+      this.recipeProjectStore.update(result.success);
+    } else if (result.failure) {
+      this.recipeProjectStore.failure.set(result.failure);
+    }
+
+    this.recipeProjectStore.loading.set(false);
+  }
+
+  async removeRecipeProject() {
+    this.recipeProjectStore.loading.set(true);
+
+    const result = await this.recipeProjectResource.delete();
+    if (result.success) {
+      this.portionsUsedInRecipeProjectStore.reset();
+      this.recipeProjectStore.reset();
+      this.recipeProjectIngredientsStore.reset();
+    }
   }
 
   async addIngredients(ingredients: IngredientsCreate) {

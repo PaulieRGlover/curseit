@@ -6,7 +6,37 @@
         [counter]="ingredient.counter"
         [freshness]="ingredient.freshness"
         [remaining]="ingredient.sizeInGrams / ingredient.maximumSizeInGrams"
+        (remove)="handleIngredientRemove(ingredient)"
       />
     }
   </div>
+
+  <ciui-checkbox
+    class="cid-food-basic-info__perishable"
+    label="Perishable"
+    name="perishable"
+    row
+    [formControl]="recipeProjectForm.controls.spendPortions"
+    (change)="handleChange()"
+  />
+
+  <ciui-select
+    label="Nutrient amount unit"
+    labelInvisible
+    width="240px"
+    [formControl]="recipe"
+    [options]="recipeOptions"
+  />
+
+  <button
+    ciui-button
+    type="button"
+    priority="secondary"
+    (click)="cancelRecipeProject()"
+  >Cancel</button>
+
+  <button
+    ciui-button
+    type="button"
+  >Create Recipe!</button>
 </div>

@@ -54,4 +54,10 @@ export class RecipeProjectIngredientsStore {
   remove(ingredientIds: Array<Ingredient['id']>) {
     removeStoreCollectionItemsByIds(this.ingredients, ingredientIds);
   }
+
+  reset() {
+    this.ingredients.set(null);
+    this.loading.set(false);
+    this.failure.set(null);
+  }
 }

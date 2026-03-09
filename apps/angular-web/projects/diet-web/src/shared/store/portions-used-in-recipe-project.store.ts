@@ -15,4 +15,8 @@ export class PortionsUsedInRecipeProjectStore {
   remove(ids: Array<string>) {
     removeStoreCollectionItems(this.portionIds, id => ids.includes(id));
   }
+
+  reset() {
+    this.portionIds.set(null);
+  }
 }

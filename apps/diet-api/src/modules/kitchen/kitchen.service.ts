@@ -10,12 +10,15 @@ import {
   RecipeProjectIngredientsCreateDto,
   RecipeProjectIngredientsDto,
   RecipeProjectIngredientsSchema,
+  RecipeProjectSchema,
+  RecipeProjectUpdateDto,
   RecipeProjectWithIngredientsCreateDto,
   RecipeProjectWithIngredientsSchema,
 } from './dto/kitchen.dto';
 import { KITCHEN_MESSAGES } from './messages/kitchen.messages';
 import { recipeProjectToRecipeProjectWithIngredients } from './transformers/recipe-project-to-recipe-project-with-ingredients';
 import { recipeProjectIngredientToDto } from './transformers/recipe-project-ingredient-to-dto';
+import { recipeProjectToDto } from './transformers/recipe-project-to-dto';
 
 @Injectable()
 export class KitchenService {
@@ -44,7 +47,7 @@ export class KitchenService {
   }
 
   async createRecipeProject(userId: UserDto['id'], dto: RecipeProjectWithIngredientsCreateDto) {
-    const foodPortionIds = dto.portions.map(({ foodPortionId }) => foodPortionId);
+    const foodPortionIds = dto.ingredients.map(({ foodPortionId }) => foodPortionId);
     let foodPortions;
     try {
       foodPortions = await this.prismaService.foodPortion.findMany({
@@ -56,14 +59,14 @@ export class KitchenService {
 
     let project;
     try {
-      const { portions, ...recipeProject } = dto;
+      const { ingredients, ...recipeProject } = dto;
       project = await this.prismaService.recipeProject.create({
         data: {
           userId,
           ...recipeProject,
           ingredients: {
-            create: portions.map(portion => {
-              const foodPortion = foodPortions.find(({ id }) => id === portion.foodPortionId);
+            create: ingredients.map(ingredient => {
+              const foodPortion = foodPortions.find(({ id }) => id === ingredient.foodPortionId);
               if (!foodPortion) {
                 throw new InternalServerErrorException();
               }
@@ -71,7 +74,7 @@ export class KitchenService {
               return {
                 sizeInGrams: foodPortion.sizeInGrams,
                 sizeDisplayUnit: foodPortion.sizeDisplayUnit,
-                ...portion,
+                ...ingredient,
               };
             }),
           },
@@ -88,13 +91,32 @@ export class KitchenService {
     );
   }
 
+  async updateRecipeProject(userId: UserDto['id'], dto: RecipeProjectUpdateDto) {
+    let project;
+    try {
+      project = await this.prismaService.recipeProject.findFirst({ where: { userId } });
+      if (!project) {
+        throw new NotFoundException();
+      }
+
+      project = await this.prismaService.recipeProject.update({
+        where: { id: project.id },
+        data: dto,
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
+    
+    return this.validationService.validate<typeof RecipeProjectSchema>(
+      RecipeProjectSchema,
+      recipeProjectToDto(project),
+    );
+  }
+
   async deleteRecipeProject(userId: UserDto['id']) {
     let project;
     try {
-      project = await this.prismaService.recipeProject.findFirst({
-        where: { userId },
-        include: this._recipeProjectWithPortionsInclude,
-      });
+      project = await this.prismaService.recipeProject.findFirst({ where: { userId } });
       if (!project) {
         throw new NotFoundException();
       }
@@ -104,9 +126,9 @@ export class KitchenService {
       throw new InternalServerErrorException();
     }
 
-    return this.validationService.validate<typeof RecipeProjectWithIngredientsSchema>(
-      RecipeProjectWithIngredientsSchema,
-      recipeProjectToRecipeProjectWithIngredients(project),
+    return this.validationService.validate<typeof RecipeProjectSchema>(
+      RecipeProjectSchema,
+      recipeProjectToDto(project),
     );
   }
 
