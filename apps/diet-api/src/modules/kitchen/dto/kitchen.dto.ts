@@ -2,6 +2,8 @@ import { createZodDto } from '@anatine/zod-nestjs';
 
 import { z } from 'zod';
 
+import { DAY } from '@curseit/time';
+
 import { FoodUnitSchema } from '@/modules/fridge/dto/fridge.dto';
 
 export const RecipeProjectSchema = z.object({
@@ -19,26 +21,26 @@ const recipeProjectIngredientId = z.string();
 
 export const RecipeProjectIngredientSchema = z.object({
   id: recipeProjectIngredientId,
-  foodPortionId: z.string(),
-  variationId: z.string(),
   foodId: z.string(),
-  counter: z.string(),
-  freshness: z.number().min(0).max(1).nullable(),
-  sizeInGrams: z.number(),
+  foodVariationId: z.string().nullable(),
+  foodPortionId: z.string().nullable(),
+  counter: z.string().optional(),
+  freshness: z.number().min(0).max(1).nullable().optional(),
+  sizeInGrams: z.number().positive(),
   sizeDisplayUnit: FoodUnitSchema,
-  maximumSizeInGrams: z.number(),
+  maximumSizeInGrams: z.number().optional(),
 });
 export class RecipeProjectIngredientDto extends createZodDto(RecipeProjectIngredientSchema) {}
 
 export const RecipeProjectIngredientsSchema = z.array(RecipeProjectIngredientSchema);
-export class RecipeProjectIngredientsDto extends createZodDto(
-  RecipeProjectIngredientsSchema,
-) {}
+export class RecipeProjectIngredientsDto extends createZodDto(RecipeProjectIngredientsSchema) {}
 
 export const RecipeProjectIngredientBulkDeleteSchema = z.object({
   ids: z.array(recipeProjectIngredientId),
 });
-export class RecipeProjectIngredientBulkDeleteDto extends createZodDto(RecipeProjectIngredientBulkDeleteSchema) {}
+export class RecipeProjectIngredientBulkDeleteDto extends createZodDto(
+  RecipeProjectIngredientBulkDeleteSchema,
+) {}
 
 export const RecipeProjectWithIngredientsSchema = RecipeProjectSchema.extend({
   ingredients: z.array(RecipeProjectIngredientSchema),
@@ -54,7 +56,7 @@ export const RecipeProjectIngredientCreateSchema = RecipeProjectIngredientSchema
   sizeDisplayUnit: true,
 })
   .partial()
-  .required({ foodPortionId: true });
+  .extend({ foodPortionId: z.string() });
 
 export const RecipeProjectIngredientsCreateSchema = z.array(RecipeProjectIngredientCreateSchema);
 export class RecipeProjectIngredientsCreateDto extends createZodDto(
@@ -67,3 +69,28 @@ export const RecipeProjectWithIngredientsCreateSchema = RecipeProjectCreateSchem
 export class RecipeProjectWithIngredientsCreateDto extends createZodDto(
   RecipeProjectWithIngredientsCreateSchema,
 ) {}
+
+const recipeId = z.string();
+
+export const RecipeSchema = z.object({
+  id: recipeId,
+  title: z.string().optional(),
+  timeToCook: z
+    .number()
+    .positive()
+    .max(DAY * 365)
+    .optional(),
+  timeToSpoil: z.number().positive().optional(),
+  description: z.string().optional(),
+});
+
+export const RecipeCreateSchema = RecipeSchema.partial();
+
+const recipeIngredientId = z.string();
+
+export const RecipeIngredientSchema = z.object({
+  id: recipeIngredientId,
+  sizeInGrams: z.number().positive(),
+  sizeDisplayUnit: FoodUnitSchema,
+  foodId: z.string(),
+});

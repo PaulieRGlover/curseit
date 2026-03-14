@@ -12,9 +12,9 @@
   </div>
 
   <ciui-checkbox
-    class="cid-food-basic-info__perishable"
-    label="Perishable"
-    name="perishable"
+    class="cid-recipe-project-minimized__spend-portions"
+    label="Spend portions"
+    name="spend-portions"
     row
     [formControl]="recipeProjectForm.controls.spendPortions"
     (change)="handleChange()"
@@ -38,5 +38,6 @@
   <button
     ciui-button
     type="button"
-  >Create Recipe!</button>
+    (click)="cook()"
+  >Cook!</button>
 </div>

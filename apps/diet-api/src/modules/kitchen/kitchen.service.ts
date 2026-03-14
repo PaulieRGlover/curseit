@@ -52,6 +52,7 @@ export class KitchenService {
     try {
       foodPortions = await this.prismaService.foodPortion.findMany({
         where: { id: { in: foodPortionIds }, foodVariation: { food: { user: { id: userId } } } },
+        include: { foodVariation: true },
       });
     } catch {
       throw new InternalServerErrorException();
@@ -72,6 +73,7 @@ export class KitchenService {
               }
 
               return {
+                foodId: foodPortion.foodVariation.foodId,
                 sizeInGrams: foodPortion.sizeInGrams,
                 sizeDisplayUnit: foodPortion.sizeDisplayUnit,
                 ...ingredient,
@@ -146,6 +148,7 @@ export class KitchenService {
     try {
       foodPortions = await this.prismaService.foodPortion.findMany({
         where: { id: { in: foodPortionIds }, foodVariation: { food: { user: { id: userId } } } },
+        include: { foodVariation: true },
       });
     } catch {
       throw new InternalServerErrorException();
@@ -161,6 +164,7 @@ export class KitchenService {
           }
 
           return {
+            foodId: foodPortion.foodVariation.foodId,
             recipeProjectId: recipeProject.id,
             sizeInGrams: foodPortion.sizeInGrams,
             sizeDisplayUnit: foodPortion.sizeDisplayUnit,

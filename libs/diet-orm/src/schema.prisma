@@ -24,6 +24,7 @@ model User {
   foods          Food[]
   nutrients      UsersNutrient[]
   recipeProjects RecipeProject[]
+  recipes        Recipe[]
 
   @@map("users")
 }
@@ -44,9 +45,11 @@ model Food {
   perishable  Boolean @default(true)
   picture     String?
 
-  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String          @map("user_id")
-  variations FoodVariation[]
+  user                     User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   String                    @map("user_id")
+  variations               FoodVariation[]
+  recipeIngredients        RecipeIngredient[]
+  recipeProjectIngredients RecipeProjectIngredient[]
 
   @@map("foods")
 }
@@ -91,10 +94,12 @@ model FoodVariation {
   provider                 String?
   providerId               String?  @map("provider_id")
 
-  food      Food                      @relation(fields: [foodId], references: [id], onDelete: Cascade)
-  foodId    String                    @map("food_id")
-  portions  FoodPortion[]
-  nutrients NutrientInFoodVariation[]
+  food                     Food                      @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  foodId                   String                    @map("food_id")
+  portions                 FoodPortion[]
+  nutrients                NutrientInFoodVariation[]
+  recipeIngredients        RecipeIngredient[]
+  recipeProjectIngredients RecipeProjectIngredient[]
 
   @@unique([name, foodId])
   @@map("food_variations")
@@ -131,13 +136,19 @@ model FoodPortion {
 }
 
 model RecipeProject {
-  id            String   @id @default(uuid())
-  dateAdded     DateTime @default(now()) @map("date_added")
-  dateModified  DateTime @default(now()) @map("date_modified")
-  spendPortions Boolean  @default(true) @map("spend_portions")
+  id               String   @id @default(uuid())
+  dateAdded        DateTime @default(now()) @map("date_added")
+  dateModified     DateTime @default(now()) @map("date_modified")
+  spendPortions    Boolean  @default(true) @map("spend_portions")
+  title            String?
+  timeToCook       Int?     @map("time_to_cook")
+  timeUntilSpoiled Int?     @map("time_until_spoiled")
+  description      String?
 
   user        User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String                    @map("user_id")
+  recipe      Recipe?                   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId    String?                   @map("recipe_id")
   ingredients RecipeProjectIngredient[]
 
   @@map("recipe_projects")
@@ -148,12 +159,48 @@ model RecipeProjectIngredient {
   sizeInGrams     Float    @map("size_in_grams")
   sizeDisplayUnit FoodUnit @default(g) @map("size_display_unit")
 
-  foodPortion     FoodPortion   @relation(fields: [foodPortionId], references: [id], onDelete: Cascade)
-  foodPortionId   String        @map("food_portion_id")
-  recipeProject   RecipeProject @relation(fields: [recipeProjectId], references: [id], onDelete: Cascade)
-  recipeProjectId String        @map("recipe_project_id")
+  food            Food           @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  foodId          String         @map("food_id")
+  foodPortion     FoodPortion?   @relation(fields: [foodPortionId], references: [id], onDelete: Cascade)
+  foodPortionId   String?        @map("food_portion_id")
+  foodVariation   FoodVariation? @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
+  foodVariationId String?        @map("food_variation_id")
+  recipeProject   RecipeProject  @relation(fields: [recipeProjectId], references: [id], onDelete: Cascade)
+  recipeProjectId String         @map("recipe_project_id")
 
   @@map("recipe_project_ingredients")
+}
+
+model Recipe {
+  id           String   @id @default(uuid())
+  dateAdded    DateTime @default(now()) @map("date_added")
+  dateModified DateTime @default(now()) @map("date_modified")
+  title        String?
+  timeToCook   Int?     @map("time_to_cook")
+  timeToSpoil  Int?     @map("time_to_spoil")
+  description  String?
+
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String             @map("user_id")
+  ingredients    RecipeIngredient[]
+  recipeProjects RecipeProject[]
+
+  @@map("recipes")
+}
+
+model RecipeIngredient {
+  id              String   @id @default(uuid())
+  sizeInGrams     Float    @map("size_in_grams")
+  sizeDisplayUnit FoodUnit @default(g) @map("size_display_unit")
+
+  food            Food           @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  foodId          String         @map("food_id")
+  foodVariation   FoodVariation? @relation(fields: [foodVariationId], references: [id], onDelete: Cascade)
+  foodVariationId String?        @map("food_variation_id")
+  recipe          Recipe         @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId        String         @map("recipe_project_id")
+
+  @@map("recipe_ingredients")
 }
 
 enum NutrientUnit {

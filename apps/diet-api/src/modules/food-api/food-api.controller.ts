@@ -20,10 +20,4 @@ export class FoodApiController {
   getFood(@Query() query: GetFoodDto) {
     return this.foodApiService.getFood(query);
   }
-
-  // TODO: protect or refactor
-  @Get('sync-nutrients')
-  syncNutrients() {
-    return this.foodApiService.syncNutrients();
-  }
 }

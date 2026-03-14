@@ -76,7 +76,11 @@ export class CidPortions {
     return portions_ ? portions_.every(portion => selectedPortions_.includes(portion)) : false;
   });
   isCooking = computed(() => {
-    return Boolean(this.portionsUsedInRecipeProjectStore.portionIds()?.length);
+    const portionUsedIds_ = this.portionsUsedInRecipeProjectStore.portionIds();
+    return Boolean(
+      portionUsedIds_?.length &&
+      this.portionsStore.portions()?.some(({ id }) => portionUsedIds_.includes(id))
+    );
   });
   areAllSelectedForCooking = computed(() => {
     const portionIds = this.portionsStore.portions()?.map(({ id }) => id);

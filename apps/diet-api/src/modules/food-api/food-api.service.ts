@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { Nullable } from '@curseit/types';
 
 import { FoodsPrismaService } from '../prisma/foods-prisma.service';
-import { PrismaService } from '../prisma/prisma.service';
 
 import { FoodDto, FoodsWithNutrientsDto } from './dto/foods.dto';
 import { GetFoodDto, SearchDto } from './dto/search.dto';
@@ -18,7 +17,6 @@ import { foodWithNutrientsToFoodsPrismaFoodCreate } from './transformers/food-wi
 export class FoodApiService {
   constructor(
     private readonly foodsPrismaService: FoodsPrismaService,
-    private readonly prismaService: PrismaService,
     private readonly fdcService: FdcService,
     private readonly cacheService: CacheService,
   ) {}
@@ -90,27 +88,6 @@ export class FoodApiService {
           },
         },
       },
-    });
-  }
-
-  async syncNutrients() {
-    const nutrients = await this.foodsPrismaService.nutrient.findMany({
-      where: {},
-      include: {
-        _count: {
-          select: { foods: true },
-        },
-      },
-    });
-
-    await this.prismaService.nutrient.createMany({
-      data: nutrients.map(({ id, _count, ...nutrient }) => {
-        return {
-          ...nutrient,
-          externalId: id,
-          externalWeight: _count.foods,
-        };
-      }),
     });
   }
 }

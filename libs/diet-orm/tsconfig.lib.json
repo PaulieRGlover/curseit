@@ -10,6 +10,13 @@
     "types": ["node"]
   },
   "include": ["src/**/*.ts", "src/**/*.js"],
-  "references": [],
+  "references": [
+    {
+      "path": "../foods-orm/tsconfig.lib.json"
+    },
+    {
+      "path": "../time/tsconfig.lib.json"
+    }
+  ],
   "exclude": ["src/**/*.spec.js", "src/**/*.test.js"]
 }

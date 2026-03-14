@@ -22,4 +22,8 @@
     gap: 1rem;
     margin-right: auto;
   }
+
+  &__spend-portions {
+    justify-content: flex-end;
+  }
 }

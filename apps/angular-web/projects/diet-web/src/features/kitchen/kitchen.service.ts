@@ -124,6 +124,10 @@ export class KitchenService {
     }
   }
 
+  async cook() {
+    
+  }
+
   private async _createOrUpdateRecipeProjectFromPortions(
     ingredients: RecipeProjectWithIngredientsCreate['ingredients'],
   ) {

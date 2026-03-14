@@ -1,28 +1,35 @@
 import { Prisma } from '@curseit/diet-orm';
 
 import { portionCalculateFreshness } from '@/utils/portion-calculate-freshness';
+import { RecipeProjectIngredientDto } from '../dto/kitchen.dto';
 
 export const recipeProjectIngredientToDto = (
   ingredient: Prisma.RecipeProjectIngredientGetPayload<{
     include: { foodPortion: { include: { foodVariation: true } } };
   }>,
-) => {
-  const {
-    foodVariationId,
-    foodVariation: { foodId, counter },
-    dateAdded,
-    dateExpiring,
-  } = ingredient.foodPortion;
-
-  return {
+): RecipeProjectIngredientDto => {
+  const dto: RecipeProjectIngredientDto = {
     id: ingredient.id,
+    foodId: ingredient.foodId,
     foodPortionId: ingredient.foodPortionId,
-    variationId: foodVariationId,
-    foodId,
-    counter,
-    freshness: portionCalculateFreshness(dateAdded, dateExpiring),
+    foodVariationId: ingredient.foodVariationId,
     sizeInGrams: ingredient.sizeInGrams,
     sizeDisplayUnit: ingredient.sizeDisplayUnit,
-    maximumSizeInGrams: ingredient.foodPortion.remainingInGrams,
   };
+
+  const { foodPortion } = ingredient;
+  if (foodPortion) {
+    const {
+      foodVariation,
+      dateAdded,
+      dateExpiring,
+      remainingInGrams,
+    } = foodPortion;
+
+    dto.counter = foodVariation.counter;
+    dto.freshness = portionCalculateFreshness(dateAdded, dateExpiring);
+    dto.maximumSizeInGrams = remainingInGrams;
+  }
+
+  return dto;
 };

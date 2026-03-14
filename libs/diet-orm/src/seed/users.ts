@@ -3,6 +3,8 @@ import { faker } from '@faker-js/faker';
 import * as argon2 from 'argon2';
 import { Prisma } from 'dist/index.js';
 
+export const PRIME_USER_LOGIN = 'test@curseit.io';
+
 export type UserWithPassword = Prisma.UserCreateManyInput & { password?: string };
 export const getUsers = async (hashSecret: string): Promise<Array<UserWithPassword>> => [
   ...(await Promise.all([
@@ -25,7 +27,7 @@ export const getUsers = async (hashSecret: string): Promise<Array<UserWithPasswo
       }),
     ...[
       {
-        login: 'test@curseit.io',
+        login: PRIME_USER_LOGIN,
         firstName: 'Test',
         lastName: 'Testovic',
         password: 'eadeadeadA1!',

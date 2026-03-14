@@ -73,8 +73,12 @@ export class CidRecipeProjectMinimized {
     this.kitchenService.updateRecipeProject(recipeProjectUpdate);
   }
 
-  async cancelRecipeProject() {
+  cancelRecipeProject() {
     this.kitchenService.removeRecipeProject();
+  }
+
+  cook() {
+    this.kitchenService.cook();
   }
 
   @HostBinding('class')
